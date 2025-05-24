@@ -12,10 +12,6 @@ import (
 // Parameters for GET requests to the TMDB API.  Used with the Client interface.
 type GetParams map[string]string
 
-type ErrorClientHttp struct {
-	StatusCode int
-}
-
 type Client interface {
 	// Fetches data from the TMDB API.
 	// The path should be the endpoint you want to access, e.g., "/movie/popular".
