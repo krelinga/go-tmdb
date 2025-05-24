@@ -7,18 +7,22 @@ import (
 	"strings"
 )
 
+type MovieId int
+
 type Movie struct {
-	Adult bool `json:"adult"`
+	Adult   bool    `json:"adult"`
+	MovieId MovieId `json:"id"`
 
 	// Additional bits that can be fetched at the same time.
 	Keywords *MovieKeywords `json:"keywords,omitempty"`
 }
 
 type MovieKeywords struct {
+	MovieId  MovieId    `json:"id"`
 	Keywords []*Keyword `json:"keywords"`
 }
 
-func GetMovie(client Client, movieId int, options ...GetMovieOption) (*Movie, error) {
+func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie, error) {
 	o := getMovieOptions{}
 	for _, opt := range options {
 		opt.applyToGetMovieOptions(&o)
