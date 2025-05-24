@@ -2,8 +2,8 @@ package tmdb
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -23,14 +23,14 @@ type Client interface {
 	// other methods in this package.
 	//
 	// Implementations of this method should handle parallel calls to Get().
-	Get(ctx context.Context, path string, params GetParams, out any) error
+	Get(ctx context.Context, path string, params GetParams) ([]byte, error)
 }
 
 type internalClient struct {
 	apiKey string
 }
 
-func (c *internalClient) Get(ctx context.Context, path string, params GetParams, out any) error {
+func (c *internalClient) Get(ctx context.Context, path string, params GetParams) ([]byte, error) {
 	baseURL := "https://api.themoviedb.org/3"
 	u, err := url.Parse(baseURL)
 	if err != nil {
@@ -46,24 +46,25 @@ func (c *internalClient) Get(ctx context.Context, path string, params GetParams,
 
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	decoder := json.NewDecoder(resp.Body)
-	if err := decoder.Decode(out); err != nil {
-		return err
+	out, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+
+	return out, nil
 }
 
 func NewClient(apiKey string) Client {

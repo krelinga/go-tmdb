@@ -2,6 +2,7 @@ package tmdb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -32,15 +33,20 @@ func GetMovie(client Client, movieId int, options ...GetMovieOption) (*Movie, er
 	if len(appends) > 0 {
 		params["append_to_response"] = strings.Join(appends, ",")
 	}
-	m := &Movie{}
 	ctx := context.Background()
 	if o.useContext != nil {
 		ctx = *o.useContext
 	}
 	endpoint := fmt.Sprintf("/movie/%d", movieId)
-	if err := client.Get(ctx, endpoint, params, m); err != nil {
+	data, err := client.Get(ctx, endpoint, params)
+	if err != nil {
 		return nil, err
 	}
+	m := &Movie{}
+	if err := json.Unmarshal(data, m); err != nil {
+		return nil, fmt.Errorf("unmarshalling movie: %w", err)
+	}
+
 	return m, nil
 }
 
