@@ -11,6 +11,7 @@ type MovieId int
 
 type Movie struct {
 	Adult   bool    `json:"adult"`
+	BackdropImage BackdropImage `json:"backdrop_path"`
 	MovieId MovieId `json:"id"`
 
 	// Additional bits that can be fetched at the same time.
