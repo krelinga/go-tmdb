@@ -5,14 +5,19 @@ import (
 	"encoding/json"
 )
 
+type BackdropSize string
+type LogoSize string
+type PosterSize string
+type StillSize string
+
 type Configuration struct {
 	Images struct {
-		BaseUrl string `json:"base_url"`
-		SecureBaseUrl string `json:"secure_base_url"`
-		BackdropSizes []string `json:"backdrop_sizes"`
-		LogoSizes []string `json:"logo_sizes"`
-		PosterSizes []string `json:"poster_sizes"`
-		StillSizes []string `json:"still_sizes"`
+		BaseUrl       string         `json:"base_url"`
+		SecureBaseUrl string         `json:"secure_base_url"`
+		BackdropSizes []BackdropSize `json:"backdrop_sizes"`
+		LogoSizes     []LogoSize     `json:"logo_sizes"`
+		PosterSizes   []PosterSize   `json:"poster_sizes"`
+		StillSizes    []StillSize    `json:"still_sizes"`
 	} `json:"images"`
 	ChangeKeys []string `json:"change_keys"`
 }
