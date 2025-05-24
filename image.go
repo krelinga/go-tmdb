@@ -30,6 +30,16 @@ func (p PosterImage) GetSecureUrl(configuration *Configuration, size PosterSize)
 	return getImageUrl(configuration.Images.PosterSizes, configuration.Images.SecureBaseUrl, size, string(p))
 }
 
+type ProfileImage string
+
+func (p ProfileImage) GetUrl(configuration *Configuration, size ProfileSize) (string, bool) {
+	return getImageUrl(configuration.Images.ProfileSizes, configuration.Images.BaseUrl, size, string(p))
+}
+
+func (p ProfileImage) GetSecureUrl(configuration *Configuration, size ProfileSize) (string, bool) {
+	return getImageUrl(configuration.Images.ProfileSizes, configuration.Images.SecureBaseUrl, size, string(p))
+}
+
 type StillImage string
 
 func (s StillImage) GetUrl(configuration *Configuration, size StillSize) (string, bool) {

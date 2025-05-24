@@ -8,6 +8,7 @@ import (
 type BackdropSize string
 type LogoSize string
 type PosterSize string
+type ProfileSize string
 type StillSize string
 
 type Configuration struct {
@@ -17,6 +18,7 @@ type Configuration struct {
 		BackdropSizes []BackdropSize `json:"backdrop_sizes"`
 		LogoSizes     []LogoSize     `json:"logo_sizes"`
 		PosterSizes   []PosterSize   `json:"poster_sizes"`
+		ProfileSizes  []ProfileSize  `json:"profile_sizes"`
 		StillSizes    []StillSize    `json:"still_sizes"`
 	} `json:"images"`
 	ChangeKeys []string `json:"change_keys"`
