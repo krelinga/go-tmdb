@@ -42,6 +42,9 @@ func GetMovie(client Client, movieId int, options ...GetMovieOption) (*Movie, er
 	if err != nil {
 		return nil, err
 	}
+	if o.rawReply != nil {
+		*o.rawReply = data
+	}
 	m := &Movie{}
 	if err := json.Unmarshal(data, m); err != nil {
 		return nil, fmt.Errorf("unmarshalling movie: %w", err)
@@ -51,9 +54,9 @@ func GetMovie(client Client, movieId int, options ...GetMovieOption) (*Movie, er
 }
 
 type getMovieOptions struct {
+	baseOptions
 	wantDetails  bool
 	wantKeywords bool
-	useContext   *context.Context
 }
 
 type GetMovieOption interface {

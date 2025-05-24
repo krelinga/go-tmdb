@@ -2,6 +2,11 @@ package tmdb
 
 import "context"
 
+type baseOptions struct {
+	useContext *context.Context
+	rawReply *[]byte
+}
+
 func WithDetails() detailsOption {
 	return detailsOption{}
 }
@@ -31,4 +36,16 @@ type contextOption struct {
 
 func (c contextOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.useContext = &c.ctx
+}
+
+func WithRawReply(reply *[]byte) rawReplyOption {
+	return rawReplyOption{reply: reply}
+}
+
+type rawReplyOption struct {
+	reply *[]byte
+}
+
+func (r rawReplyOption) applyToGetMovieOptions(o *getMovieOptions) {
+	o.rawReply = r.reply
 }

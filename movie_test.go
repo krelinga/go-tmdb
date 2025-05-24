@@ -17,7 +17,8 @@ func getClient(t *testing.T) tmdb.Client {
 
 func TestGetMovie(t *testing.T) {
 	client := getClient(t)
-	movie, err := tmdb.GetMovie(client, 550, tmdb.WithDetails(), tmdb.WithKeywords())
+	var raw []byte
+	movie, err := tmdb.GetMovie(client, 550, tmdb.WithDetails(), tmdb.WithKeywords(), tmdb.WithRawReply(&raw))
 	if err != nil {
 		t.Fatalf("GetMovie failed: %v", err)
 	}
@@ -30,4 +31,5 @@ func TestGetMovie(t *testing.T) {
 	if len(movie.Keywords.Keywords) == 0 {
 		t.Fatal("No keywords found")
 	}
+	t.Log(string(raw))
 }
