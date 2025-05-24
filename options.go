@@ -38,6 +38,10 @@ func (c contextOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.useContext = &c.ctx
 }
 
+func (c contextOption) applyToGetConfigurationOptions(o *getConfigruationOptions) {
+	o.useContext = &c.ctx
+}
+
 func WithRawReply(reply *[]byte) rawReplyOption {
 	return rawReplyOption{reply: reply}
 }
@@ -47,5 +51,9 @@ type rawReplyOption struct {
 }
 
 func (r rawReplyOption) applyToGetMovieOptions(o *getMovieOptions) {
+	o.rawReply = r.reply
+}
+
+func (r rawReplyOption) applyToGetConfigurationOptions(o *getConfigruationOptions) {
 	o.rawReply = r.reply
 }
