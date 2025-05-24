@@ -39,7 +39,7 @@ type Movie struct {
 
 	// Additional bits that can be fetched at the same time.
 	Keywords *MovieKeywords `json:"keywords,omitempty"`
-	Credits *MovieCredits `json:"credits,omitempty"`
+	Credits  *MovieCredits  `json:"credits,omitempty"`
 }
 
 type MovieKeywords struct {
@@ -48,7 +48,31 @@ type MovieKeywords struct {
 }
 
 type MovieCredits struct {
-	MovieId MovieId `json:"id"`
+	MovieId MovieId      `json:"id"`
+	Cast    []*MovieCast `json:"cast"`
+	Crew    []*MovieCrew `json:"crew"`
+}
+
+type MovieCastId int
+type CreditId string
+
+type CreditPerson struct {
+	PersonSummary
+	OriginalName string   `json:"original_name"`
+	CreditId     CreditId `json:"credit_id"`
+}
+
+type MovieCast struct {
+	CreditPerson
+	CastId    MovieCastId `json:"cast_id"`
+	Character string      `json:"character"`
+	Order     int         `json:"order"`
+}
+
+type MovieCrew struct {
+	CreditPerson
+	Department string `json:"department"`
+	Job        string `json:"job"`
 }
 
 func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie, error) {
@@ -60,6 +84,9 @@ func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie
 	appends := []string{}
 	if o.wantKeywords {
 		appends = append(appends, "keywords")
+	}
+	if o.wantCredits {
+		appends = append(appends, "credits")
 	}
 
 	params := GetParams{}
@@ -90,6 +117,7 @@ type getMovieOptions struct {
 	baseOptions
 	wantDetails  bool
 	wantKeywords bool
+	wantCredits  bool
 }
 
 type GetMovieOption interface {

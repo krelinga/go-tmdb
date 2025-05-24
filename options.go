@@ -26,6 +26,16 @@ func (k keywordsOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.wantKeywords = true
 }
 
+func WithCredits() creditsOption {
+	return creditsOption{}
+}
+
+type creditsOption struct {}
+
+func (c creditsOption) applyToGetMovieOptions(o *getMovieOptions) {
+	o.wantCredits = true
+}
+
 func WithContext(ctx context.Context) contextOption {
 	return contextOption{ctx: ctx}
 }
