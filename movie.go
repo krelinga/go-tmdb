@@ -115,7 +115,6 @@ func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie
 
 type getMovieOptions struct {
 	baseOptions
-	wantDetails  bool
 	wantKeywords bool
 	wantCredits  bool
 }

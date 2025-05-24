@@ -19,7 +19,6 @@ func TestGetMovie(t *testing.T) {
 	client := getClient(t)
 	var raw []byte
 	movie, err := tmdb.GetMovie(client, 550,
-		tmdb.WithDetails(),
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
 		tmdb.WithRawReply(&raw))

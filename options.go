@@ -4,23 +4,14 @@ import "context"
 
 type baseOptions struct {
 	useContext *context.Context
-	rawReply *[]byte
-}
-
-func WithDetails() detailsOption {
-	return detailsOption{}
-}
-
-type detailsOption struct {}
-
-func (d detailsOption) applyToGetMovieOptions(o *getMovieOptions) {
-	o.wantDetails = true
+	rawReply   *[]byte
 }
 
 func WithKeywords() keywordsOption {
 	return keywordsOption{}
 }
-type keywordsOption struct {}
+
+type keywordsOption struct{}
 
 func (k keywordsOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.wantKeywords = true
@@ -30,7 +21,7 @@ func WithCredits() creditsOption {
 	return creditsOption{}
 }
 
-type creditsOption struct {}
+type creditsOption struct{}
 
 func (c creditsOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.wantCredits = true
