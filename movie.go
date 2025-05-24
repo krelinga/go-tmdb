@@ -39,11 +39,16 @@ type Movie struct {
 
 	// Additional bits that can be fetched at the same time.
 	Keywords *MovieKeywords `json:"keywords,omitempty"`
+	Credits *MovieCredits `json:"credits,omitempty"`
 }
 
 type MovieKeywords struct {
 	MovieId  MovieId    `json:"id"`
 	Keywords []*Keyword `json:"keywords"`
+}
+
+type MovieCredits struct {
+	MovieId MovieId `json:"id"`
 }
 
 func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie, error) {
