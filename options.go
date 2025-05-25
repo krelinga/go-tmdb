@@ -59,6 +59,10 @@ func (r rawReplyOption) applyToGetConfigurationOptions(o *getConfigruationOption
 	o.rawReply = r.reply
 }
 
+func (r rawReplyOption) applyToGetTvSeriesOptions(o *getTvSeriesOptions) {
+	o.rawReply = r.reply
+}
+
 func WithAdult() adultOption {
 	return adultOption{}
 }
