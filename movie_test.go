@@ -8,6 +8,7 @@ import (
 )
 
 func getClient(t *testing.T) tmdb.Client {
+	t.Helper()
 	key, ok := os.LookupEnv("TMDB_API_KEY")
 	if !ok {
 		t.Fatal("environment variable TMDB_API_KEY not set")
