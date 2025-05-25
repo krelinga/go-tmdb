@@ -1,0 +1,25 @@
+package tmdb_test
+
+import (
+	"testing"
+
+	"github.com/krelinga/go-tmdb"
+)
+
+func TestSearchMoviess(t *testing.T) {
+	client := getClient(t)
+
+	total := 0
+	for m, err := range tmdb.SearchMovies(client, "Inception") {
+		if err != nil {
+			t.Fatalf("SearchMovies failed: %v", err)
+		}
+		if m == nil {
+			t.Fatal("SearchMovies returned nil")
+			continue
+		}
+		t.Logf("Found movie: %s (%d)", m.Title, m.MovieId)
+		total++
+	}
+	t.Logf("Found %d movies", total)
+}

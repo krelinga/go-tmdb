@@ -58,3 +58,13 @@ func (r rawReplyOption) applyToGetMovieOptions(o *getMovieOptions) {
 func (r rawReplyOption) applyToGetConfigurationOptions(o *getConfigruationOptions) {
 	o.rawReply = r.reply
 }
+
+func WithAdult() adultOption {
+	return adultOption{}
+}
+
+type adultOption struct{}
+
+func (a adultOption) applyToSearchMoviesOptions(o *searchMoviesOptions) {
+	o.wantAdult = true
+}
