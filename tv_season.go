@@ -11,9 +11,9 @@ type TvSeasonNumber int
 
 type TvSeason struct {
 	// TODO: what is this?
-	UnderscoreId string `json:"_id"`
-	AirDate      Date   `json:"air_date"`
-	// TODO: Episodes
+	UnderscoreId   string         `json:"_id"`
+	AirDate        Date           `json:"air_date"`
+	TvEpisodes     []*TvEpisode   `json:"episodes"`
 	Name           string         `json:"name"`
 	Overview       string         `json:"overview"`
 	TvSeasonId     TvSeasonId     `json:"id"`

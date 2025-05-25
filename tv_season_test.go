@@ -26,4 +26,13 @@ func TestGetTvSeason(t *testing.T) {
 	}
 	t.Logf("TV season name: %s\n", tv.Name)
 	t.Logf("TV season number: %d\n", tv.TvSeasonNumber)
+	for _, e := range tv.TvEpisodes {
+		if e == nil {
+			t.Fatal("TvEpisode is nil")
+		}
+		if e.Name == "" {
+			t.Fatal("TvEpisode name is empty")
+		}
+		t.Logf("Episode: %s (ID: %d)\n", e.Name, e.TvEpisodeId)
+	}
 }
