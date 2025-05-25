@@ -6,7 +6,7 @@ import (
 	"github.com/krelinga/go-tmdb"
 )
 
-func TestGetTVSeries(t *testing.T) {
+func TestGetTvSeries(t *testing.T) {
 	client := getClient(t)
 	var raw []byte
 	tv, err := tmdb.GetTvSeries(client, 1399,
