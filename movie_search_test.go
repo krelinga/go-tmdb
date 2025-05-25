@@ -22,4 +22,7 @@ func TestSearchMoviess(t *testing.T) {
 		total++
 	}
 	t.Logf("Found %d movies", total)
+	if total == 0 {
+		t.Fatal("No movies found")
+	}
 }
