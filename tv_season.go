@@ -3,6 +3,7 @@ package tmdb
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 )
 
 type TvSeasonId int
@@ -10,15 +11,15 @@ type TvSeasonNumber int
 
 type TvSeason struct {
 	// TODO: what is this?
-	UnderscoreId int64 `json:"_id"`
-	AirDate 	Date  `json:"air_date"`
+	UnderscoreId string `json:"_id"`
+	AirDate      Date   `json:"air_date"`
 	// TODO: Episodes
-	Name string `json:"name"`
-	Overview string `json:"overview"`
-	TvSeasonId TvSeasonId `json:"id"`
-	PosterImage PosterImage `json:"poster_path"`
+	Name           string         `json:"name"`
+	Overview       string         `json:"overview"`
+	TvSeasonId     TvSeasonId     `json:"id"`
+	PosterImage    PosterImage    `json:"poster_path"`
 	TvSeasonNumber TvSeasonNumber `json:"season_number"`
-	VoteAverage float64 `json:"vote_average"`
+	VoteAverage    float64        `json:"vote_average"`
 }
 
 func GetTvSeason(client Client, id TvSeasonId, number TvSeasonNumber, options ...GetTvSeasonOption) (*TvSeason, error) {
@@ -32,7 +33,7 @@ func GetTvSeason(client Client, id TvSeasonId, number TvSeasonNumber, options ..
 		ctx = *o.useContext
 	}
 
-	data, err := client.Get(ctx, "/tv/season/"+string(id), nil)
+	data, err := client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d", id, number), nil)
 	if err != nil {
 		return nil, err
 	}
