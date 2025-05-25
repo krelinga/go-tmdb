@@ -1,6 +1,8 @@
 package tmdb
 
+type GenereId int
+
 type Genere struct {
-	Id   int    `json:"id"`
+	Id   GenereId    `json:"id"`
 	Name string `json:"name"`
 }
