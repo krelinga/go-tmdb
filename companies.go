@@ -1,6 +1,6 @@
 package tmdb
 
-type ProductionCompanySummary struct {
+type ProductionCompanyShort struct {
 	Id            int       `json:"id"`
 	LogoImage     LogoImage `json:"logo_path"`
 	Name          string    `json:"name"`

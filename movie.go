@@ -21,18 +21,18 @@ type GetMovieReply struct {
 
 type Movie struct {
 	MovieShort
-	BelongsToCollection        string                      `json:"belongs_to_collection,omitempty"`
-	Budget                     int                         `json:"budget"`
-	Genres                     []*Genere                   `json:"genres"`
-	Homepage                   string                      `json:"homepage,omitempty"`
-	ImdbId                     ImdbId                      `json:"imdb_id,omitempty"`
-	ProductionCompanySummaries []*ProductionCompanySummary `json:"production_companies"`
-	ProductionCountrySummaries []*CountrySummary           `json:"production_countries"`
-	Revenue                    int                         `json:"revenue"`
-	Runtime                    Minutes                     `json:"runtime"`
-	SpokenLanguages            []*Language                 `json:"spoken_languages"`
-	Status                     string                      `json:"status"`
-	Tagline                    string                      `json:"tagline"`
+	BelongsToCollection        string                    `json:"belongs_to_collection,omitempty"`
+	Budget                     int                       `json:"budget"`
+	Genres                     []*Genere                 `json:"genres"`
+	Homepage                   string                    `json:"homepage,omitempty"`
+	ImdbId                     ImdbId                    `json:"imdb_id,omitempty"`
+	ProductionCompanySummaries []*ProductionCompanyShort `json:"production_companies"`
+	ProductionCountrySummaries []*CountrySummary         `json:"production_countries"`
+	Revenue                    int                       `json:"revenue"`
+	Runtime                    Minutes                   `json:"runtime"`
+	SpokenLanguages            []*Language               `json:"spoken_languages"`
+	Status                     string                    `json:"status"`
+	Tagline                    string                    `json:"tagline"`
 }
 
 type MovieShort struct {
