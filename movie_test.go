@@ -8,7 +8,7 @@ import (
 
 func TestGetMovie(t *testing.T) {
 	var raw []byte
-	movie, err := tmdb.GetMovie(globalClient, 550,
+	movie, err := tmdb.GetMovie(getClient(t), 550,
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
 		tmdb.WithReleaseDates(),
@@ -44,7 +44,7 @@ func TestGetMovie(t *testing.T) {
 }
 
 func TestHttpError(t *testing.T) {
-	_, err := tmdb.GetMovie(globalClient, 0) // Invalid movie ID
+	_, err := tmdb.GetMovie(getClient(t), 0) // Invalid movie ID
 	if err == nil {
 		t.Fatal("Expected error for invalid movie ID, got nil")
 	}

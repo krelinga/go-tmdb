@@ -8,7 +8,7 @@ import (
 
 func TestGetTvSeason(t *testing.T) {
 	var raw []byte
-	tv, err := tmdb.GetTvSeason(globalClient, 1399, 1,
+	tv, err := tmdb.GetTvSeason(getClient(t), 1399, 1,
 		tmdb.WithRawReply(&raw),
 	)
 	if err != nil {

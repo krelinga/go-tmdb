@@ -69,17 +69,11 @@ var clientOnce = sync.OnceValues(func() (tmdb.Client, error) {
 	return client, nil
 })
 
-var globalClient tmdb.Client
-
-func TestMain(m *testing.M) {
-	flag.Parse()
-
-	var err error
-	globalClient, err = clientOnce()
+func getClient(t *testing.T) tmdb.Client {
+	t.Helper()
+	client, err := clientOnce()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create client: %v\n", err)
-		os.Exit(1)
+		t.Fatalf("Failed to create client: %v", err)
 	}
-	
-	os.Exit(m.Run())
+	return client
 }

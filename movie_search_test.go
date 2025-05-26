@@ -8,7 +8,7 @@ import (
 
 func TestSearchMoviess(t *testing.T) {
 	total := 0
-	for m, err := range tmdb.SearchMovies(globalClient, "Inception") {
+	for m, err := range tmdb.SearchMovies(getClient(t), "Inception") {
 		if err != nil {
 			t.Fatalf("SearchMovies failed: %v", err)
 		}
