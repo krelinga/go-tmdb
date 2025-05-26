@@ -224,16 +224,17 @@ func NewReplayClient(upstream Client, dataDir string) (Client, error) {
 }
 
 func newReadOnlyReplayClient(dataDir string) (Client, error) {
-	data, _, err := readDataDir(dataDir)
+	data, fp, err := readDataDir(dataDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading data directory: %w", err)
 	}
 
-	return &readOnlyReplayClient{data: data}, nil
+	return &readOnlyReplayClient{data: data, fp: fp}, nil
 }
 
 type readOnlyReplayClient struct {
 	data map[string]*savedReply
+	fp   string // fingerprint of the data directory contents
 }
 
 func (c *readOnlyReplayClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
@@ -249,7 +250,7 @@ func newUpdatingReplayClient(upstream Client, dataDir string) (Client, error) {
 		return nil, fmt.Errorf("creating data directory: %w", err)
 	}
 
-	data, _, err := readDataDir(dataDir)
+	data, fp, err := readDataDir(dataDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading data directory: %w", err)
 	}
@@ -257,6 +258,7 @@ func newUpdatingReplayClient(upstream Client, dataDir string) (Client, error) {
 		upstream: upstream,
 		dataDir:  dataDir,
 		data:     data,
+		fp:       fp,
 	}, nil
 }
 
@@ -265,6 +267,7 @@ type updatingReplayClient struct {
 	dataDir  string
 	mu       sync.Mutex
 	data     map[string]*savedReply
+	fp       string // fingerprint of the data directory contents
 }
 
 func (c *updatingReplayClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
