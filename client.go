@@ -159,6 +159,11 @@ type memoClient struct {
 }
 
 func (c *memoClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
+	if c.writeMode == MemoClientWriteModeNone && c.readMode == MemoClientReadModeNone {
+		// If both read and write modes are none, just pass through to the upstream client & avoid grabbing the mutex.
+		return c.upstream.Get(ctx, path, params)
+	}
+
 	// write mode | read mode yes        | read mode no
 	// -----------|----------------------|-------------
 	// none       | read		         | passthrough
