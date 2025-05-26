@@ -94,7 +94,7 @@ func savedKey(path string, params GetParams) string {
 
 	// Create a unique key for the request based on the path and parameters.
 	// This is a simple implementation; you might want to use a more robust hashing function.
-	return fmt.Sprintf("%s?%s", path, url.Values(values).Encode())
+	return fmt.Sprintf("%s?%s", url.QueryEscape(path), url.Values(values).Encode())
 }
 
 type MemoClientMode int
@@ -247,7 +247,7 @@ type updatingReplayClient struct {
 	upstream Client
 	dataDir  string
 	mu       sync.Mutex
-	data map[string]*savedReply
+	data     map[string]*savedReply
 }
 
 func (c *updatingReplayClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
