@@ -74,6 +74,8 @@ func getClient(t *testing.T) tmdb.Client {
 	client, err := clientOnce()
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
+	} else {
+		t.Logf("Using client: %s", client)
 	}
 	return client
 }
