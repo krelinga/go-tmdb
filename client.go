@@ -12,6 +12,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"time"
 )
 
 // Parameters for GET requests to the TMDB API.  Used with the Client interface.
@@ -31,10 +32,14 @@ type Client interface {
 	//
 	// Implementations of this method should handle parallel calls to Get().
 	Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error)
+
+	// String returns a string representation of the client, useful for cache-busting in tests.
+	String() string
 }
 
 type internalClient struct {
-	apiKey string
+	apiKey     string
+	createTime time.Time
 }
 
 func (c *internalClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
@@ -70,9 +75,14 @@ func (c *internalClient) Get(ctx context.Context, path string, params GetParams)
 	return out, ClientHttpCode(resp.StatusCode), nil
 }
 
+func (c *internalClient) String() string {
+	return fmt.Sprintf("live data  client (created at: %s)", c.createTime.Format(time.RFC3339))
+}
+
 func NewClient(apiKey string) Client {
 	return &internalClient{
-		apiKey: apiKey,
+		apiKey:     apiKey,
+		createTime: time.Now(),
 	}
 }
 
@@ -143,6 +153,10 @@ func (c *readOnlyReplayClient) Get(ctx context.Context, path string, params GetP
 	return nil, 0, fmt.Errorf("no saved reply for %s with params %v", path, params)
 }
 
+func (c *readOnlyReplayClient) String() string {
+	return fmt.Sprintf("read-only replay client (data fingerprint: %s)", c.fp)
+}
+
 func newUpdatingReplayClient(upstream Client, dataDir string) (Client, error) {
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
 		return nil, fmt.Errorf("creating data directory: %w", err)
@@ -198,6 +212,16 @@ func (c *updatingReplayClient) Get(ctx context.Context, path string, params GetP
 	}
 
 	return data, code, nil
+}
+
+func (c *updatingReplayClient) String() string {
+	var upstramPart string
+	if c.upstream != nil {
+		upstramPart = fmt.Sprintf("upstream: %s", c.upstream)
+	} else {
+		upstramPart = "no upstream"
+	}
+	return fmt.Sprintf("updating replay client (data fingerprint: %s) with %s", c.fp, upstramPart)
 }
 
 func readDataDir(dataDir string) (map[string]*savedReply, string, error) {
