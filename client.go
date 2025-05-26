@@ -97,86 +97,70 @@ func savedKey(path string, params GetParams) string {
 	return fmt.Sprintf("%s?%s", path, url.Values(values).Encode())
 }
 
-type MemoClientReadMode int
+type MemoClientMode int
 
 const (
-	MemoClientReadModeNone MemoClientReadMode = iota
-	MemoClientReadModeRead
+	MemoClientModePassthrough MemoClientMode = iota
+	MemoClientModeRead
+	MemoClientModeAppend
+	MemoClientModeWrite
+	MemoClientModeReplace
 )
 
-type MemoClientWriteMode int
-
-const (
-	MemoClientWriteModeNone MemoClientWriteMode = iota
-	MemoClientWriteModeWrite
-	MemoClientWriteModeAppend
-	MemoClientWriteModeReplace
-)
-
-func invalidMemoClientWriteMode(mode MemoClientWriteMode) error {
-	return fmt.Errorf("invalid client memo write mode: %d", mode)
-}
-
-func invalidMemoClientReadMode(mode MemoClientReadMode) error {
-	return fmt.Errorf("invalid client memo read mode: %d", mode)
-}
-
-func NewMemoClient(upstream Client, readMode MemoClientReadMode, writeMode MemoClientWriteMode, dataDir string) (Client, error) {
-	switch readMode {
-	case MemoClientReadModeNone, MemoClientReadModeRead: // valid modes
-	default:
-		return nil, invalidMemoClientReadMode(readMode)
-	}
-
-	switch writeMode {
-	case MemoClientWriteModeNone: // nothing to do.
-	case MemoClientWriteModeWrite, MemoClientWriteModeAppend, MemoClientWriteModeReplace:
+func NewMemoClient(upstream Client, mode MemoClientMode, dataDir string) (Client, error) {
+	switch mode {
+	case MemoClientModeReplace:
+		if err := os.RemoveAll(dataDir); err != nil && !os.IsNotExist(err) {
+			return nil, fmt.Errorf("removing data directory: %w", err)
+		}
+		fallthrough
+	case MemoClientModeWrite:
+		fallthrough
+	case MemoClientModeAppend:
 		if err := os.MkdirAll(dataDir, 0755); err != nil {
 			return nil, fmt.Errorf("creating data directory: %w", err)
 		}
+	case MemoClientModeRead:
+		if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+			return nil, fmt.Errorf("data directory does not exist: %s", dataDir)
+		} else if err != nil {
+			return nil, fmt.Errorf("checking data directory: %w", err)
+		}
 	default:
-		return nil, invalidMemoClientWriteMode(writeMode)
-	}
-
-	if writeMode == MemoClientWriteModeAppend && readMode == MemoClientReadModeNone {
-		return nil, fmt.Errorf("append mode is not allowed with read mode none")
+		return nil, fmt.Errorf("invalid memo client mode: %d", mode)
 	}
 
 	return &memoClient{
-		upstream:  upstream,
-		readMode:  readMode,
-		writeMode: writeMode,
-		dataDir:   dataDir,
+		upstream: upstream,
+		mode:     mode,
+		dataDir:  dataDir,
 	}, nil
 }
 
 type memoClient struct {
-	upstream  Client
-	readMode  MemoClientReadMode
-	writeMode MemoClientWriteMode
-	dataDir   string
-	mu        sync.Mutex
+	upstream Client
+	mode     MemoClientMode
+	dataDir  string
+	mu       sync.Mutex
 }
 
 func (c *memoClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
-	if c.writeMode == MemoClientWriteModeNone && c.readMode == MemoClientReadModeNone {
-		// If both read and write modes are none, just pass through to the upstream client & avoid grabbing the mutex.
+	if c.mode == MemoClientModePassthrough {
+		// Avoid grabbing the lock if we're in passthrough mode.
 		return c.upstream.Get(ctx, path, params)
 	}
-
-	// write mode | read mode yes        | read mode no
-	// -----------|----------------------|-------------
-	// none       | read		         | passthrough
-	// write      | read + (over)write   | (over)write
-	// append     | read + create if new | INVALID
-	// replace    | read + (over)write   | (over)write
 	key := savedKey(path, params)
 	filePath := fmt.Sprintf("%s/%s.json", c.dataDir, url.QueryEscape(key))
 
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if c.readMode == MemoClientReadModeRead {
+	var needRead bool
+	switch c.mode {
+	case MemoClientModeRead, MemoClientModeAppend:
+		needRead = true
+	}
+	if needRead {
 		if data, err := os.ReadFile(filePath); err == nil {
 			var saved savedReply
 			if err := json.Unmarshal(data, &saved); err != nil {
@@ -193,7 +177,12 @@ func (c *memoClient) Get(ctx context.Context, path string, params GetParams) ([]
 		return nil, code, err
 	}
 
-	if c.writeMode != MemoClientWriteModeNone {
+	var needWrite bool
+	switch c.mode {
+	case MemoClientModeWrite, MemoClientModeReplace, MemoClientModeAppend:
+		needWrite = true
+	}
+	if needWrite {
 		saved := savedReply{
 			Reply: data,
 			Code:  code,
