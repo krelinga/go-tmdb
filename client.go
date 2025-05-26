@@ -2,6 +2,7 @@ package tmdb
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -223,7 +224,7 @@ func NewReplayClient(upstream Client, dataDir string) (Client, error) {
 }
 
 func newReadOnlyReplayClient(dataDir string) (Client, error) {
-	data, err := readDataDir(dataDir)
+	data, _, err := readDataDir(dataDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading data directory: %w", err)
 	}
@@ -248,7 +249,7 @@ func newUpdatingReplayClient(upstream Client, dataDir string) (Client, error) {
 		return nil, fmt.Errorf("creating data directory: %w", err)
 	}
 
-	data, err := readDataDir(dataDir)
+	data, _, err := readDataDir(dataDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading data directory: %w", err)
 	}
@@ -298,27 +299,30 @@ func (c *updatingReplayClient) Get(ctx context.Context, path string, params GetP
 	return data, code, nil
 }
 
-func readDataDir(dataDir string) (map[string]*savedReply, error) {
+func readDataDir(dataDir string) (map[string]*savedReply, string, error) {
 	files, err := os.ReadDir(dataDir)
 	if err != nil {
-		return nil, fmt.Errorf("reading data directory: %w", err)
+		return nil, "", fmt.Errorf("reading data directory: %w", err)
 	}
 
 	data := make(map[string]*savedReply)
+	fp := sha256.New()
 	for _, file := range files {
 		if !file.IsDir() && strings.HasSuffix(file.Name(), ".json") {
+			fp.Write([]byte(file.Name()))
 			filePath := fmt.Sprintf("%s/%s", dataDir, file.Name())
 			content, err := os.ReadFile(filePath)
 			if err != nil {
-				return nil, fmt.Errorf("reading file %s: %w", filePath, err)
+				return nil, "", fmt.Errorf("reading file %s: %w", filePath, err)
 			}
+			fp.Write(content)
 			var saved savedReply
 			if err := json.Unmarshal(content, &saved); err != nil {
-				return nil, fmt.Errorf("unmarshalling file %s: %w", filePath, err)
+				return nil, "", fmt.Errorf("unmarshalling file %s: %w", filePath, err)
 			}
 			key := strings.TrimSuffix(file.Name(), ".json")
 			data[key] = &saved
 		}
 	}
-	return data, nil
+	return data, fmt.Sprintf("%x", fp.Sum(nil)), nil
 }
