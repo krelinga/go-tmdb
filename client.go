@@ -198,3 +198,110 @@ func (c *memoClient) Get(ctx context.Context, path string, params GetParams) ([]
 
 	return data, code, nil
 }
+
+func NewReplayClient(upstream Client, dataDir string) (Client, error) {
+	if upstream == nil {
+		return newReadOnlyReplayClient(dataDir)
+	}
+	return newUpdatingReplayClient(upstream, dataDir)
+}
+
+func newReadOnlyReplayClient(dataDir string) (Client, error) {
+	data, err := readDataDir(dataDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading data directory: %w", err)
+	}
+
+	return &readOnlyReplayClient{data: data}, nil
+}
+
+type readOnlyReplayClient struct {
+	data map[string]*savedReply
+}
+
+func (c *readOnlyReplayClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
+	key := savedKey(path, params)
+	if reply, ok := c.data[key]; ok {
+		return reply.Reply, reply.Code, nil
+	}
+	return nil, 0, fmt.Errorf("no saved reply for %s with params %v", path, params)
+}
+
+func newUpdatingReplayClient(upstream Client, dataDir string) (Client, error) {
+	if err := os.MkdirAll(dataDir, 0755); err != nil {
+		return nil, fmt.Errorf("creating data directory: %w", err)
+	}
+
+	data, err := readDataDir(dataDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading data directory: %w", err)
+	}
+	return &updatingReplayClient{
+		upstream: upstream,
+		dataDir:  dataDir,
+		data:     data,
+	}, nil
+}
+
+type updatingReplayClient struct {
+	upstream Client
+	dataDir  string
+	mu       sync.Mutex
+	data map[string]*savedReply
+}
+
+func (c *updatingReplayClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
+	key := savedKey(path, params)
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if reply, ok := c.data[key]; ok {
+		return reply.Reply, reply.Code, nil
+	}
+
+	data, code, err := c.upstream.Get(ctx, path, params)
+	if err != nil {
+		return nil, code, err
+	}
+
+	saved := &savedReply{
+		Reply: data,
+		Code:  code,
+	}
+	c.data[key] = saved
+
+	filePath := fmt.Sprintf("%s/%s.json", c.dataDir, key)
+	outData, err := json.Marshal(saved)
+	if err != nil {
+		return nil, code, fmt.Errorf("marshalling reply: %w", err)
+	}
+	if err := os.WriteFile(filePath, outData, 0644); err != nil {
+		return nil, code, fmt.Errorf("writing reply to file: %w", err)
+	}
+
+	return data, code, nil
+}
+
+func readDataDir(dataDir string) (map[string]*savedReply, error) {
+	files, err := os.ReadDir(dataDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading data directory: %w", err)
+	}
+
+	data := make(map[string]*savedReply)
+	for _, file := range files {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".json") {
+			filePath := fmt.Sprintf("%s/%s", dataDir, file.Name())
+			content, err := os.ReadFile(filePath)
+			if err != nil {
+				return nil, fmt.Errorf("reading file %s: %w", filePath, err)
+			}
+			var saved savedReply
+			if err := json.Unmarshal(content, &saved); err != nil {
+				return nil, fmt.Errorf("unmarshalling file %s: %w", filePath, err)
+			}
+			data[file.Name()] = &saved
+		}
+	}
+	return data, nil
+}
