@@ -11,6 +11,14 @@ type MovieId int
 type ImdbId string
 
 type GetMovieReply struct {
+	Movie
+
+	// Additional bits that can be fetched at the same time.
+	Keywords *MovieKeywords `json:"keywords,omitempty"`
+	Credits  *MovieCredits  `json:"credits,omitempty"`
+}
+
+type Movie struct {
 	MovieShort
 	BelongsToCollection        string                      `json:"belongs_to_collection,omitempty"`
 	Budget                     int                         `json:"budget"`
@@ -24,26 +32,22 @@ type GetMovieReply struct {
 	SpokenLanguages            []*Language                 `json:"spoken_languages"`
 	Status                     string                      `json:"status"`
 	Tagline                    string                      `json:"tagline"`
-
-	// Additional bits that can be fetched at the same time.
-	Keywords *MovieKeywords `json:"keywords,omitempty"`
-	Credits  *MovieCredits  `json:"credits,omitempty"`
 }
 
 type MovieShort struct {
-	Adult                      bool                        `json:"adult"`
-	BackdropImage              BackdropImage               `json:"backdrop_path"`
-	MovieId                    MovieId                     `json:"id"`
-	OriginalLanguage           string                      `json:"original_language"`
-	OriginalTitle              string                      `json:"original_title"`
-	Overview                   string                      `json:"overview"`
-	Popularity                 float64                     `json:"popularity"`
-	PosterImage                PosterImage                 `json:"poster_path"`
-	RelaseDate                 Date                        `json:"release_date"`
-	Title                      string                      `json:"title"`
-	Video                      bool                        `json:"video"`
-	VoteAverage                float64                     `json:"vote_average"`
-	VoteCount                  int                         `json:"vote_count"`
+	Adult            bool          `json:"adult"`
+	BackdropImage    BackdropImage `json:"backdrop_path"`
+	MovieId          MovieId       `json:"id"`
+	OriginalLanguage string        `json:"original_language"`
+	OriginalTitle    string        `json:"original_title"`
+	Overview         string        `json:"overview"`
+	Popularity       float64       `json:"popularity"`
+	PosterImage      PosterImage   `json:"poster_path"`
+	RelaseDate       Date          `json:"release_date"`
+	Title            string        `json:"title"`
+	Video            bool          `json:"video"`
+	VoteAverage      float64       `json:"vote_average"`
+	VoteCount        int           `json:"vote_count"`
 }
 
 type MovieKeywords struct {
