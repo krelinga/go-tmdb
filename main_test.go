@@ -1,20 +1,20 @@
 package tmdb_test
 
 import (
+	"errors"
 	"flag"
+	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/krelinga/go-tmdb"
 )
 
-var globalClient tmdb.Client
 var replayFlag = flag.String("replay", "read", "Which mode to run the replay client in.  Options are: 'direct', 'read', 'write', or 'replace'")
 
-func TestMain(m *testing.M) {
-	flag.Parse()
-
+var clientOnce = sync.OnceValues(func() (tmdb.Client, error) {
 	var direct, write, replace bool
 	switch *replayFlag {
 	case "direct":
@@ -26,8 +26,7 @@ func TestMain(m *testing.M) {
 	case "replace":
 		replace = true
 	default:
-		os.Stderr.WriteString("Invalid replay mode. Options are: 'direct', 'read', 'write', or 'replace'\n")
-		os.Exit(1)
+		return nil, errors.New("Invalid replay mode. Options are: 'direct', 'read', 'write', or 'replace'")
 	}
 
 	const dataDir = "testdata"
@@ -36,8 +35,7 @@ func TestMain(m *testing.M) {
 		// Remove all the existing files.
 		files, err := os.ReadDir(dataDir)
 		if err != nil && !os.IsNotExist(err) {
-			os.Stderr.WriteString("Failed to read test data directory: " + err.Error() + "\n")
-			os.Exit(1)
+			return nil, fmt.Errorf("Failed to read test data directory: %w", err)
 		}
 		for _, file := range files {
 			if file.IsDir() || !strings.HasSuffix(file.Name(), ".json") {
@@ -45,8 +43,7 @@ func TestMain(m *testing.M) {
 			}
 			err := os.Remove(dataDir + "/" + file.Name())
 			if err != nil {
-				os.Stderr.WriteString("Failed to remove file " + file.Name() + ": " + err.Error() + "\n")
-				os.Exit(1)
+				return nil, fmt.Errorf("Failed to remove file %s: %w", file.Name(), err)
 			}
 		}
 	}
@@ -55,22 +52,34 @@ func TestMain(m *testing.M) {
 	if direct || write || replace {
 		key, ok := os.LookupEnv("TMDB_API_KEY")
 		if !ok {
-			os.Stderr.WriteString("environment variable TMDB_API_KEY not set\n")
-			os.Exit(1)
+			return nil, errors.New("environment variable TMDB_API_KEY not set")
 		}
 		upstream = tmdb.NewClient(key)
 	}
-
+	var client tmdb.Client
 	if direct {
-		globalClient = upstream
+		client = upstream
 	} else {
 		var err error
-		globalClient, err = tmdb.NewReplayClient(upstream, dataDir)
+		client, err = tmdb.NewReplayClient(upstream, dataDir)
 		if err != nil {
-			os.Stderr.WriteString("Failed to create replay client: " + err.Error() + "\n")
-			os.Exit(1)
+			return nil, fmt.Errorf("Failed to create replay client: %w", err)
 		}
 	}
+	return client, nil
+})
 
+var globalClient tmdb.Client
+
+func TestMain(m *testing.M) {
+	flag.Parse()
+
+	var err error
+	globalClient, err = clientOnce()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to create client: %v\n", err)
+		os.Exit(1)
+	}
+	
 	os.Exit(m.Run())
 }
