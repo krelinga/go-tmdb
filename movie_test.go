@@ -53,3 +53,12 @@ func TestGetMovie(t *testing.T) {
 	}
 	t.Log(string(raw))
 }
+
+func TestHttpError(t *testing.T) {
+	client := getClient(t)
+	_, err := tmdb.GetMovie(client, 0) // Invalid movie ID
+	if err == nil {
+		t.Fatal("Expected error for invalid movie ID, got nil")
+	}
+	t.Logf("Expected error: %v", err)
+}

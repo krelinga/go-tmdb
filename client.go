@@ -12,6 +12,8 @@ import (
 // Parameters for GET requests to the TMDB API.  Used with the Client interface.
 type GetParams map[string]string
 
+type ClientHttpCode int
+
 type Client interface {
 	// Fetches data from the TMDB API.
 	// The path should be the endpoint you want to access, e.g., "/movie/popular".
@@ -23,14 +25,14 @@ type Client interface {
 	// other methods in this package.
 	//
 	// Implementations of this method should handle parallel calls to Get().
-	Get(ctx context.Context, path string, params GetParams) ([]byte, error)
+	Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error)
 }
 
 type internalClient struct {
 	apiKey string
 }
 
-func (c *internalClient) Get(ctx context.Context, path string, params GetParams) ([]byte, error) {
+func (c *internalClient) Get(ctx context.Context, path string, params GetParams) ([]byte, ClientHttpCode, error) {
 	baseURL := "https://api.themoviedb.org/3"
 	u, err := url.Parse(baseURL)
 	if err != nil {
@@ -46,25 +48,21 @@ func (c *internalClient) Get(ctx context.Context, path string, params GetParams)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
 	out, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return out, nil
+	return out, ClientHttpCode(resp.StatusCode), nil
 }
 
 func NewClient(apiKey string) Client {

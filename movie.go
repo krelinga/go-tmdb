@@ -141,7 +141,7 @@ func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*GetMo
 		ctx = *o.useContext
 	}
 	endpoint := fmt.Sprintf("/movie/%d", movieId)
-	data, err := client.Get(ctx, endpoint, params)
+	data, err := checkCode(client.Get(ctx, endpoint, params))
 	if err != nil {
 		return nil, err
 	}

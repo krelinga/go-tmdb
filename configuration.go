@@ -35,7 +35,7 @@ func GetConfiguration(client Client, options ...GetConfigurationOption) (*Config
 	}
 	endpoint := "/configuration"
 	params := GetParams{}
-	data, err := client.Get(ctx, endpoint, params)
+	data, err := checkCode(client.Get(ctx, endpoint, params))
 	if err != nil {
 		return nil, err
 	}

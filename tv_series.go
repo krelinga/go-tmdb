@@ -62,7 +62,7 @@ func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*T
 		ctx = *o.useContext
 	}
 
-	data, err := client.Get(ctx, fmt.Sprintf("/tv/%d", id), nil)
+	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d", id), nil))
 	if err != nil {
 		return nil, err
 	}

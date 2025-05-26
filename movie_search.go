@@ -35,7 +35,7 @@ func SearchMovies(client Client, query string, options ...SearchMoviesOption) it
 				"page":          fmt.Sprintf("%d", page),
 				"include_adult": fmt.Sprintf("%t", o.wantAdult),
 			}
-			data, err := client.Get(ctx, "/search/movie", params)
+			data, err := checkCode(client.Get(ctx, "/search/movie", params))
 			if err != nil {
 				yield(nil, err)
 				return

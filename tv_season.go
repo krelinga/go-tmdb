@@ -33,7 +33,7 @@ func GetTvSeason(client Client, id TvSeasonId, number TvSeasonNumber, options ..
 		ctx = *o.useContext
 	}
 
-	data, err := client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d", id, number), nil)
+	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d", id, number), nil))
 	if err != nil {
 		return nil, err
 	}
