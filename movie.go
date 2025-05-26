@@ -10,7 +10,7 @@ import (
 type MovieId int
 type ImdbId string
 
-type Movie struct {
+type GetMovieReply struct {
 	MovieShort
 	BelongsToCollection        string                      `json:"belongs_to_collection,omitempty"`
 	Budget                     int                         `json:"budget"`
@@ -79,7 +79,7 @@ type MovieCrew struct {
 	Job        string `json:"job"`
 }
 
-func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie, error) {
+func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*GetMovieReply, error) {
 	o := getMovieOptions{}
 	for _, opt := range options {
 		opt.applyToGetMovieOptions(&o)
@@ -109,7 +109,7 @@ func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*Movie
 	if o.rawReply != nil {
 		*o.rawReply = data
 	}
-	m := &Movie{}
+	m := &GetMovieReply{}
 	if err := json.Unmarshal(data, m); err != nil {
 		return nil, fmt.Errorf("unmarshalling movie: %w", err)
 	}
