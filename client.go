@@ -81,20 +81,36 @@ type savedReply struct {
 }
 
 func savedKey(path string, params GetParams) string {
-	values := url.Values{}
+	path = strings.TrimLeft(path, "/")
+	path = strings.TrimRight(path, "/")
+	path = strings.ReplaceAll(path, "/", "_")
 
+	type kv struct {
+		k, v string
+	}
+	kvs := make([]kv, 0, len(params))
 	for k, v := range params {
 		if k == "append_to_response" {
 			parts := strings.Split(v, ",")
 			slices.Sort(parts)
 			v = strings.Join(parts, ",")
 		}
-		values[k] = []string{v}
+		kvs = append(kvs, kv{k: k, v: v})
+	}
+	slices.SortFunc(kvs, func(a, b kv) int {
+		return strings.Compare(a.k, b.k)
+	})
+	values := make([]string, 0, len(kvs))
+	for _, kv := range kvs {
+		values = append(values, fmt.Sprintf("%s=%s", kv.k, kv.v))
 	}
 
-	// Create a unique key for the request based on the path and parameters.
-	// This is a simple implementation; you might want to use a more robust hashing function.
-	return fmt.Sprintf("%s?%s", url.QueryEscape(path), url.Values(values).Encode())
+	prefix := "GET_"
+	var suffix string
+	if len(values) > 0 {
+		suffix = "?" + strings.Join(values, "&")
+	}
+	return prefix + path + suffix
 }
 
 type MemoClientMode int
@@ -300,7 +316,8 @@ func readDataDir(dataDir string) (map[string]*savedReply, error) {
 			if err := json.Unmarshal(content, &saved); err != nil {
 				return nil, fmt.Errorf("unmarshalling file %s: %w", filePath, err)
 			}
-			data[file.Name()] = &saved
+			key := strings.TrimSuffix(file.Name(), ".json")
+			data[key] = &saved
 		}
 	}
 	return data, nil
