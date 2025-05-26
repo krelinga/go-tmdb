@@ -7,9 +7,8 @@ import (
 )
 
 func TestGetTvSeries(t *testing.T) {
-	client := getClient(t)
 	var raw []byte
-	tv, err := tmdb.GetTvSeries(client, 1399,
+	tv, err := tmdb.GetTvSeries(globalClient, 1399,
 		tmdb.WithRawReply(&raw))
 	if err != nil {
 		t.Fatalf("GetTVSeries failed: %v", err)

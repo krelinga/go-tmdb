@@ -1,25 +1,14 @@
 package tmdb_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/krelinga/go-tmdb"
 )
 
-func getClient(t *testing.T) tmdb.Client {
-	t.Helper()
-	key, ok := os.LookupEnv("TMDB_API_KEY")
-	if !ok {
-		t.Fatal("environment variable TMDB_API_KEY not set")
-	}
-	return tmdb.NewClient(key)
-}
-
 func TestGetMovie(t *testing.T) {
-	client := getClient(t)
 	var raw []byte
-	movie, err := tmdb.GetMovie(client, 550,
+	movie, err := tmdb.GetMovie(globalClient, 550,
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
 		tmdb.WithReleaseDates(),
@@ -55,8 +44,7 @@ func TestGetMovie(t *testing.T) {
 }
 
 func TestHttpError(t *testing.T) {
-	client := getClient(t)
-	_, err := tmdb.GetMovie(client, 0) // Invalid movie ID
+	_, err := tmdb.GetMovie(globalClient, 0) // Invalid movie ID
 	if err == nil {
 		t.Fatal("Expected error for invalid movie ID, got nil")
 	}

@@ -7,9 +7,8 @@ import (
 )
 
 func TestGetConfiguration(t *testing.T) {
-	client := getClient(t)
 	var raw []byte
-	config, err := tmdb.GetConfiguration(client, tmdb.WithRawReply(&raw))
+	config, err := tmdb.GetConfiguration(globalClient, tmdb.WithRawReply(&raw))
 	if err != nil {
 		t.Fatalf("GetConfiguration failed: %v", err)
 	}
