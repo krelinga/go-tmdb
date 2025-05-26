@@ -22,6 +22,7 @@ func TestGetMovie(t *testing.T) {
 	movie, err := tmdb.GetMovie(client, 550,
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
+		tmdb.WithReleaseDates(),
 		tmdb.WithRawReply(&raw))
 	if err != nil {
 		t.Fatalf("GetMovie failed: %v", err)
@@ -43,6 +44,12 @@ func TestGetMovie(t *testing.T) {
 	}
 	if len(movie.Credits.Crew) == 0 {
 		t.Fatal("No crew found")
+	}
+	if movie.Releases == nil {
+		t.Fatal("MovieReleaseDates is nil")
+	}
+	if len(movie.Releases.MovieReleaseCountries) == 0 {
+		t.Fatal("No release dates found")
 	}
 	t.Log(string(raw))
 }

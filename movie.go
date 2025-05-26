@@ -11,11 +11,12 @@ type MovieId int
 type ImdbId string
 
 type GetMovieReply struct {
-	Movie
+	*Movie
 
 	// Additional bits that can be fetched at the same time.
-	Keywords *MovieKeywords `json:"keywords,omitempty"`
-	Credits  *MovieCredits  `json:"credits,omitempty"`
+	Keywords *MovieKeywords     `json:"keywords,omitempty"`
+	Credits  *MovieCredits      `json:"credits,omitempty"`
+	Releases *MovieReleaseDates `json:"release_dates,omitempty"`
 }
 
 type Movie struct {
@@ -83,6 +84,37 @@ type MovieCrew struct {
 	Job        string `json:"job"`
 }
 
+type MovieReleaseType int
+
+var (
+	MovieReleaseTypeUnknown           MovieReleaseType = 0
+	MovieReleaseTypePremiere          MovieReleaseType = 1
+	MovieReleaseTypeTheatricalLimited MovieReleaseType = 2
+	MovieReleaseTypeTheatrical        MovieReleaseType = 3
+	MovieReleaseTypeDigital           MovieReleaseType = 4
+	MovieReleaseTypePhysical          MovieReleaseType = 5
+	MovieReleaseTypeTv                MovieReleaseType = 6
+)
+
+type MovieReleaseDates struct {
+	MovieId               MovieId                `json:"id"`
+	MovieReleaseCountries []*MovieReleaseCountry `json:"results"`
+}
+
+type MovieReleaseCountry struct {
+	Iso3166_1         CountryIso3166_1    `json:"iso_3166_1"`
+	MovieReleaseDates []*MovieReleaseDate `json:"release_dates"`
+}
+
+type MovieReleaseDate struct {
+	Certification string `json:"certification"`
+	// TODO: Descriptors?
+	Language         LanguageIso639_1 `json:"iso_639_1"`
+	Note             string           `json:"note"`
+	ReleaseDate      Date             `json:"release_date"`
+	MovieReleaseType MovieReleaseType `json:"type"`
+}
+
 func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*GetMovieReply, error) {
 	o := getMovieOptions{}
 	for _, opt := range options {
@@ -95,6 +127,9 @@ func GetMovie(client Client, movieId MovieId, options ...GetMovieOption) (*GetMo
 	}
 	if o.wantCredits {
 		appends = append(appends, "credits")
+	}
+	if o.wantReleases {
+		appends = append(appends, "release_dates")
 	}
 
 	params := GetParams{}
@@ -125,6 +160,7 @@ type getMovieOptions struct {
 	baseOptions
 	wantKeywords bool
 	wantCredits  bool
+	wantReleases bool
 }
 
 type GetMovieOption interface {

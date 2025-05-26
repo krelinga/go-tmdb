@@ -76,3 +76,13 @@ type adultOption struct{}
 func (a adultOption) applyToSearchMoviesOptions(o *searchMoviesOptions) {
 	o.wantAdult = true
 }
+
+func WithReleaseDates() releaseDatesOption {
+	return releaseDatesOption{}
+}
+
+type releaseDatesOption struct{}
+
+func (r releaseDatesOption) applyToGetMovieOptions(o *getMovieOptions) {
+	o.wantReleases = true
+}
