@@ -123,3 +123,8 @@ func checkBackdropImage(t *testing.T, backdropImage tmdb.BackdropImage, config *
 	size := config.Images.BackdropSizes[0]
 	return checkImage(t, backdropImage, "BackdropImage", config, size)
 }
+
+func checkPosterImage(t *testing.T, posterImage tmdb.PosterImage, config *tmdb.Configuration) bool {
+	size := config.Images.PosterSizes[0]
+	return checkImage(t, posterImage, "PosterImage", config, size)
+}

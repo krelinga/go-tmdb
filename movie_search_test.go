@@ -42,4 +42,5 @@ func TestSearchMoviess(t *testing.T) {
 	}
 
 	checkBackdropImage(t, found.BackdropImage, config)
+	checkPosterImage(t, found.PosterImage, config)
 }
