@@ -7,12 +7,11 @@ import (
 )
 
 func TestGetMovie(t *testing.T) {
-	var raw []byte
 	movie, err := tmdb.GetMovie(getClient(t), 550,
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
 		tmdb.WithReleaseDates(),
-		tmdb.WithRawReply(&raw))
+	)
 	if err != nil {
 		t.Fatalf("GetMovie failed: %v", err)
 	}
@@ -40,7 +39,6 @@ func TestGetMovie(t *testing.T) {
 	if len(movie.Releases.MovieReleaseCountries) == 0 {
 		t.Fatal("No release dates found")
 	}
-	t.Log(string(raw))
 }
 
 func TestHttpError(t *testing.T) {
