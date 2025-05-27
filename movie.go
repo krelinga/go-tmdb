@@ -26,7 +26,7 @@ type Movie struct {
 	Genres                     []*Genere                 `json:"genres"`
 	Homepage                   string                    `json:"homepage,omitempty"`
 	ImdbId                     ImdbId                    `json:"imdb_id,omitempty"`
-	ProductionCompanySummaries []*ProductionCompanyShort `json:"production_companies"`
+	ProductionCompanyShorts    []*ProductionCompanyShort `json:"production_companies"`
 	ProductionCountrySummaries []*CountrySummary         `json:"production_countries"`
 	Revenue                    int                       `json:"revenue"`
 	Runtime                    Minutes                   `json:"runtime"`
