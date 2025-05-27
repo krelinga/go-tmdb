@@ -39,7 +39,7 @@ func TestSearchMovies(t *testing.T) {
 			VoteAverage:      8.369,
 			VoteCount:        37482,
 		},
-		GenereIds: []tmdb.GenereId{28, 878, 12},
+		GenereIds: []tmdb.GenreId{28, 878, 12},
 	}
 	assert.Equal(t, expected, found, "SearchMovies did not return expected result")
 

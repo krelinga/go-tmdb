@@ -9,7 +9,7 @@ import (
 
 type MovieSearchResult struct {
 	MovieShort
-	GenereIds []GenereId `json:"genre_ids"`
+	GenereIds []GenreId `json:"genre_ids"`
 }
 
 func SearchMovies(client Client, query string, options ...SearchMoviesOption) iter.Seq2[*MovieSearchResult, error] {

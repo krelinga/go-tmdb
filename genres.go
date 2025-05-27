@@ -1,8 +1,8 @@
 package tmdb
 
-type GenereId int
+type GenreId int
 
 type Genere struct {
-	Id   GenereId    `json:"id"`
-	Name string `json:"name"`
+	Id   GenreId `json:"id"`
+	Name string  `json:"name"`
 }
