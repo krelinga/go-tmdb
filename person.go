@@ -4,9 +4,9 @@ type Gender int
 
 var (
 	GenderUnknown   Gender = 0
-	GenderFemale           = 1
-	GenderMale             = 2
-	GenderNonBinary        = 3
+	GenderFemale    Gender = 1
+	GenderMale      Gender = 2
+	GenderNonBinary Gender = 3
 )
 
 type PersonId int
