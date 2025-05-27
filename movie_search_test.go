@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSearchMoviess(t *testing.T) {
+func TestSearchMovies(t *testing.T) {
 	var found *tmdb.MovieSearchResult
 	for m, err := range tmdb.SearchMovies(getClient(t), "Inception") {
 		if err != nil {
