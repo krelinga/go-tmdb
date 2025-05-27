@@ -50,4 +50,5 @@ func TestSearchMovies(t *testing.T) {
 
 	checkBackdropImage(t, found.BackdropImage, config)
 	checkPosterImage(t, found.PosterImage, config)
+	checkDate(t, 2010, 7, 15, found.RelaseDate)
 }
