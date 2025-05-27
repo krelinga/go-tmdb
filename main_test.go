@@ -81,31 +81,45 @@ func getClient(t *testing.T) tmdb.Client {
 	return client
 }
 
-func checkBackdropImage(t *testing.T, backdropImage tmdb.BackdropImage, config *tmdb.Configuration) bool {
+type imageSize interface {
+	tmdb.BackdropSize | tmdb.PosterSize | tmdb.ProfileSize | tmdb.LogoSize | tmdb.StillSize
+}
+
+type image[imageSizeType imageSize] interface {
+	GetSecureUrl(config *tmdb.Configuration, size imageSizeType) (string, bool)
+	GetUrl(config *tmdb.Configuration, size imageSizeType) (string, bool)
+	~string
+}
+
+func checkImage[imageSizeType imageSize, imageType image[imageSizeType]](t *testing.T, img imageType, typeName string, config *tmdb.Configuration, size imageSizeType) bool {
 	t.Helper()
-	size := config.Images.BackdropSizes[0]
 
-	secureUrl, ok := backdropImage.GetSecureUrl(config, size)
-	if !assert.True(t, ok, "BackdropImage %q GetSecureUrl() should support size %q", backdropImage, size) {
+	secureUrl, ok := img.GetSecureUrl(config, size)
+	if !assert.Truef(t, ok, "%s %q GetSecureUrl() should support size %q", typeName, img, size) {
 		return false
 	}
-	if !assert.True(t, strings.HasSuffix(secureUrl, string(backdropImage)), "BackdropImage %q GetSecureUrl() should end with %q", secureUrl, backdropImage) {
+	if !assert.Truef(t, strings.HasSuffix(secureUrl, string(img)), "%s %q GetSecureUrl() should end with %q", typeName, secureUrl, img) {
 		return false
 	}
-	if !assert.True(t, strings.HasPrefix(secureUrl, config.Images.SecureBaseUrl), "BackdropImage %q GetSecureUrl() should start with %q", secureUrl, config.Images.SecureBaseUrl) {
+	if !assert.Truef(t, strings.HasPrefix(secureUrl, config.Images.SecureBaseUrl), "%s %q GetSecureUrl() should start with %q", typeName, secureUrl, config.Images.SecureBaseUrl) {
 		return false
 	}
 
-	insecureUrl, ok := backdropImage.GetUrl(config, size)
-	if !assert.True(t, ok, "BackdropImage %q GetUrl() should support size %q", backdropImage, size) {
+	insecureUrl, ok := img.GetUrl(config, size)
+	if !assert.Truef(t, ok, "%s %q GetUrl() should support size %q", typeName, img, size) {
 		return false
 	}
-	if !assert.True(t, strings.HasSuffix(secureUrl, string(backdropImage)), "BackdropImage %q GetUrl() should end with %q", insecureUrl, backdropImage) {
+	if !assert.Truef(t, strings.HasSuffix(secureUrl, string(img)), "%s %q GetUrl() should end with %q", typeName, insecureUrl, img) {
 		return false
 	}
-	if !assert.True(t, strings.HasPrefix(secureUrl, config.Images.SecureBaseUrl), "BackdropImage %q GetUrl() should start with %q", insecureUrl, config.Images.SecureBaseUrl) {
+	if !assert.Truef(t, strings.HasPrefix(secureUrl, config.Images.SecureBaseUrl), "%s %q GetUrl() should start with %q", typeName, insecureUrl, config.Images.SecureBaseUrl) {
 		return false
 	}
 
 	return true
+}
+
+func checkBackdropImage(t *testing.T, backdropImage tmdb.BackdropImage, config *tmdb.Configuration) bool {
+	size := config.Images.BackdropSizes[0]
+	return checkImage(t, backdropImage, "BackdropImage", config, size)
 }
