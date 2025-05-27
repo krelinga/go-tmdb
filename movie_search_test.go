@@ -9,13 +9,20 @@ import (
 
 func TestSearchMovies(t *testing.T) {
 	var found *tmdb.MovieSearchResult
+	count := 0
 	for m, err := range tmdb.SearchMovies(getClient(t), "Inception") {
 		if err != nil {
 			t.Fatalf("SearchMovies failed: %v", err)
 		}
+		count++
+		if found != nil {
+			continue // We only want the first result.
+		}
 		found = m
-		break
 	}
+
+	assert.Equal(t, 9, count, "SearchMovies did not return expected number of results")
+
 	expected := &tmdb.MovieSearchResult{
 		MovieShort: tmdb.MovieShort{
 			Adult:            false,
