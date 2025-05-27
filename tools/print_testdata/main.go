@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -27,7 +28,13 @@ func errorMain() error {
 	}
 	fmt.Printf("Code: %d\n", rec.Code)
 	if len(rec.Reply) > 0 {
-		fmt.Printf("Reply: %s\n", rec.Reply)
+		b := &bytes.Buffer{}
+		if err := json.Indent(b, rec.Reply, "", "  "); err != nil {
+			return fmt.Errorf("indenting reply: %w", err)
+		}
+		fmt.Print("Reply: ")
+		b.WriteTo(os.Stdout)
+		fmt.Println()
 	} else {
 		fmt.Println("Reply: <empty>")
 	}
