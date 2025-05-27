@@ -99,6 +99,9 @@ func TestGetMovie(t *testing.T) {
 		Tagline: "Mischief. Mayhem. Soap.",
 	}
 	assert.Equal(t, expectedMovie, found.Movie, "Expected movie details do not match")
+	for _, pc := range found.Movie.ProductionCompanyShorts {
+		checkLogoImage(t, pc.LogoImage, config)
+	}
 
 	expectedKeywords := &tmdb.MovieKeywords{
 		MovieId: 0, // TODO: looks like the API doesn't populate this field.  Should I set it anyway?

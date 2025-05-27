@@ -133,3 +133,8 @@ func checkProfileImage(t *testing.T, profileImage tmdb.ProfileImage, config *tmd
 	size := config.Images.ProfileSizes[0]
 	return checkImage(t, profileImage, "ProfileImage", config, size)
 }
+
+func checkLogoImage(t *testing.T, logoImage tmdb.LogoImage, config *tmdb.Configuration) bool {
+	size := config.Images.LogoSizes[0]
+	return checkImage(t, logoImage, "LogoImage", config, size)
+}
