@@ -86,7 +86,7 @@ type MovieCrew struct {
 
 type MovieReleaseType int
 
-var (
+const (
 	MovieReleaseTypeUnknown           MovieReleaseType = 0
 	MovieReleaseTypePremiere          MovieReleaseType = 1
 	MovieReleaseTypeTheatricalLimited MovieReleaseType = 2
