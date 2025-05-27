@@ -2,7 +2,7 @@ package tmdb
 
 type GenreId int
 
-type Genere struct {
+type Genre struct {
 	GenreId GenreId `json:"id"`
 	Name    string  `json:"name"`
 }

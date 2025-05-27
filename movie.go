@@ -23,7 +23,7 @@ type Movie struct {
 	MovieShort
 	BelongsToCollection        string                    `json:"belongs_to_collection,omitempty"`
 	Budget                     int                       `json:"budget"`
-	Genres                     []*Genere                 `json:"genres"`
+	Genres                     []*Genre                  `json:"genres"`
 	Homepage                   string                    `json:"homepage,omitempty"`
 	ImdbId                     ImdbId                    `json:"imdb_id,omitempty"`
 	ProductionCompanyShorts    []*ProductionCompanyShort `json:"production_companies"`

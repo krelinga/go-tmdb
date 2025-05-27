@@ -14,7 +14,7 @@ type TvSeries struct {
 	CreatedBy       []*TvSeriesCreator `json:"created_by"`
 	EpisodeRunTimes []int              `json:"episode_run_time"`
 	FirstAirDate    Date               `json:"first_air_date"`
-	Genres          []*Genere          `json:"genres"`
+	Genres          []*Genre           `json:"genres"`
 	Homepage        string             `json:"homepage"`
 	TvSeriesId      TvSeriesId         `json:"id"`
 	InProduction    bool               `json:"in_production"`

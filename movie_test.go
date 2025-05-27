@@ -39,7 +39,7 @@ func TestGetMovie(t *testing.T) {
 		},
 		BelongsToCollection: "",
 		Budget:              63000000,
-		Genres: []*tmdb.Genere{
+		Genres: []*tmdb.Genre{
 			{GenreId: 18, Name: "Drama"},
 		},
 		Homepage: "http://www.foxmovies.com/movies/fight-club",
