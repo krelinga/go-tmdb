@@ -31,7 +31,7 @@ func TestGetMovie(t *testing.T) {
 			Overview:         "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.",
 			Popularity:       30.8279,
 			PosterImage:      "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-			RelaseDate:       "1999-10-15",
+			ReleaseDate:      "1999-10-15",
 			Title:            "Fight Club",
 			Video:            false,
 			VoteAverage:      8.438,
@@ -102,7 +102,7 @@ func TestGetMovie(t *testing.T) {
 	for _, pc := range found.Movie.ProductionCompanyShorts {
 		checkLogoImage(t, pc.LogoImage, config)
 	}
-	checkDate(t, 1999, 10, 15, found.Movie.RelaseDate)
+	checkDate(t, 1999, 10, 15, found.Movie.ReleaseDate)
 
 	expectedKeywords := &tmdb.MovieKeywords{
 		MovieId: 0, // TODO: looks like the API doesn't populate this field.  Should I set it anyway?

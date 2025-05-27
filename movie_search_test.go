@@ -33,7 +33,7 @@ func TestSearchMovies(t *testing.T) {
 			Overview:         "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious.",
 			Popularity:       28.2038,
 			PosterImage:      tmdb.PosterImage("/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"),
-			RelaseDate:       "2010-07-15",
+			ReleaseDate:      "2010-07-15",
 			Title:            "Inception",
 			Video:            false,
 			VoteAverage:      8.369,
@@ -50,5 +50,5 @@ func TestSearchMovies(t *testing.T) {
 
 	checkBackdropImage(t, found.BackdropImage, config)
 	checkPosterImage(t, found.PosterImage, config)
-	checkDate(t, 2010, 7, 15, found.RelaseDate)
+	checkDate(t, 2010, 7, 15, found.ReleaseDate)
 }
