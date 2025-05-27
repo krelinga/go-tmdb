@@ -117,7 +117,7 @@ func TestGetMovie(t *testing.T) {
 	}
 	assert.Equal(t, expectedKeywords, found.Keywords, "Expected keywords do not match")
 
-	expectedCreditSubset := []*tmdb.MovieCast{
+	expectedCastSubset := []*tmdb.MovieCast{
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSummary: tmdb.PersonSummary{
@@ -173,8 +173,48 @@ func TestGetMovie(t *testing.T) {
 			Order:     2,
 		},
 	}
-	for _, ec := range expectedCreditSubset {
+	for _, ec := range expectedCastSubset {
 		assert.Contains(t, found.Credits.Cast, ec, "Expected cast member not found: %v", ec)
+	}
+
+	expectedCrewSubset := []*tmdb.MovieCrew{
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSummary: tmdb.PersonSummary{
+					Adult:              false,
+					Gender:             tmdb.GenderMale,
+					KnownForDepartment: "Directing",
+					Name:               "David Fincher",
+					PersonId:           7467,
+					Popularity:         9.2504,
+					ProfileImage:       "/tpEczFclQZeKAiCeKZZ0adRvtfz.jpg",
+				},
+				OriginalName: "David Fincher",
+				CreditId:     "631f0289568463007bbe28a5",
+			},
+			Department: "Directing",
+			Job:        "Director",
+		},
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSummary: tmdb.PersonSummary{
+					Adult:              false,
+					Gender:             tmdb.GenderMale,
+					KnownForDepartment: "Production",
+					Name:               "Arnon Milchan",
+					PersonId:           376,
+					Popularity:         2.9801,
+					ProfileImage:       "/b2hBExX4NnczNAnLuTBF4kmNhZm.jpg",
+				},
+				OriginalName: "Arnon Milchan",
+				CreditId:     "55731b8192514111610027d7",
+			},
+			Department: "Production",
+			Job:        "Executive Producer",
+		},
+	}
+	for _, ec := range expectedCrewSubset {
+		assert.Contains(t, found.Credits.Crew, ec, "Expected crew member not found: %v", ec)
 	}
 }
 
