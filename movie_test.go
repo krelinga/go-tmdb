@@ -8,6 +8,10 @@ import (
 )
 
 func TestGetMovie(t *testing.T) {
+	config, err := tmdb.GetConfiguration(getClient(t))
+	if err != nil {
+		t.Fatalf("GetConfiguration failed: %v", err)
+	}
 	found, err := tmdb.GetMovie(getClient(t), 550,
 		tmdb.WithKeywords(),
 		tmdb.WithCredits(),
@@ -175,6 +179,7 @@ func TestGetMovie(t *testing.T) {
 	}
 	for _, ec := range expectedCastSubset {
 		assert.Contains(t, found.Credits.Cast, ec, "Expected cast member not found: %v", ec)
+		checkProfileImage(t, ec.ProfileImage, config)
 	}
 
 	expectedCrewSubset := []*tmdb.MovieCrew{
@@ -215,6 +220,7 @@ func TestGetMovie(t *testing.T) {
 	}
 	for _, ec := range expectedCrewSubset {
 		assert.Contains(t, found.Credits.Crew, ec, "Expected crew member not found: %v", ec)
+		checkProfileImage(t, ec.ProfileImage, config)
 	}
 }
 

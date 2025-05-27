@@ -128,3 +128,8 @@ func checkPosterImage(t *testing.T, posterImage tmdb.PosterImage, config *tmdb.C
 	size := config.Images.PosterSizes[0]
 	return checkImage(t, posterImage, "PosterImage", config, size)
 }
+
+func checkProfileImage(t *testing.T, profileImage tmdb.ProfileImage, config *tmdb.Configuration) bool {
+	size := config.Images.ProfileSizes[0]
+	return checkImage(t, profileImage, "ProfileImage", config, size)
+}
