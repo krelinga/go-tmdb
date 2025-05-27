@@ -138,3 +138,15 @@ func checkLogoImage(t *testing.T, logoImage tmdb.LogoImage, config *tmdb.Configu
 	size := config.Images.LogoSizes[0]
 	return checkImage(t, logoImage, "LogoImage", config, size)
 }
+
+func checkDate(t *testing.T, expectedYear, expectedMonth, expectedDay int, actual tmdb.Date) bool {
+	t.Helper()
+	asTime, err := actual.GetTime()
+	if !assert.NoErrorf(t, err, "GetTime() should not return an error for date %q", actual) {
+		return false
+	}
+	assert.Equalf(t, expectedYear, asTime.Year(), "Expected year %d, got %d for date %q", expectedYear, asTime.Year(), actual)
+	assert.Equalf(t, expectedMonth, int(asTime.Month()), "Expected month %d, got %d for date %q", expectedMonth, asTime.Month(), actual)
+	assert.Equalf(t, expectedDay, asTime.Day(), "Expected day %d, got %d for date %q", expectedDay, asTime.Day(), actual)
+	return true
+}

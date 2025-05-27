@@ -102,6 +102,7 @@ func TestGetMovie(t *testing.T) {
 	for _, pc := range found.Movie.ProductionCompanyShorts {
 		checkLogoImage(t, pc.LogoImage, config)
 	}
+	checkDate(t, 1999, 10, 15, found.Movie.RelaseDate)
 
 	expectedKeywords := &tmdb.MovieKeywords{
 		MovieId: 0, // TODO: looks like the API doesn't populate this field.  Should I set it anyway?
