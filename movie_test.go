@@ -40,7 +40,7 @@ func TestGetMovie(t *testing.T) {
 		BelongsToCollection: "",
 		Budget:              63000000,
 		Genres: []*tmdb.Genere{
-			{Id: 18, Name: "Drama"},
+			{GenreId: 18, Name: "Drama"},
 		},
 		Homepage: "http://www.foxmovies.com/movies/fight-club",
 		ImdbId:   "tt0137523",
