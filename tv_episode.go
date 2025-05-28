@@ -4,7 +4,7 @@ type TvEpisodeId int
 type TvEpisodeNumber int
 
 type TvEpisode struct {
-	AirDate         string          `json:"air_date"`
+	AirDate         DateYYYYMMDD    `json:"air_date"`
 	TvEpisodeNumber TvEpisodeNumber `json:"episode_number"`
 	TvEpisodeId     TvEpisodeId     `json:"id"`
 	Name            string          `json:"name"`
