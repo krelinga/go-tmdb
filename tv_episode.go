@@ -10,6 +10,10 @@ type TvEpisodeId int
 type TvEpisodeNumber int
 
 type TvEpisode struct {
+	TvEpisodeSum
+}
+
+type TvEpisodeSum struct {
 	AirDate         DateYYYYMMDD    `json:"air_date"`
 	TvEpisodeNumber TvEpisodeNumber `json:"episode_number"`
 	EpisodeType     string          `json:"episode_type"`
@@ -51,8 +55,8 @@ func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNum
 	if o.rawReply != nil {
 		*o.rawReply = data
 	}
-	r := &GetTvEpisodeReply{TvEpisode: &TvEpisode{}}
-	if err := json.Unmarshal(data, r.TvEpisode); err != nil {
+	r := &GetTvEpisodeReply{}
+	if err := json.Unmarshal(data, r); err != nil {
 		return nil, err
 	}
 	return r, nil
