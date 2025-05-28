@@ -80,4 +80,28 @@ func TestGetTvEpisode(t *testing.T) {
 		assert.Contains(t, episode.Crew, ec, "Expected crew member not found: %v", ec)
 		checkProfileImage(t, ec.ProfileImage, config)
 	}
+
+	expectedGuestStarsSubset := []*tmdb.CastPerson{
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSum: tmdb.PersonSum{
+					Adult:              false,
+					Gender: 		   tmdb.GenderMale,
+					PersonId:           119783,
+					KnownForDepartment: "Acting",
+					Name:               "Joseph Mawle",
+					Popularity:         2.5522,
+					ProfileImage:       tmdb.ProfileImage("/1Ocb9v3h54beGVoJMm4w50UQhLf.jpg"),
+				},
+				CreditId:     "5256c8b919c2956ff604836a",
+				OriginalName: "Joseph Mawle",
+			},
+			Character: "Benjen Stark",
+			Order:     61,
+		},
+	}
+	for _, egs := range expectedGuestStarsSubset {
+		assert.Contains(t, episode.GuestStars, egs, "Expected guest star not found: %v", egs)
+		checkProfileImage(t, egs.ProfileImage, config)
+	}
 }
