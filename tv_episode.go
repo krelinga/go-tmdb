@@ -10,7 +10,7 @@ type TvEpisode struct {
 	Name            string          `json:"name"`
 	Overview        string          `json:"overview"`
 	ProductionCode  string          `json:"production_code"`
-	Runtime         int             `json:"runtime"` // TODO: units.
+	Runtime         Minutes         `json:"runtime"`
 	TvSeasonNumber  TvSeasonNumber  `json:"season_number"`
 	TvSeriesId      TvSeriesId      `json:"show_id"`
 	StillImage      PosterImage     `json:"still_path"`
@@ -18,4 +18,6 @@ type TvEpisode struct {
 	VoteCount       int             `json:"vote_count"`
 	// TODO: Crew
 	// TODO: GuestStars
+	// TODO: episode_type is used in the /tv/ endpoint under the last_episode_to_air field.
+	// TODO: still_path is used in the /tv/ endpoint under the last_episode_to_air field.
 }
