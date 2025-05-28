@@ -28,4 +28,5 @@ func TestGetTvEpisode(t *testing.T) {
 	assert.Equal(t, "Winter Is Coming", episode.Name, "Episode name should match")
 	const expectedOverview = "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
 	assert.Equal(t, expectedOverview, episode.Overview, "Episode overview should match")
+	assert.Equal(t, tmdb.Minutes(62), episode.Runtime, "Runtime should be 62 minutes")
 }
