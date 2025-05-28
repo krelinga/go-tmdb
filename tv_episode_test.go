@@ -29,4 +29,6 @@ func TestGetTvEpisode(t *testing.T) {
 	const expectedOverview = "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
 	assert.Equal(t, expectedOverview, episode.Overview, "Episode overview should match")
 	assert.Equal(t, tmdb.Minutes(62), episode.Runtime, "Runtime should be 62 minutes")
+	assert.Equal(t, tmdb.DateYYYYMMDD("2011-04-17"), episode.AirDate, "AirDate should match")
+	checkDate(t, 2011, 4, 17, episode.AirDate)
 }
