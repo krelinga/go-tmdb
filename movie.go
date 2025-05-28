@@ -63,11 +63,10 @@ type MovieCredits struct {
 }
 
 type MovieCastId int
-type CreditId string
 
 type MovieCast struct {
 	CastPerson
-	CastId    MovieCastId `json:"cast_id"`
+	MovieCastId MovieCastId `json:"cast_id"`
 }
 
 type MovieCrew struct {

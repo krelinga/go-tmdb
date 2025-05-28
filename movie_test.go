@@ -144,7 +144,7 @@ func TestGetMovie(t *testing.T) {
 				Character: "Narrator",
 				Order:     0,
 			},
-			CastId: 4,
+			MovieCastId: 4,
 		},
 		{
 			CastPerson: tmdb.CastPerson{
@@ -164,7 +164,7 @@ func TestGetMovie(t *testing.T) {
 				Character: "Tyler Durden",
 				Order:     1,
 			},
-			CastId: 5,
+			MovieCastId: 5,
 		},
 		{
 			CastPerson: tmdb.CastPerson{
@@ -184,7 +184,7 @@ func TestGetMovie(t *testing.T) {
 				Character: "Marla Singer",
 				Order:     2,
 			},
-			CastId: 285,
+			MovieCastId: 285,
 		},
 	}
 	for _, ec := range expectedCastSubset {

@@ -33,6 +33,8 @@ type Person struct {
 	PlaceOfBirth string       `json:"place_of_birth"`
 }
 
+type CreditId string
+
 type CreditPerson struct {
 	PersonSum
 	OriginalName string   `json:"original_name"`
@@ -41,6 +43,6 @@ type CreditPerson struct {
 
 type CastPerson struct {
 	CreditPerson
-	Character string      `json:"character"`
-	Order     int         `json:"order"`
+	Character string `json:"character"`
+	Order     int    `json:"order"`
 }
