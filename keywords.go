@@ -1,6 +1,8 @@
 package tmdb
 
+type KeywordId int
+
 type Keyword struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	KeywordId KeywordId    `json:"id"`
+	Name      string `json:"name"`
 }
