@@ -192,7 +192,7 @@ func TestGetMovie(t *testing.T) {
 		checkProfileImage(t, ec.ProfileImage, config)
 	}
 
-	expectedCrewSubset := []*tmdb.MovieCrew{
+	expectedCrewSubset := []*tmdb.CrewPerson{
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{

@@ -57,9 +57,9 @@ type MovieKeywords struct {
 }
 
 type MovieCredits struct {
-	MovieId MovieId      `json:"id"`
-	Cast    []*MovieCast `json:"cast"`
-	Crew    []*MovieCrew `json:"crew"`
+	MovieId MovieId       `json:"id"`
+	Cast    []*MovieCast  `json:"cast"`
+	Crew    []*CrewPerson `json:"crew"`
 }
 
 type MovieCastId int
@@ -69,7 +69,7 @@ type MovieCast struct {
 	MovieCastId MovieCastId `json:"cast_id"`
 }
 
-type MovieCrew struct {
+type CrewPerson struct {
 	CreditPerson
 	Department string `json:"department"`
 	Job        string `json:"job"`
