@@ -2,7 +2,7 @@ package tmdb
 
 type ProductionCompanyId int
 
-type ProductionCompanyShort struct {
+type ProductionCompanySum struct {
 	Id            ProductionCompanyId `json:"id"`
 	LogoImage     LogoImage           `json:"logo_path"`
 	Name          string              `json:"name"`

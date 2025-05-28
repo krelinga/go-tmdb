@@ -22,7 +22,7 @@ func TestGetMovie(t *testing.T) {
 	}
 
 	expectedMovie := &tmdb.Movie{
-		MovieShort: tmdb.MovieShort{
+		MovieSum: tmdb.MovieSum{
 			Adult:            false,
 			BackdropImage:    tmdb.BackdropImage("/xRyINp9KfMLVjRiO5nCsoRDdvvF.jpg"),
 			MovieId:          550,
@@ -44,7 +44,7 @@ func TestGetMovie(t *testing.T) {
 		},
 		Homepage: "http://www.foxmovies.com/movies/fight-club",
 		ImdbId:   "tt0137523",
-		ProductionCompanyShorts: []*tmdb.ProductionCompanyShort{
+		ProductionCompanyShorts: []*tmdb.ProductionCompanySum{
 			{
 				Id:            711,
 				LogoImage:     tmdb.LogoImage("/tEiIH5QesdheJmDAqQwvtN60727.png"),
@@ -76,7 +76,7 @@ func TestGetMovie(t *testing.T) {
 				OriginCountry: "DE",
 			},
 		},
-		ProductionCountrySummaries: []*tmdb.CountrySummary{
+		ProductionCountrySummaries: []*tmdb.CountrySum{
 			{
 				CountryIso3166_1: "DE",
 				EnglishName:      "Germany",
@@ -128,7 +128,7 @@ func TestGetMovie(t *testing.T) {
 	expectedCastSubset := []*tmdb.MovieCast{
 		{
 			CreditPerson: tmdb.CreditPerson{
-				PersonSummary: tmdb.PersonSummary{
+				PersonSum: tmdb.PersonSum{
 					Adult:              false,
 					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Acting",
@@ -146,7 +146,7 @@ func TestGetMovie(t *testing.T) {
 		},
 		{
 			CreditPerson: tmdb.CreditPerson{
-				PersonSummary: tmdb.PersonSummary{
+				PersonSum: tmdb.PersonSum{
 					Adult:              false,
 					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Acting",
@@ -164,7 +164,7 @@ func TestGetMovie(t *testing.T) {
 		},
 		{
 			CreditPerson: tmdb.CreditPerson{
-				PersonSummary: tmdb.PersonSummary{
+				PersonSum: tmdb.PersonSum{
 					Adult:              false,
 					Gender:             tmdb.GenderFemale,
 					KnownForDepartment: "Acting",
@@ -189,7 +189,7 @@ func TestGetMovie(t *testing.T) {
 	expectedCrewSubset := []*tmdb.MovieCrew{
 		{
 			CreditPerson: tmdb.CreditPerson{
-				PersonSummary: tmdb.PersonSummary{
+				PersonSum: tmdb.PersonSum{
 					Adult:              false,
 					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Directing",
@@ -206,7 +206,7 @@ func TestGetMovie(t *testing.T) {
 		},
 		{
 			CreditPerson: tmdb.CreditPerson{
-				PersonSummary: tmdb.PersonSummary{
+				PersonSum: tmdb.PersonSum{
 					Adult:              false,
 					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Production",

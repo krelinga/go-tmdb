@@ -8,7 +8,7 @@ import (
 )
 
 type MovieSearchResult struct {
-	MovieShort
+	MovieSum
 	GenereIds []GenreId `json:"genre_ids"`
 }
 

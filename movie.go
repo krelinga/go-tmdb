@@ -20,22 +20,22 @@ type GetMovieReply struct {
 }
 
 type Movie struct {
-	MovieShort
-	BelongsToCollection        string                    `json:"belongs_to_collection,omitempty"`
-	Budget                     int                       `json:"budget"`
-	Genres                     []*Genre                  `json:"genres"`
-	Homepage                   string                    `json:"homepage,omitempty"`
-	ImdbId                     ImdbId                    `json:"imdb_id,omitempty"`
-	ProductionCompanyShorts    []*ProductionCompanyShort `json:"production_companies"`
-	ProductionCountrySummaries []*CountrySummary         `json:"production_countries"`
-	Revenue                    int                       `json:"revenue"`
-	Runtime                    Minutes                   `json:"runtime"`
-	SpokenLanguages            []*Language               `json:"spoken_languages"`
-	Status                     string                    `json:"status"`
-	Tagline                    string                    `json:"tagline"`
+	MovieSum
+	BelongsToCollection        string                  `json:"belongs_to_collection,omitempty"`
+	Budget                     int                     `json:"budget"`
+	Genres                     []*Genre                `json:"genres"`
+	Homepage                   string                  `json:"homepage,omitempty"`
+	ImdbId                     ImdbId                  `json:"imdb_id,omitempty"`
+	ProductionCompanyShorts    []*ProductionCompanySum `json:"production_companies"`
+	ProductionCountrySummaries []*CountrySum           `json:"production_countries"`
+	Revenue                    int                     `json:"revenue"`
+	Runtime                    Minutes                 `json:"runtime"`
+	SpokenLanguages            []*Language             `json:"spoken_languages"`
+	Status                     string                  `json:"status"`
+	Tagline                    string                  `json:"tagline"`
 }
 
-type MovieShort struct {
+type MovieSum struct {
 	Adult            bool          `json:"adult"`
 	BackdropImage    BackdropImage `json:"backdrop_path"`
 	MovieId          MovieId       `json:"id"`
@@ -66,7 +66,7 @@ type MovieCastId int
 type CreditId string
 
 type CreditPerson struct {
-	PersonSummary
+	PersonSum
 	OriginalName string   `json:"original_name"`
 	CreditId     CreditId `json:"credit_id"`
 }

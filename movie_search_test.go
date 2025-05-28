@@ -24,7 +24,7 @@ func TestSearchMovies(t *testing.T) {
 	assert.Equal(t, 9, count, "SearchMovies did not return expected number of results")
 
 	expected := &tmdb.MovieSearchResult{
-		MovieShort: tmdb.MovieShort{
+		MovieSum: tmdb.MovieSum{
 			Adult:            false,
 			BackdropImage:    tmdb.BackdropImage("/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg"),
 			MovieId:          27205,

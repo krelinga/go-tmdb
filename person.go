@@ -12,7 +12,7 @@ var (
 type PersonId int
 type ImdbPersonId string
 
-type PersonSummary struct {
+type PersonSum struct {
 	Adult              bool         `json:"adult"`
 	Gender             Gender       `json:"gender"`
 	PersonId           PersonId     `json:"id"`
@@ -23,7 +23,7 @@ type PersonSummary struct {
 }
 
 type Person struct {
-	PersonSummary
+	PersonSum
 	AlsoKnownAs  []string     `json:"also_known_as"`
 	Biography    string       `json:"biography"`
 	Birthday     DateYYYYMMDD `json:"birthday"`
