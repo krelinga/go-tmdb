@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetTvEpisode(t *testing.T) {
-	episode, err := tmdb.GetTvEpisode(getClient(t), 1399, 1, 1)
+	episode, err := tmdb.GetTvEpisode(getClient(t), 1399, 1, 1, tmdb.WithExternalIds())
 	if err != nil {
 		t.Fatalf("GetTvEpisode failed: %v", err)
 	}
