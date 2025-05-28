@@ -58,6 +58,23 @@ func TestGetTvEpisode(t *testing.T) {
 			Job:        "Writer",
 			Department: "Writing",
 		},
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSum: tmdb.PersonSum{
+					Adult:              false,
+					Gender: tmdb.GenderMale,
+					PersonId:           44797,
+					KnownForDepartment: "Directing",
+					Name:               "Tim Van Patten",
+					Popularity:         1.7764,
+					ProfileImage:       tmdb.ProfileImage("/vwcARZBg4PEzOwnPsXdjRWeUVrZ.jpg"),
+				},
+				CreditId:     "5256c8a219c2956ff6046e77",
+				OriginalName: "Tim Van Patten",
+			},
+			Job:        "Director",
+			Department: "Directing",
+		},
 	}
 	for _, ec := range expectedCrewSubset {
 		assert.Contains(t, episode.Crew, ec, "Expected crew member not found: %v", ec)
