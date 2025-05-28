@@ -143,6 +143,12 @@ func checkLogoImage(t *testing.T, logoImage tmdb.LogoImage, config *tmdb.Configu
 	return checkImage(t, logoImage, "LogoImage", config, size)
 }
 
+func checkStillImage(t *testing.T, stillImage tmdb.StillImage, config *tmdb.Configuration) bool {
+	t.Helper()
+	size := config.Images.StillSizes[0]
+	return checkImage(t, stillImage, "StillImage", config, size)
+}
+
 func checkDate(t *testing.T, expectedYear, expectedMonth, expectedDay int, actual tmdb.Date) bool {
 	t.Helper()
 	asTime, err := actual.GetTime()

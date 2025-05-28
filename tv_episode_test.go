@@ -11,6 +11,10 @@ func TestGetTvEpisode(t *testing.T) {
 	const Series tmdb.TvSeriesId = 1399 // "Game of Thrones"
 	const SeasonNumber tmdb.TvSeasonNumber = 1
 	const EpisodeNumber tmdb.TvEpisodeNumber = 1
+	config, err := tmdb.GetConfiguration(getClient(t))
+	if err != nil {
+		t.Fatalf("GetConfiguration failed: %v", err)
+	}
 	episode, err := tmdb.GetTvEpisode(getClient(t), Series, SeasonNumber, EpisodeNumber, tmdb.WithExternalIds())
 	if err != nil {
 		t.Fatalf("GetTvEpisode failed: %v", err)
@@ -31,4 +35,6 @@ func TestGetTvEpisode(t *testing.T) {
 	assert.Equal(t, tmdb.Minutes(62), episode.Runtime, "Runtime should be 62 minutes")
 	assert.Equal(t, tmdb.DateYYYYMMDD("2011-04-17"), episode.AirDate, "AirDate should match")
 	checkDate(t, 2011, 4, 17, episode.AirDate)
+	assert.Equal(t, tmdb.StillImage("/wrGWeW4WKxnaeA8sxJb2T9O6ryo.jpg"), episode.StillImage, "StillImage should match")
+	checkStillImage(t, episode.StillImage, config)
 }
