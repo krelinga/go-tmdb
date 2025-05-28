@@ -11,6 +11,8 @@ type TvEpisodeNumber int
 
 type TvEpisode struct {
 	TvEpisodeSum
+	Crew       []*CrewPerson `json:"crew"`
+	GuestStars []*CastPerson `json:"guest_stars"`
 }
 
 type TvEpisodeSum struct {
@@ -27,8 +29,6 @@ type TvEpisodeSum struct {
 	StillImage      PosterImage     `json:"still_path"`
 	VoteAverage     float64         `json:"vote_average"`
 	VoteCount       int             `json:"vote_count"`
-	// TODO: Crew
-	// TODO: GuestStars
 }
 
 type GetTvEpisodeReply struct {
