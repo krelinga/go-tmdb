@@ -26,7 +26,7 @@ type TvEpisodeSum struct {
 	ProductionCode  string          `json:"production_code"`
 	Runtime         Minutes         `json:"runtime"`
 	TvSeasonNumber  TvSeasonNumber  `json:"season_number"`
-	TvSeriesId      TvSeriesId      `json:"show_id"`
+	TvSeriesId      TvSeriesId      `json:"show_id"` // This isn't always present in the json, but in all of those cases we can add it.
 	StillImage      PosterImage     `json:"still_path"`
 	VoteAverage     float64         `json:"vote_average"`
 	VoteCount       int             `json:"vote_count"`
@@ -82,6 +82,8 @@ func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNum
 	if err := json.Unmarshal(data, r); err != nil {
 		return nil, err
 	}
+	// This is a case where this field isn't set in the JSON, but it is trivial for us to set it.
+	r.TvSeriesId = tvSeriesId
 	return r, nil
 }
 
