@@ -1,5 +1,11 @@
 package tmdb
 
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+)
+
 type TvEpisodeId int
 type TvEpisodeNumber int
 
@@ -19,4 +25,43 @@ type TvEpisode struct {
 	VoteCount       int             `json:"vote_count"`
 	// TODO: Crew
 	// TODO: GuestStars
+}
+
+type GetTvEpisodeReply struct {
+	*TvEpisode
+
+	// TODO: add fields that can be appended to the reply.
+}
+
+func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNumber, episodeNumber TvEpisodeNumber, options ...GetTvEpisodeOption) (*GetTvEpisodeReply, error) {
+	o := getTvEpisodeOptions{}
+	for _, opt := range options {
+		opt.applyToGetTvEpisodeOptions(&o)
+	}
+
+	ctx := context.Background()
+	if o.useContext != nil {
+		ctx = *o.useContext
+	}
+
+	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d/episode/%d", tvSeriesId, seasonNumber, episodeNumber), nil))
+	if err != nil {
+		return nil, err
+	}
+	if o.rawReply != nil {
+		*o.rawReply = data
+	}
+	r := &GetTvEpisodeReply{TvEpisode: &TvEpisode{}}
+	if err := json.Unmarshal(data, r.TvEpisode); err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+type GetTvEpisodeOption interface {
+	applyToGetTvEpisodeOptions(*getTvEpisodeOptions)
+}
+
+type getTvEpisodeOptions struct {
+	baseOptions
 }
