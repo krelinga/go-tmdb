@@ -69,12 +69,6 @@ type MovieCast struct {
 	MovieCastId MovieCastId `json:"cast_id"`
 }
 
-type CrewPerson struct {
-	CreditPerson
-	Department string `json:"department"`
-	Job        string `json:"job"`
-}
-
 type MovieReleaseType int
 
 const (

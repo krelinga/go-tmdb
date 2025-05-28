@@ -46,3 +46,9 @@ type CastPerson struct {
 	Character string `json:"character"`
 	Order     int    `json:"order"`
 }
+
+type CrewPerson struct {
+	CreditPerson
+	Department string `json:"department"`
+	Job        string `json:"job"`
+}
