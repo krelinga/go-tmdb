@@ -26,8 +26,8 @@ type Person struct {
 	PersonSummary
 	AlsoKnownAs  []string     `json:"also_known_as"`
 	Biography    string       `json:"biography"`
-	Birthday     Date         `json:"birthday"`
-	Deathday     Date         `json:"deathday"`
+	Birthday     DateYYYYMMDD `json:"birthday"`
+	Deathday     DateYYYYMMDD `json:"deathday"`
 	Homepage     string       `json:"homepage"`
 	ImdbId       ImdbPersonId `json:"imdb_id"`
 	PlaceOfBirth string       `json:"place_of_birth"`

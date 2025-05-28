@@ -44,7 +44,7 @@ type MovieShort struct {
 	Overview         string        `json:"overview"`
 	Popularity       float64       `json:"popularity"`
 	PosterImage      PosterImage   `json:"poster_path"`
-	ReleaseDate      Date          `json:"release_date"`
+	ReleaseDate      DateYYYYMMDD  `json:"release_date"`
 	Title            string        `json:"title"`
 	Video            bool          `json:"video"`
 	VoteAverage      float64       `json:"vote_average"`

@@ -13,13 +13,13 @@ type TvSeries struct {
 	BackdropImage   BackdropImage      `json:"backdrop_path"`
 	CreatedBy       []*TvSeriesCreator `json:"created_by"`
 	EpisodeRunTimes []int              `json:"episode_run_time"`
-	FirstAirDate    Date               `json:"first_air_date"`
+	FirstAirDate    DateYYYYMMDD       `json:"first_air_date"`
 	Genres          []*Genre           `json:"genres"`
 	Homepage        string             `json:"homepage"`
 	TvSeriesId      TvSeriesId         `json:"id"`
 	InProduction    bool               `json:"in_production"`
 	Languages       []string           `json:"languages"`
-	LastAirDate     Date               `json:"last_air_date"`
+	LastAirDate     DateYYYYMMDD       `json:"last_air_date"`
 	// TODO: LastEpisodeToAir
 	Name             string `json:"name"`
 	NextEpisodeToAir string `json:"next_episode_to_air"`
