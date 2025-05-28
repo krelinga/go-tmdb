@@ -22,6 +22,6 @@ func (d DateRfc3339) GetTime() (time.Time, error) {
 	return t, nil
 }
 
-type DateInterface interface {
+type Date interface {
 	GetTime() (time.Time, error)
 }
