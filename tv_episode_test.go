@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetTvEpisode(t *testing.T) {
-	const Series tmdb.TvSeriesId= 1399 // "Game of Thrones"
+	const Series tmdb.TvSeriesId = 1399 // "Game of Thrones"
 	const SeasonNumber tmdb.TvSeasonNumber = 1
 	const EpisodeNumber tmdb.TvEpisodeNumber = 1
 	episode, err := tmdb.GetTvEpisode(getClient(t), Series, SeasonNumber, EpisodeNumber, tmdb.WithExternalIds())
@@ -22,4 +22,5 @@ func TestGetTvEpisode(t *testing.T) {
 	assert.Equal(t, Series, episode.TvSeriesId, "TvSeriesId should match")
 	assert.Equal(t, SeasonNumber, episode.TvSeasonNumber, "TvSeasonNumber should match")
 	assert.Equal(t, EpisodeNumber, episode.TvEpisodeNumber, "TvEpisodeNumber should match")
+	assert.Equal(t, "standard", episode.EpisodeType, "EpisodeType should be 'standard'")
 }
