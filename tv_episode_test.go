@@ -39,4 +39,28 @@ func TestGetTvEpisode(t *testing.T) {
 	checkStillImage(t, episode.StillImage, config)
 	assert.Equal(t, 8.063, episode.VoteAverage, "VoteAverage should match")
 	assert.Equal(t, 374, episode.VoteCount, "VoteCount should match")
+
+	expectedCrewSubset := []*tmdb.CrewPerson{
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSum: tmdb.PersonSum{
+					Adult:              false,
+					Gender:             tmdb.GenderMale,
+					PersonId:           9813,
+					KnownForDepartment: "Writing",
+					Name:               "David Benioff",
+					Popularity:         3.065,
+					ProfileImage:       tmdb.ProfileImage("/bOlW8pymCeQLfwPIvc2D1MRcUoF.jpg"),
+				},
+				CreditId:     "5256c8a019c2956ff6046e2b",
+				OriginalName: "David Benioff",
+			},
+			Job:        "Writer",
+			Department: "Writing",
+		},
+	}
+	for _, ec := range expectedCrewSubset {
+		assert.Contains(t, episode.Crew, ec, "Expected crew member not found: %v", ec)
+		checkProfileImage(t, ec.ProfileImage, config)
+	}
 }
