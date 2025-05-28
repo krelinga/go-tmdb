@@ -39,15 +39,15 @@ type GetTvEpisodeReply struct {
 	ExternalIds *TvEpisodeExternalIds `json:"external_ids,omitempty"`
 }
 
-type ImdbEpisodeId string
-type TheTvdbEpisodeId int
-type WikidataEpisodeId string
+type ImdbTvEpisodeId string
+type TheTvdbTvEpisodeId int
+type WikidataTvEpisodeId string
 
 type TvEpisodeExternalIds struct {
-	TvEpisodeId       TvEpisodeId       `json:"id"`
-	ImdbEpisodeId     ImdbEpisodeId     `json:"imdb_id"`
-	TheTvdbEpisodeId  TheTvdbEpisodeId  `json:"thetvdb_id"`
-	WikidataEpisodeId WikidataEpisodeId `json:"wikidata_id"`
+	TvEpisodeId       TvEpisodeId         `json:"id"`
+	ImdbEpisodeId     ImdbTvEpisodeId     `json:"imdb_id"`
+	TheTvdbEpisodeId  TheTvdbTvEpisodeId  `json:"tvdb_id"`
+	WikidataEpisodeId WikidataTvEpisodeId `json:"wikidata_id"`
 }
 
 func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNumber, episodeNumber TvEpisodeNumber, options ...GetTvEpisodeOption) (*GetTvEpisodeReply, error) {

@@ -121,4 +121,11 @@ func TestGetTvEpisode(t *testing.T) {
 		assert.Contains(t, episode.GuestStars, egs, "Expected guest star not found: %v", egs)
 		checkProfileImage(t, egs.ProfileImage, config)
 	}
+
+	if episode.ExternalIds == nil {
+		t.Fatal("Expected ExternalIds to be present, but it is nil")
+	}
+	assert.Equal(t, tmdb.ImdbTvEpisodeId("tt1480055"), episode.ExternalIds.ImdbEpisodeId, "ImdbEpisodeId should match")
+	assert.Equal(t, tmdb.TheTvdbTvEpisodeId(3254641), episode.ExternalIds.TheTvdbEpisodeId, "TheTvdbEpisodeId should match")
+	assert.Equal(t, tmdb.WikidataTvEpisodeId("Q2614622"), episode.ExternalIds.WikidataEpisodeId, "WikidataEpisodeId should match")
 }
