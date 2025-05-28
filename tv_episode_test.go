@@ -23,6 +23,7 @@ func TestGetTvEpisode(t *testing.T) {
 	assert.Equal(t, SeasonNumber, episode.TvSeasonNumber, "TvSeasonNumber should match")
 	assert.Equal(t, EpisodeNumber, episode.TvEpisodeNumber, "TvEpisodeNumber should match")
 	assert.Equal(t, tmdb.TvEpisodeId(63056), episode.TvEpisodeId, "TvEpisodeId should match")
+	assert.Equal(t, "101", episode.ProductionCode, "ProductionCode should match")
 	assert.Equal(t, "standard", episode.EpisodeType, "EpisodeType should be 'standard'")
 	assert.Equal(t, "Winter Is Coming", episode.Name, "Episode name should match")
 	const expectedOverview = "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
