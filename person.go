@@ -32,3 +32,15 @@ type Person struct {
 	ImdbId       ImdbPersonId `json:"imdb_id"`
 	PlaceOfBirth string       `json:"place_of_birth"`
 }
+
+type CreditPerson struct {
+	PersonSum
+	OriginalName string   `json:"original_name"`
+	CreditId     CreditId `json:"credit_id"`
+}
+
+type CastPerson struct {
+	CreditPerson
+	Character string      `json:"character"`
+	Order     int         `json:"order"`
+}

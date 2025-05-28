@@ -127,58 +127,64 @@ func TestGetMovie(t *testing.T) {
 
 	expectedCastSubset := []*tmdb.MovieCast{
 		{
-			CreditPerson: tmdb.CreditPerson{
-				PersonSum: tmdb.PersonSum{
-					Adult:              false,
-					Gender:             tmdb.GenderMale,
-					KnownForDepartment: "Acting",
-					Name:               "Edward Norton",
-					PersonId:           819,
-					Popularity:         8.3963,
-					ProfileImage:       tmdb.ProfileImage("/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"),
+			CastPerson: tmdb.CastPerson{
+				CreditPerson: tmdb.CreditPerson{
+					PersonSum: tmdb.PersonSum{
+						Adult:              false,
+						Gender:             tmdb.GenderMale,
+						KnownForDepartment: "Acting",
+						Name:               "Edward Norton",
+						PersonId:           819,
+						Popularity:         8.3963,
+						ProfileImage:       tmdb.ProfileImage("/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"),
+					},
+					OriginalName: "Edward Norton",
+					CreditId:     "52fe4250c3a36847f80149f3",
 				},
-				OriginalName: "Edward Norton",
-				CreditId:     "52fe4250c3a36847f80149f3",
+				Character: "Narrator",
+				Order:     0,
 			},
-			CastId:    4,
-			Character: "Narrator",
-			Order:     0,
+			CastId: 4,
 		},
 		{
-			CreditPerson: tmdb.CreditPerson{
-				PersonSum: tmdb.PersonSum{
-					Adult:              false,
-					Gender:             tmdb.GenderMale,
-					KnownForDepartment: "Acting",
-					Name:               "Brad Pitt",
-					PersonId:           287,
-					Popularity:         15.325,
-					ProfileImage:       tmdb.ProfileImage("/cckcYc2v0yh1tc9QjRelptcOBko.jpg"),
+			CastPerson: tmdb.CastPerson{
+				CreditPerson: tmdb.CreditPerson{
+					PersonSum: tmdb.PersonSum{
+						Adult:              false,
+						Gender:             tmdb.GenderMale,
+						KnownForDepartment: "Acting",
+						Name:               "Brad Pitt",
+						PersonId:           287,
+						Popularity:         15.325,
+						ProfileImage:       tmdb.ProfileImage("/cckcYc2v0yh1tc9QjRelptcOBko.jpg"),
+					},
+					OriginalName: "Brad Pitt",
+					CreditId:     "52fe4250c3a36847f80149f7",
 				},
-				OriginalName: "Brad Pitt",
-				CreditId:     "52fe4250c3a36847f80149f7",
+				Character: "Tyler Durden",
+				Order:     1,
 			},
-			CastId:    5,
-			Character: "Tyler Durden",
-			Order:     1,
+			CastId: 5,
 		},
 		{
-			CreditPerson: tmdb.CreditPerson{
-				PersonSum: tmdb.PersonSum{
-					Adult:              false,
-					Gender:             tmdb.GenderFemale,
-					KnownForDepartment: "Acting",
-					Name:               "Helena Bonham Carter",
-					PersonId:           1283,
-					Popularity:         5.9771,
-					ProfileImage:       tmdb.ProfileImage("/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg"),
+			CastPerson: tmdb.CastPerson{
+				CreditPerson: tmdb.CreditPerson{
+					PersonSum: tmdb.PersonSum{
+						Adult:              false,
+						Gender:             tmdb.GenderFemale,
+						KnownForDepartment: "Acting",
+						Name:               "Helena Bonham Carter",
+						PersonId:           1283,
+						Popularity:         5.9771,
+						ProfileImage:       tmdb.ProfileImage("/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg"),
+					},
+					OriginalName: "Helena Bonham Carter",
+					CreditId:     "631f0de8bd32090082733691",
 				},
-				OriginalName: "Helena Bonham Carter",
-				CreditId:     "631f0de8bd32090082733691",
+				Character: "Marla Singer",
+				Order:     2,
 			},
-			CastId:    285,
-			Character: "Marla Singer",
-			Order:     2,
+			CastId: 285,
 		},
 	}
 	for _, ec := range expectedCastSubset {

@@ -65,17 +65,9 @@ type MovieCredits struct {
 type MovieCastId int
 type CreditId string
 
-type CreditPerson struct {
-	PersonSum
-	OriginalName string   `json:"original_name"`
-	CreditId     CreditId `json:"credit_id"`
-}
-
 type MovieCast struct {
-	CreditPerson
+	CastPerson
 	CastId    MovieCastId `json:"cast_id"`
-	Character string      `json:"character"`
-	Order     int         `json:"order"`
 }
 
 type MovieCrew struct {
