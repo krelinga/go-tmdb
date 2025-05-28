@@ -226,6 +226,39 @@ func TestGetMovie(t *testing.T) {
 		assert.Contains(t, found.Credits.Crew, ec, "Expected crew member not found: %v", ec)
 		checkProfileImage(t, ec.ProfileImage, config)
 	}
+
+	premiere := &tmdb.MovieReleaseDate{
+		Certification:    "",
+		Language:         "",
+		Note:             "CMJ Film Festival",
+		ReleaseDate:      "1999-09-21T00:00:00.000Z",
+		MovieReleaseType: tmdb.MovieReleaseTypePremiere,
+	}
+	checkDate(t, 1999, 9, 21, premiere.ReleaseDate)
+	theatrical := &tmdb.MovieReleaseDate{
+		Certification:    "R",
+		Language:         "",
+		Note:             "",
+		ReleaseDate:      "1999-10-15T00:00:00.000Z",
+		MovieReleaseType: tmdb.MovieReleaseTypeTheatrical,
+	}
+	checkDate(t, 1999, 10, 15, theatrical.ReleaseDate)
+	vhs := &tmdb.MovieReleaseDate{
+		Certification:    "R",
+		Language:         "",
+		Note:             "VHS",
+		ReleaseDate:      "2000-04-25T00:00:00.000Z",
+		MovieReleaseType: tmdb.MovieReleaseTypePhysical,
+	}
+	checkDate(t, 2000, 4, 25, vhs.ReleaseDate)
+	for _, rc := range found.Releases.MovieReleaseCountries {
+		if rc.Iso3166_1 != "US" {
+			continue // We only care about the US release dates.
+		}
+		for _, erd := range []*tmdb.MovieReleaseDate{premiere, theatrical, vhs} {
+			assert.Contains(t, rc.MovieReleaseDates, erd, "Expected US release date not found: %v", erd)
+		}
+	}
 }
 
 func TestHttpError(t *testing.T) {

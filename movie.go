@@ -111,7 +111,7 @@ type MovieReleaseDate struct {
 	// TODO: Descriptors?
 	Language         LanguageIso639_1 `json:"iso_639_1"`
 	Note             string           `json:"note"`
-	ReleaseDate      Date             `json:"release_date"`
+	ReleaseDate      DateRfc3339      `json:"release_date"`
 	MovieReleaseType MovieReleaseType `json:"type"`
 }
 

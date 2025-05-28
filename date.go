@@ -11,3 +11,17 @@ func (d Date) GetTime() (time.Time, error) {
 	}
 	return t, nil
 }
+
+type DateRfc3339 string
+
+func (d DateRfc3339) GetTime() (time.Time, error) {
+	t, err := time.Parse(time.RFC3339, string(d))
+	if err != nil {
+		return time.Time{}, err
+	}
+	return t, nil
+}
+
+type DateInterface interface {
+	GetTime() (time.Time, error)
+}

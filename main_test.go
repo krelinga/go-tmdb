@@ -139,7 +139,7 @@ func checkLogoImage(t *testing.T, logoImage tmdb.LogoImage, config *tmdb.Configu
 	return checkImage(t, logoImage, "LogoImage", config, size)
 }
 
-func checkDate(t *testing.T, expectedYear, expectedMonth, expectedDay int, actual tmdb.Date) bool {
+func checkDate(t *testing.T, expectedYear, expectedMonth, expectedDay int, actual tmdb.DateInterface) bool {
 	t.Helper()
 	asTime, err := actual.GetTime()
 	if !assert.NoErrorf(t, err, "GetTime() should not return an error for date %q", actual) {
