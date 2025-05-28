@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type TvEpisodeId int
@@ -35,6 +36,18 @@ type GetTvEpisodeReply struct {
 	*TvEpisode
 
 	// TODO: add fields that can be appended to the reply.
+	ExternalIds *TvEpisodeExternalIds `json:"external_ids,omitempty"`
+}
+
+type ImdbEpisodeId string
+type TheTvdbEpisodeId int
+type WikidataEpisodeId string
+
+type TvEpisodeExternalIds struct {
+	TvEpisodeId       TvEpisodeId       `json:"id"`
+	ImdbEpisodeId     ImdbEpisodeId     `json:"imdb_id"`
+	TheTvdbEpisodeId  TheTvdbEpisodeId  `json:"thetvdb_id"`
+	WikidataEpisodeId WikidataEpisodeId `json:"wikidata_id"`
 }
 
 func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNumber, episodeNumber TvEpisodeNumber, options ...GetTvEpisodeOption) (*GetTvEpisodeReply, error) {
@@ -48,7 +61,17 @@ func GetTvEpisode(client Client, tvSeriesId TvSeriesId, seasonNumber TvSeasonNum
 		ctx = *o.useContext
 	}
 
-	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d/episode/%d", tvSeriesId, seasonNumber, episodeNumber), nil))
+	appendTo := []string{}
+	if o.wantExternalIds {
+		appendTo = append(appendTo, "external_ids")
+	}
+
+	params := make(GetParams)
+	if len(appendTo) > 0 {
+		params["append_to_response"] = strings.Join(appendTo, ",")
+	}
+
+	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d/season/%d/episode/%d", tvSeriesId, seasonNumber, episodeNumber), params))
 	if err != nil {
 		return nil, err
 	}
@@ -68,4 +91,5 @@ type GetTvEpisodeOption interface {
 
 type getTvEpisodeOptions struct {
 	baseOptions
+	wantExternalIds bool
 }

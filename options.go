@@ -86,3 +86,12 @@ type releaseDatesOption struct{}
 func (r releaseDatesOption) applyToGetMovieOptions(o *getMovieOptions) {
 	o.wantReleases = true
 }
+
+func WithExternalIds() externalIdsOption {
+	return externalIdsOption{}
+}
+type externalIdsOption struct{}
+
+func (e externalIdsOption) applyToGetTvEpisodeOptions(o *getTvEpisodeOptions) {
+	o.wantExternalIds = true
+}
