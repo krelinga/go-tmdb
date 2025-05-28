@@ -37,4 +37,6 @@ func TestGetTvEpisode(t *testing.T) {
 	checkDate(t, 2011, 4, 17, episode.AirDate)
 	assert.Equal(t, tmdb.StillImage("/wrGWeW4WKxnaeA8sxJb2T9O6ryo.jpg"), episode.StillImage, "StillImage should match")
 	checkStillImage(t, episode.StillImage, config)
+	assert.Equal(t, 8.063, episode.VoteAverage, "VoteAverage should match")
+	assert.Equal(t, 374, episode.VoteCount, "VoteCount should match")
 }
