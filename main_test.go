@@ -120,21 +120,25 @@ func checkImage[imageSizeType imageSize, imageType image[imageSizeType]](t *test
 }
 
 func checkBackdropImage(t *testing.T, backdropImage tmdb.BackdropImage, config *tmdb.Configuration) bool {
+	t.Helper()
 	size := config.Images.BackdropSizes[0]
 	return checkImage(t, backdropImage, "BackdropImage", config, size)
 }
 
 func checkPosterImage(t *testing.T, posterImage tmdb.PosterImage, config *tmdb.Configuration) bool {
+	t.Helper()
 	size := config.Images.PosterSizes[0]
 	return checkImage(t, posterImage, "PosterImage", config, size)
 }
 
 func checkProfileImage(t *testing.T, profileImage tmdb.ProfileImage, config *tmdb.Configuration) bool {
+	t.Helper()
 	size := config.Images.ProfileSizes[0]
 	return checkImage(t, profileImage, "ProfileImage", config, size)
 }
 
 func checkLogoImage(t *testing.T, logoImage tmdb.LogoImage, config *tmdb.Configuration) bool {
+	t.Helper()
 	size := config.Images.LogoSizes[0]
 	return checkImage(t, logoImage, "LogoImage", config, size)
 }
