@@ -99,6 +99,23 @@ func TestGetTvEpisode(t *testing.T) {
 			Character: "Benjen Stark",
 			Order:     61,
 		},
+		{
+			CreditPerson: tmdb.CreditPerson{
+				PersonSum: tmdb.PersonSum{
+					Adult:              false,
+					Gender: tmdb.GenderMale,
+					PersonId:           1223792,
+					KnownForDepartment: "Acting",
+					Name:               "Kristian Nairn",
+					Popularity:         1.171,
+					ProfileImage: 	 tmdb.ProfileImage("/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg"),
+				},
+				CreditId:     "5256c8be19c2956ff6048446",
+				OriginalName: "Kristian Nairn",
+			},
+			Character: "Hodor",
+			Order:     81,
+		},
 	}
 	for _, egs := range expectedGuestStarsSubset {
 		assert.Contains(t, episode.GuestStars, egs, "Expected guest star not found: %v", egs)
