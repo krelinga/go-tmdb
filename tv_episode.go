@@ -6,6 +6,7 @@ type TvEpisodeNumber int
 type TvEpisode struct {
 	AirDate         DateYYYYMMDD    `json:"air_date"`
 	TvEpisodeNumber TvEpisodeNumber `json:"episode_number"`
+	EpisodeType     string          `json:"episode_type"`
 	TvEpisodeId     TvEpisodeId     `json:"id"`
 	Name            string          `json:"name"`
 	Overview        string          `json:"overview"`
@@ -18,6 +19,4 @@ type TvEpisode struct {
 	VoteCount       int             `json:"vote_count"`
 	// TODO: Crew
 	// TODO: GuestStars
-	// TODO: episode_type is used in the /tv/ endpoint under the last_episode_to_air field.
-	// TODO: still_path is used in the /tv/ endpoint under the last_episode_to_air field.
 }
