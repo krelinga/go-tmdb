@@ -35,4 +35,20 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, "Game of Thrones", tv.Name, "Unexpected name")
 	assert.Equal(t, 8.456, tv.VoteAverage, "Unexpected vote average")
 	assert.Equal(t, 25031, tv.VoteCount, "Unexpected vote count")
+
+	expectedCreatorSubset := []*tmdb.TvSeriesCreator{
+		{
+			PersonCore: tmdb.PersonCore{
+				PersonId:     9813,
+				Name:         "David Benioff",
+				ProfileImage: "/bOlW8pymCeQLfwPIvc2D1MRcUoF.jpg",
+				Gender:       tmdb.GenderMale,
+			},
+			CreditId: tmdb.CreditId("5256c8c219c2956ff604858a"),
+		},
+	}
+	for _, ec := range expectedCreatorSubset {
+		assert.Contains(t, tv.CreatedBy, ec, "Creators should contain expected creator: %v", ec)
+		checkProfileImage(t, ec.ProfileImage, config)
+	}
 }
