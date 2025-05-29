@@ -23,7 +23,6 @@ type TvSeries struct {
 	NumberOfEpisodes int                `json:"number_of_episodes"`
 	NumberOfSeasons  int                `json:"number_of_seasons"`
 	// TODO: ProductionCompanies
-	// TODO: ProductionCountries
 	ProductionCountries []*CountrySum  `json:"production_countries"`
 	TvSeasons           []*TvSeasonSum `json:"seasons"`
 	SpokenLanguages     []*Language    `json:"spoken_languages"`
