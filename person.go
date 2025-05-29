@@ -12,14 +12,18 @@ var (
 type PersonId int
 type ImdbPersonId string
 
-type PersonSum struct {
-	Adult              bool         `json:"adult"`
+type PersonCore struct {
 	Gender             Gender       `json:"gender"`
 	PersonId           PersonId     `json:"id"`
-	KnownForDepartment string       `json:"known_for_department"`
 	Name               string       `json:"name"`
-	Popularity         float64      `json:"popularity"`
 	ProfileImage       ProfileImage `json:"profile_path"`
+}
+
+type PersonSum struct {
+	PersonCore
+	Adult              bool         `json:"adult"`
+	KnownForDepartment string       `json:"known_for_department"`
+	Popularity         float64      `json:"popularity"`
 }
 
 type Person struct {

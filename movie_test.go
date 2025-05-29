@@ -130,13 +130,15 @@ func TestGetMovie(t *testing.T) {
 			CastPerson: tmdb.CastPerson{
 				CreditPerson: tmdb.CreditPerson{
 					PersonSum: tmdb.PersonSum{
+						PersonCore: tmdb.PersonCore{
+							Gender:       tmdb.GenderMale,
+							Name:         "Edward Norton",
+							PersonId:     819,
+							ProfileImage: tmdb.ProfileImage("/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"),
+						},
 						Adult:              false,
-						Gender:             tmdb.GenderMale,
 						KnownForDepartment: "Acting",
-						Name:               "Edward Norton",
-						PersonId:           819,
 						Popularity:         8.3963,
-						ProfileImage:       tmdb.ProfileImage("/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"),
 					},
 					OriginalName: "Edward Norton",
 					CreditId:     "52fe4250c3a36847f80149f3",
@@ -150,13 +152,15 @@ func TestGetMovie(t *testing.T) {
 			CastPerson: tmdb.CastPerson{
 				CreditPerson: tmdb.CreditPerson{
 					PersonSum: tmdb.PersonSum{
+						PersonCore: tmdb.PersonCore{
+							Gender:       tmdb.GenderMale,
+							Name:         "Brad Pitt",
+							PersonId:     287,
+							ProfileImage: tmdb.ProfileImage("/cckcYc2v0yh1tc9QjRelptcOBko.jpg"),
+						},
 						Adult:              false,
-						Gender:             tmdb.GenderMale,
 						KnownForDepartment: "Acting",
-						Name:               "Brad Pitt",
-						PersonId:           287,
 						Popularity:         15.325,
-						ProfileImage:       tmdb.ProfileImage("/cckcYc2v0yh1tc9QjRelptcOBko.jpg"),
 					},
 					OriginalName: "Brad Pitt",
 					CreditId:     "52fe4250c3a36847f80149f7",
@@ -170,13 +174,15 @@ func TestGetMovie(t *testing.T) {
 			CastPerson: tmdb.CastPerson{
 				CreditPerson: tmdb.CreditPerson{
 					PersonSum: tmdb.PersonSum{
+						PersonCore: tmdb.PersonCore{
+							Gender:       tmdb.GenderFemale,
+							Name:         "Helena Bonham Carter",
+							PersonId:     1283,
+							ProfileImage: tmdb.ProfileImage("/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg"),
+						},
 						Adult:              false,
-						Gender:             tmdb.GenderFemale,
 						KnownForDepartment: "Acting",
-						Name:               "Helena Bonham Carter",
-						PersonId:           1283,
 						Popularity:         5.9771,
-						ProfileImage:       tmdb.ProfileImage("/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg"),
 					},
 					OriginalName: "Helena Bonham Carter",
 					CreditId:     "631f0de8bd32090082733691",
@@ -196,13 +202,15 @@ func TestGetMovie(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						Name:         "David Fincher",
+						PersonId:     7467,
+						ProfileImage: "/tpEczFclQZeKAiCeKZZ0adRvtfz.jpg",
+					},
 					Adult:              false,
-					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Directing",
-					Name:               "David Fincher",
-					PersonId:           7467,
 					Popularity:         9.2504,
-					ProfileImage:       "/tpEczFclQZeKAiCeKZZ0adRvtfz.jpg",
 				},
 				OriginalName: "David Fincher",
 				CreditId:     "631f0289568463007bbe28a5",
@@ -213,13 +221,15 @@ func TestGetMovie(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						Name:         "Arnon Milchan",
+						PersonId:     376,
+						ProfileImage: "/b2hBExX4NnczNAnLuTBF4kmNhZm.jpg",
+					},
 					Adult:              false,
-					Gender:             tmdb.GenderMale,
 					KnownForDepartment: "Production",
-					Name:               "Arnon Milchan",
-					PersonId:           376,
 					Popularity:         2.9801,
-					ProfileImage:       "/b2hBExX4NnczNAnLuTBF4kmNhZm.jpg",
 				},
 				OriginalName: "Arnon Milchan",
 				CreditId:     "55731b8192514111610027d7",

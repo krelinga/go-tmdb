@@ -44,13 +44,15 @@ func TestGetTvEpisode(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						PersonId:     9813,
+						Name:         "David Benioff",
+						ProfileImage: tmdb.ProfileImage("/bOlW8pymCeQLfwPIvc2D1MRcUoF.jpg"),
+					},
 					Adult:              false,
-					Gender:             tmdb.GenderMale,
-					PersonId:           9813,
 					KnownForDepartment: "Writing",
-					Name:               "David Benioff",
 					Popularity:         3.065,
-					ProfileImage:       tmdb.ProfileImage("/bOlW8pymCeQLfwPIvc2D1MRcUoF.jpg"),
 				},
 				CreditId:     "5256c8a019c2956ff6046e2b",
 				OriginalName: "David Benioff",
@@ -61,13 +63,15 @@ func TestGetTvEpisode(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						PersonId:     44797,
+						Name:         "Tim Van Patten",
+						ProfileImage: tmdb.ProfileImage("/vwcARZBg4PEzOwnPsXdjRWeUVrZ.jpg"),
+					},
 					Adult:              false,
-					Gender: tmdb.GenderMale,
-					PersonId:           44797,
 					KnownForDepartment: "Directing",
-					Name:               "Tim Van Patten",
 					Popularity:         1.7764,
-					ProfileImage:       tmdb.ProfileImage("/vwcARZBg4PEzOwnPsXdjRWeUVrZ.jpg"),
 				},
 				CreditId:     "5256c8a219c2956ff6046e77",
 				OriginalName: "Tim Van Patten",
@@ -85,13 +89,15 @@ func TestGetTvEpisode(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						PersonId:     119783,
+						Name:         "Joseph Mawle",
+						ProfileImage: tmdb.ProfileImage("/1Ocb9v3h54beGVoJMm4w50UQhLf.jpg"),
+					},
 					Adult:              false,
-					Gender: 		   tmdb.GenderMale,
-					PersonId:           119783,
 					KnownForDepartment: "Acting",
-					Name:               "Joseph Mawle",
 					Popularity:         2.5522,
-					ProfileImage:       tmdb.ProfileImage("/1Ocb9v3h54beGVoJMm4w50UQhLf.jpg"),
 				},
 				CreditId:     "5256c8b919c2956ff604836a",
 				OriginalName: "Joseph Mawle",
@@ -102,13 +108,15 @@ func TestGetTvEpisode(t *testing.T) {
 		{
 			CreditPerson: tmdb.CreditPerson{
 				PersonSum: tmdb.PersonSum{
+					PersonCore: tmdb.PersonCore{
+						Gender:       tmdb.GenderMale,
+						PersonId:     1223792,
+						Name:         "Kristian Nairn",
+						ProfileImage: tmdb.ProfileImage("/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg"),
+					},
 					Adult:              false,
-					Gender: tmdb.GenderMale,
-					PersonId:           1223792,
 					KnownForDepartment: "Acting",
-					Name:               "Kristian Nairn",
 					Popularity:         1.171,
-					ProfileImage: 	 tmdb.ProfileImage("/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg"),
 				},
 				CreditId:     "5256c8be19c2956ff6048446",
 				OriginalName: "Kristian Nairn",
