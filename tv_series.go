@@ -26,6 +26,7 @@ type TvSeries struct {
 	// TODO: ProductionCountries
 	TvSeasons []*TvSeasonSum `json:"seasons"`
 	// TODO: SpokenLanguages
+	SpokenLanguages []*Language `json:"spoken_languages"`
 	Status  string `json:"status"`
 	Tagline string `json:"tagline"`
 	Type    string `json:"type"`
