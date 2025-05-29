@@ -51,4 +51,6 @@ func TestGetTvSeries(t *testing.T) {
 		assert.Contains(t, tv.CreatedBy, ec, "Creators should contain expected creator: %v", ec)
 		checkProfileImage(t, ec.ProfileImage, config)
 	}
+
+	assert.Empty(t, tv.EpisodeRunTimes, "Episode run times should be empty for TV series")
 }
