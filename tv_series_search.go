@@ -32,6 +32,8 @@ func SearchTvSeries(client Client, query string, options ...SearchTvSeriesOption
 		for page := 1; ; page++ {
 			params := GetParams{
 				"query":         query,
+				"include_adult": fmt.Sprintf("%t", o.wantAdult),
+				"page":          fmt.Sprintf("%d", page),
 			}
 			data, err := checkCode(client.Get(ctx, "/search/tv", params))
 			if err != nil {
@@ -64,4 +66,5 @@ type SearchTvSeriesOption interface {
 
 type searchTvSeriesOptions struct {
 	baseOptions
+	wantAdult bool
 }

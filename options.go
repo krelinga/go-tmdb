@@ -77,6 +77,10 @@ func (a adultOption) applyToSearchMoviesOptions(o *searchMoviesOptions) {
 	o.wantAdult = true
 }
 
+func (a adultOption) applyToSearchTvSeriesOptions(o *searchTvSeriesOptions) {
+	o.wantAdult = true
+}
+
 func WithReleaseDates() releaseDatesOption {
 	return releaseDatesOption{}
 }
