@@ -9,29 +9,19 @@ import (
 type TvSeriesId int
 
 type TvSeries struct {
-	Adult           bool               `json:"adult"`
-	BackdropImage   BackdropImage      `json:"backdrop_path"`
+	TvSeriesSum
 	CreatedBy       []*TvSeriesCreator `json:"created_by"`
 	EpisodeRunTimes []int              `json:"episode_run_time"`
-	FirstAirDate    DateYYYYMMDD       `json:"first_air_date"`
 	Genres          []*Genre           `json:"genres"`
 	Homepage        string             `json:"homepage"`
-	TvSeriesId      TvSeriesId         `json:"id"`
 	InProduction    bool               `json:"in_production"`
 	Languages       []string           `json:"languages"`
 	LastAirDate     DateYYYYMMDD       `json:"last_air_date"`
 	// TODO: LastEpisodeToAir
-	Name             string `json:"name"`
 	NextEpisodeToAir string `json:"next_episode_to_air"`
 	// TODO: Networks
 	NumberOfEpisodes int `json:"number_of_episodes"`
 	NumberOfSeasons  int `json:"number_of_seasons"`
-	// TODO: OriginCountries
-	OriginalLanguage string      `json:"original_language"`
-	OriginalName     string      `json:"original_name"`
-	Overview         string      `json:"overview"`
-	Popularity       float64     `json:"popularity"`
-	PosterImage      PosterImage `json:"poster_path"`
 	// TODO: ProductionCompanies
 	// TODO: ProductionCountries
 	// TODO: Seasons
@@ -39,6 +29,20 @@ type TvSeries struct {
 	Status      string  `json:"status"`
 	Tagline     string  `json:"tagline"`
 	Type        string  `json:"type"`
+}
+
+type TvSeriesSum struct {
+	Adult           bool               `json:"adult"`
+	BackdropImage   BackdropImage      `json:"backdrop_path"`
+	TvSeriesId      TvSeriesId         `json:"id"`
+	// TODO: OriginCountries
+	OriginalLanguage string      `json:"original_language"`
+	OriginalName     string      `json:"original_name"`
+	Overview         string      `json:"overview"`
+	Popularity       float64     `json:"popularity"`
+	PosterImage      PosterImage `json:"poster_path"`
+	FirstAirDate    DateYYYYMMDD       `json:"first_air_date"`
+	Name             string `json:"name"`
 	VoteAverage float64 `json:"vote_average"`
 	VoteCount   int     `json:"vote_count"`
 }
