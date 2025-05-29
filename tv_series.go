@@ -48,11 +48,8 @@ type TvSeriesSum struct {
 }
 
 type TvSeriesCreator struct {
-	Id           int          `json:"id"`
+	PersonCore
 	CreditId     CreditId     `json:"credit_id"`
-	Name         string       `json:"name"`
-	Gender       Gender       `json:"gender"`
-	ProfileImage ProfileImage `json:"profile_path"`
 }
 
 func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*TvSeries, error) {
