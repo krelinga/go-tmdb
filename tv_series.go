@@ -10,15 +10,15 @@ type TvSeriesId int
 
 type TvSeries struct {
 	TvSeriesSum
-	CreatedBy       []*TvSeriesCreator `json:"created_by"`
-	EpisodeRunTimes []int              `json:"episode_run_time"`
-	Genres          []*Genre           `json:"genres"`
-	Homepage        string             `json:"homepage"`
-	InProduction    bool               `json:"in_production"`
-	Languages       []string           `json:"languages"`
-	LastAirDate     DateYYYYMMDD       `json:"last_air_date"`
-	// TODO: LastEpisodeToAir
-	NextEpisodeToAir string `json:"next_episode_to_air"`
+	CreatedBy        []*TvSeriesCreator `json:"created_by"`
+	EpisodeRunTimes  []int              `json:"episode_run_time"`
+	Genres           []*Genre           `json:"genres"`
+	Homepage         string             `json:"homepage"`
+	InProduction     bool               `json:"in_production"`
+	Languages        []string           `json:"languages"`
+	LastAirDate      DateYYYYMMDD       `json:"last_air_date"`
+	LastEpisodeToAir *TvEpisodeSum      `json:"last_episode_to_air"`
+	NextEpisodeToAir string             `json:"next_episode_to_air"`
 	// TODO: Networks
 	NumberOfEpisodes int `json:"number_of_episodes"`
 	NumberOfSeasons  int `json:"number_of_seasons"`
