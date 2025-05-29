@@ -9,6 +9,7 @@ type CountrySum struct {
 	EnglishName      string
 }
 
+// TODO: this seems unnecessary?
 func (c *CountrySum) UnmarshalJSON(data []byte) error {
 	var raw struct {
 		CountryIso3166_1 CountryIso3166_1 `json:"iso_3166_1"`
