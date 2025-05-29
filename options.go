@@ -94,6 +94,7 @@ func (r releaseDatesOption) applyToGetMovieOptions(o *getMovieOptions) {
 func WithExternalIds() externalIdsOption {
 	return externalIdsOption{}
 }
+
 type externalIdsOption struct{}
 
 func (e externalIdsOption) applyToGetTvEpisodeOptions(o *getTvEpisodeOptions) {
@@ -108,4 +109,14 @@ type firstAirDateYearOption int
 
 func (f firstAirDateYearOption) applyToSearchTvSeriesOptions(o *searchTvSeriesOptions) {
 	o.firstAirDateYear = int(f)
+}
+
+func WithYear(year int) yearOption {
+	return yearOption(year)
+}
+
+type yearOption int
+
+func (y yearOption) applyToSearchTvSeriesOptions(o *searchTvSeriesOptions) {
+	o.year = int(y)
 }

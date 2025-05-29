@@ -38,6 +38,9 @@ func SearchTvSeries(client Client, query string, options ...SearchTvSeriesOption
 			if o.firstAirDateYear > 0 {
 				params["first_air_date_year"] = fmt.Sprintf("%d", o.firstAirDateYear)
 			}
+			if o.year > 0 {
+				params["year"] = fmt.Sprintf("%d", o.year)
+			}
 			data, err := checkCode(client.Get(ctx, "/search/tv", params))
 			if err != nil {
 				yield(nil, err)
@@ -71,4 +74,5 @@ type searchTvSeriesOptions struct {
 	baseOptions
 	wantAdult        bool
 	firstAirDateYear int
+	year int
 }
