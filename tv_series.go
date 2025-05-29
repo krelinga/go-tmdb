@@ -19,9 +19,9 @@ type TvSeries struct {
 	LastAirDate      DateYYYYMMDD       `json:"last_air_date"`
 	LastEpisodeToAir *TvEpisodeSum      `json:"last_episode_to_air"`
 	NextEpisodeToAir string             `json:"next_episode_to_air"`
-	// TODO: Networks
-	NumberOfEpisodes int `json:"number_of_episodes"`
-	NumberOfSeasons  int `json:"number_of_seasons"`
+	TvNetworks       []*TvNetwork       `json:"networks"`
+	NumberOfEpisodes int                `json:"number_of_episodes"`
+	NumberOfSeasons  int                `json:"number_of_seasons"`
 	// TODO: ProductionCompanies
 	// TODO: ProductionCountries
 	// TODO: Seasons
@@ -49,7 +49,7 @@ type TvSeriesSum struct {
 
 type TvSeriesCreator struct {
 	PersonCore
-	CreditId     CreditId     `json:"credit_id"`
+	CreditId CreditId `json:"credit_id"`
 }
 
 func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*TvSeries, error) {
