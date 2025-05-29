@@ -26,25 +26,25 @@ type TvSeries struct {
 	// TODO: ProductionCountries
 	// TODO: Seasons
 	// TODO: SpokenLanguages
-	Status      string  `json:"status"`
-	Tagline     string  `json:"tagline"`
-	Type        string  `json:"type"`
+	Status  string `json:"status"`
+	Tagline string `json:"tagline"`
+	Type    string `json:"type"`
 }
 
 type TvSeriesSum struct {
-	Adult           bool               `json:"adult"`
-	BackdropImage   BackdropImage      `json:"backdrop_path"`
-	TvSeriesId      TvSeriesId         `json:"id"`
-	// TODO: OriginCountries
-	OriginalLanguage string      `json:"original_language"`
-	OriginalName     string      `json:"original_name"`
-	Overview         string      `json:"overview"`
-	Popularity       float64     `json:"popularity"`
-	PosterImage      PosterImage `json:"poster_path"`
-	FirstAirDate    DateYYYYMMDD       `json:"first_air_date"`
-	Name             string `json:"name"`
-	VoteAverage float64 `json:"vote_average"`
-	VoteCount   int     `json:"vote_count"`
+	Adult            bool               `json:"adult"`
+	BackdropImage    BackdropImage      `json:"backdrop_path"`
+	TvSeriesId       TvSeriesId         `json:"id"`
+	OriginCountries  []CountryIso3166_1 `json:"origin_country"`
+	OriginalLanguage string             `json:"original_language"`
+	OriginalName     string             `json:"original_name"`
+	Overview         string             `json:"overview"`
+	Popularity       float64            `json:"popularity"`
+	PosterImage      PosterImage        `json:"poster_path"`
+	FirstAirDate     DateYYYYMMDD       `json:"first_air_date"`
+	Name             string             `json:"name"`
+	VoteAverage      float64            `json:"vote_average"`
+	VoteCount        int                `json:"vote_count"`
 }
 
 type TvSeriesCreator struct {
