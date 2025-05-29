@@ -53,4 +53,19 @@ func TestGetTvSeries(t *testing.T) {
 	}
 
 	assert.Empty(t, tv.EpisodeRunTimes, "Episode run times should be empty for TV series")
+	expectedGenres := []*tmdb.Genre{
+		{
+			GenreId: 10765,
+			Name:    "Sci-Fi & Fantasy",
+		},
+		{
+			GenreId: 18,
+			Name:    "Drama",
+		},
+		{
+			GenreId: 10759,
+			Name:    "Action & Adventure",
+		},
+	}
+	assert.Equal(t, expectedGenres, tv.Genres, "Unexpected genres")
 }
