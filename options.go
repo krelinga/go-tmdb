@@ -99,3 +99,13 @@ type externalIdsOption struct{}
 func (e externalIdsOption) applyToGetTvEpisodeOptions(o *getTvEpisodeOptions) {
 	o.wantExternalIds = true
 }
+
+func WithFirstAirDateYear(year int) firstAirDateYearOption {
+	return firstAirDateYearOption(year)
+}
+
+type firstAirDateYearOption int
+
+func (f firstAirDateYearOption) applyToSearchTvSeriesOptions(o *searchTvSeriesOptions) {
+	o.firstAirDateYear = int(f)
+}

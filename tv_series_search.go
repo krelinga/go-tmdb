@@ -20,10 +20,10 @@ func SearchTvSeries(client Client, query string, options ...SearchTvSeriesOption
 		}
 
 		type rawReply struct {
-			Page         int                   `json:"page"`
+			Page         int                     `json:"page"`
 			Results      []*TvSeriesSearchResult `json:"results"`
-			TotalPages   int                   `json:"total_pages"`
-			TotalResults int                   `json:"total_results"`
+			TotalPages   int                     `json:"total_pages"`
+			TotalResults int                     `json:"total_results"`
 		}
 		ctx := context.Background()
 		if o.useContext != nil {
@@ -34,6 +34,9 @@ func SearchTvSeries(client Client, query string, options ...SearchTvSeriesOption
 				"query":         query,
 				"include_adult": fmt.Sprintf("%t", o.wantAdult),
 				"page":          fmt.Sprintf("%d", page),
+			}
+			if o.firstAirDateYear > 0 {
+				params["first_air_date_year"] = fmt.Sprintf("%d", o.firstAirDateYear)
 			}
 			data, err := checkCode(client.Get(ctx, "/search/tv", params))
 			if err != nil {
@@ -66,5 +69,6 @@ type SearchTvSeriesOption interface {
 
 type searchTvSeriesOptions struct {
 	baseOptions
-	wantAdult bool
+	wantAdult        bool
+	firstAirDateYear int
 }
