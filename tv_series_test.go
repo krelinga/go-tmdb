@@ -168,4 +168,14 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, "Ended", tv.Status, "Unexpected status")
 	assert.Equal(t, "Winter is coming.", tv.Tagline, "Unexpected tagline")
 	assert.Equal(t, "Scripted", tv.Type, "Unexpected type")
+
+	expectedExternalIds := &tmdb.TvSeriesExternalIds{
+		FacebookTvSeriesId: tmdb.FacebookTvSeriesId("GameOfThrones"),
+		ImdbTvSeriesId: "tt0944947",
+		InstagramTvSeriesId: tmdb.InstagramTvSeriesId("gameofthrones"),
+		TheTvdbTvSeriesId: tmdb.TheTvdbTvSeriesId(121361),
+		TwitterTvSeriesId: tmdb.TwitterTvSeriesId("GameOfThrones"),
+		WikidataTvSeriesId: tmdb.WikidataTvSeriesId("Q23572"),
+	}
+	assert.Equal(t, expectedExternalIds, tv.ExternalIds, "Unexpected external IDs")
 }

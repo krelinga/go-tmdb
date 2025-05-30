@@ -74,7 +74,7 @@ type TvSeriesExternalIds struct {
 	WikidataTvSeriesId  WikidataTvSeriesId  `json:"wikidata_id"`
 }
 
-func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*TvSeries, error) {
+func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*GetTvSeriesReply, error) {
 	o := getTvSeriesOptions{}
 	for _, opt := range options {
 		opt.applyToGetTvSeriesOptions(&o)
@@ -97,7 +97,7 @@ func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*T
 	if o.rawReply != nil {
 		*o.rawReply = data
 	}
-	r := &TvSeries{}
+	r := &GetTvSeriesReply{}
 	if err := json.Unmarshal(data, r); err != nil {
 		return nil, err
 	}
