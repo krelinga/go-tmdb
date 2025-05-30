@@ -99,4 +99,5 @@ func TestGetTvSeries(t *testing.T) {
 	}
 	assert.Equal(t, expectedNetworks, tv.TvNetworks, "Unexpected TV networks")
 	assert.Equal(t, 73, tv.NumberOfEpisodes, "Unexpected number of episodes")
+	assert.Equal(t, 8, tv.NumberOfSeasons, "Unexpected number of seasons")
 }
