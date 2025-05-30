@@ -167,4 +167,5 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, expectedSpokenLanguages, tv.SpokenLanguages, "Unexpected spoken languages")
 	assert.Equal(t, "Ended", tv.Status, "Unexpected status")
 	assert.Equal(t, "Winter is coming.", tv.Tagline, "Unexpected tagline")
+	assert.Equal(t, "Scripted", tv.Type, "Unexpected type")
 }
