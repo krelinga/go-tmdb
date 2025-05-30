@@ -12,7 +12,7 @@ func TestGetTvSeries(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetConfiguration failed: %v", err)
 	}
-	tv, err := tmdb.GetTvSeries(getClient(t), 1399)
+	tv, err := tmdb.GetTvSeries(getClient(t), 1399, tmdb.WithExternalIds())
 	if err != nil {
 		t.Fatalf("GetTVSeries failed: %v", err)
 	}
@@ -28,13 +28,13 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, "Game of Thrones", tv.OriginalName, "Unexpected original name")
 	overview := "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
 	assert.Equal(t, overview, tv.Overview, "Unexpected overview")
-	assert.Equal(t, 186.7642, tv.Popularity, "Unexpected popularity")
+	assert.Equal(t, 185.5361, tv.Popularity, "Unexpected popularity")
 	assert.Equal(t, tmdb.PosterImage("/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"), tv.PosterImage, "Unexpected poster image")
 	checkPosterImage(t, tv.PosterImage, config)
 	assert.Equal(t, tmdb.DateYYYYMMDD("2011-04-17"), tv.FirstAirDate, "Unexpected first air date")
 	assert.Equal(t, "Game of Thrones", tv.Name, "Unexpected name")
 	assert.Equal(t, 8.456, tv.VoteAverage, "Unexpected vote average")
-	assert.Equal(t, 25031, tv.VoteCount, "Unexpected vote count")
+	assert.Equal(t, 25049, tv.VoteCount, "Unexpected vote count")
 
 	expectedCreatorSubset := []*tmdb.TvSeriesCreator{
 		{

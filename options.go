@@ -101,6 +101,10 @@ func (e externalIdsOption) applyToGetTvEpisodeOptions(o *getTvEpisodeOptions) {
 	o.wantExternalIds = true
 }
 
+func (e externalIdsOption) applyToGetTvSeriesOptions(o *getTvSeriesOptions) {
+	o.wantExternalIds = true
+}
+
 func WithFirstAirDateYear(year int) firstAirDateYearOption {
 	return firstAirDateYearOption(year)
 }

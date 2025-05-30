@@ -52,6 +52,28 @@ type TvSeriesCreator struct {
 	CreditId CreditId `json:"credit_id"`
 }
 
+type GetTvSeriesReply struct {
+	*TvSeries
+
+	ExternalIds *TvSeriesExternalIds `json:"external_ids,omitempty"`
+}
+
+type FacebookTvSeriesId string
+type ImdbTvSeriesId string
+type InstagramTvSeriesId string
+type TheTvdbTvSeriesId int
+type TwitterTvSeriesId string
+type WikidataTvSeriesId string
+
+type TvSeriesExternalIds struct {
+	FacebookTvSeriesId  FacebookTvSeriesId  `json:"facebook_id"`
+	ImdbTvSeriesId      ImdbTvSeriesId      `json:"imdb_id"`
+	InstagramTvSeriesId InstagramTvSeriesId `json:"instagram_id"`
+	TheTvdbTvSeriesId   TheTvdbTvSeriesId   `json:"tvdb_id"`
+	TwitterTvSeriesId   TwitterTvSeriesId   `json:"twitter_id"`
+	WikidataTvSeriesId  WikidataTvSeriesId  `json:"wikidata_id"`
+}
+
 func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*TvSeries, error) {
 	o := getTvSeriesOptions{}
 	for _, opt := range options {
@@ -63,7 +85,12 @@ func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*T
 		ctx = *o.useContext
 	}
 
-	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d", id), nil))
+	params := make(GetParams)
+	if o.wantExternalIds {
+		params["append_to_response"] = "external_ids"
+	}
+
+	data, err := checkCode(client.Get(ctx, fmt.Sprintf("/tv/%d", id), params))
 	if err != nil {
 		return nil, err
 	}
@@ -79,6 +106,7 @@ func GetTvSeries(client Client, id TvSeriesId, options ...GetTvSeriesOption) (*T
 
 type getTvSeriesOptions struct {
 	baseOptions
+	wantExternalIds bool
 }
 
 type GetTvSeriesOption interface {
