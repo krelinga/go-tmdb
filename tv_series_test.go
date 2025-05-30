@@ -157,4 +157,12 @@ func TestGetTvSeries(t *testing.T) {
 		assert.Contains(t, tv.TvSeasons, es, "TV seasons should contain expected season: %v", es)
 		checkPosterImage(t, es.PosterImage, config)
 	}
+	expectedSpokenLanguages := []*tmdb.Language{
+		{
+			EnglishName: "English",
+			Iso639_1:    "en",
+			Name:        "English",
+		},
+	}
+	assert.Equal(t, expectedSpokenLanguages, tv.SpokenLanguages, "Unexpected spoken languages")
 }
