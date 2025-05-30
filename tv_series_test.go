@@ -89,4 +89,13 @@ func TestGetTvSeries(t *testing.T) {
 	}
 	assert.Equal(t, expectedLastEpisode, tv.LastEpisodeToAir, "Unexpected last episode to air")
 	assert.Nil(t, tv.NextEpisodeToAir, "Next episode to air should be nil for completed series")
+	expectedNetworks := []*tmdb.TvNetwork{
+		{
+			TvNetworkId:   49,
+			Name:          "HBO",
+			OriginCountry: "US",
+			LogoImage:     tmdb.LogoImage("/tuomPhY2UtuPTqqFnKMVHvSb724.png"),
+		},
+	}
+	assert.Equal(t, expectedNetworks, tv.TvNetworks, "Unexpected TV networks")
 }
