@@ -120,4 +120,15 @@ func TestGetTvSeries(t *testing.T) {
 			checkLogoImage(t, epc.LogoImage, config)
 		}
 	}
+	expectedProductionCountries := []*tmdb.CountrySum{
+		{
+			CountryIso3166_1: "GB",
+			EnglishName:      "United Kingdom",
+		},
+		{
+			CountryIso3166_1: "US",
+			EnglishName:      "United States of America",
+		},
+	}
+	assert.Equal(t, expectedProductionCountries, tv.ProductionCountries, "Unexpected production countries")
 }
