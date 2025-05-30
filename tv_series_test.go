@@ -70,4 +70,5 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, expectedGenres, tv.Genres, "Unexpected genres")
 	assert.Equal(t, "https://www.hbo.com/game-of-thrones", tv.Homepage, "Unexpected homepage")
 	assert.False(t, tv.InProduction, "TV series should not be in production")
+	assert.Equal(t, []string{"en"}, tv.Languages, "Unexpected languages")
 }
