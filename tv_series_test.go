@@ -72,4 +72,20 @@ func TestGetTvSeries(t *testing.T) {
 	assert.False(t, tv.InProduction, "TV series should not be in production")
 	assert.Equal(t, []string{"en"}, tv.Languages, "Unexpected languages")
 	assert.Equal(t, tmdb.DateYYYYMMDD("2019-05-19"), tv.LastAirDate, "Unexpected last air date")
+	expectedLastEpisode := &tmdb.TvEpisodeSum{
+		TvEpisodeId:     1551830,
+		Name:            "The Iron Throne",
+		Overview:        "In the aftermath of the devastating attack on King's Landing, Daenerys must face the survivors.",
+		VoteAverage:     4.544,
+		VoteCount:       353,
+		AirDate:         tmdb.DateYYYYMMDD("2019-05-19"),
+		TvEpisodeNumber: 6,
+		EpisodeType:     "finale",
+		ProductionCode:  "806",
+		Runtime: 	   tmdb.Minutes(80),
+		TvSeasonNumber:  8,
+		TvSeriesId:      1399,
+		StillImage:      tmdb.StillImage("/zBi2O5EJfgTS6Ae0HdAYLm9o2nf.jpg"),
+	}
+	assert.Equal(t, expectedLastEpisode, tv.LastEpisodeToAir, "Unexpected last episode to air")
 }
