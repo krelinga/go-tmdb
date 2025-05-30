@@ -82,10 +82,11 @@ func TestGetTvSeries(t *testing.T) {
 		TvEpisodeNumber: 6,
 		EpisodeType:     "finale",
 		ProductionCode:  "806",
-		Runtime: 	   tmdb.Minutes(80),
+		Runtime:         tmdb.Minutes(80),
 		TvSeasonNumber:  8,
 		TvSeriesId:      1399,
 		StillImage:      tmdb.StillImage("/zBi2O5EJfgTS6Ae0HdAYLm9o2nf.jpg"),
 	}
 	assert.Equal(t, expectedLastEpisode, tv.LastEpisodeToAir, "Unexpected last episode to air")
+	assert.Nil(t, tv.NextEpisodeToAir, "Next episode to air should be nil for completed series")
 }

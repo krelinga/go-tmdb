@@ -18,7 +18,7 @@ type TvSeries struct {
 	Languages             []string                `json:"languages"`
 	LastAirDate           DateYYYYMMDD            `json:"last_air_date"`
 	LastEpisodeToAir      *TvEpisodeSum           `json:"last_episode_to_air"`
-	NextEpisodeToAir      string                  `json:"next_episode_to_air"`
+	NextEpisodeToAir      *TvEpisodeSum           `json:"next_episode_to_air"`
 	TvNetworks            []*TvNetwork            `json:"networks"`
 	NumberOfEpisodes      int                     `json:"number_of_episodes"`
 	NumberOfSeasons       int                     `json:"number_of_seasons"`
