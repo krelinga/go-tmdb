@@ -100,4 +100,24 @@ func TestGetTvSeries(t *testing.T) {
 	assert.Equal(t, expectedNetworks, tv.TvNetworks, "Unexpected TV networks")
 	assert.Equal(t, 73, tv.NumberOfEpisodes, "Unexpected number of episodes")
 	assert.Equal(t, 8, tv.NumberOfSeasons, "Unexpected number of seasons")
+	expectedProductionCompanies := []*tmdb.ProductionCompanySum{
+		{
+			ProductionCompanyId: 76043,
+			LogoImage:           tmdb.LogoImage("/9RO2vbQ67otPrBLXCaC8UMp3Qat.png"),
+			Name:                "Revolution Sun Studios",
+			OriginCountry:       "US",
+		},
+		{
+			ProductionCompanyId: 12525,
+			LogoImage:           "",
+			Name:                "Television 360",
+			OriginCountry:       "",
+		},
+	}
+	for _, epc := range expectedProductionCompanies {
+		assert.Contains(t, tv.ProductionCompanySums, epc, "Production companies should contain expected company: %v", epc)
+		if epc.LogoImage != "" {
+			checkLogoImage(t, epc.LogoImage, config)
+		}
+	}
 }
