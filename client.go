@@ -119,7 +119,7 @@ func savedKey(path string, params GetParams) string {
 	prefix := "GET_"
 	var suffix string
 	if len(values) > 0 {
-		suffix = "?" + strings.Join(values, "&")
+		suffix = "__" + strings.Join(values, "&")
 	}
 	return prefix + path + suffix
 }
