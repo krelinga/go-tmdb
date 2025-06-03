@@ -5,15 +5,15 @@ import (
 	"strings"
 )
 
-type part interface {
+type column interface {
 	Endpoint() string
 }
 
-func appendToResponse[T part](parts []T) string {
-	stringParts := make([]string, len(parts))
-	for _, part := range parts {
-		stringParts = append(stringParts, part.Endpoint())
+func appendToResponse[T column](columns []T) string {
+	stringCols := make([]string, len(columns))
+	for _, col := range columns {
+		stringCols = append(stringCols, col.Endpoint())
 	}
-	slices.Sort(stringParts)
-	return strings.Join(stringParts, ",")
+	slices.Sort(stringCols)
+	return strings.Join(stringCols, ",")
 }
