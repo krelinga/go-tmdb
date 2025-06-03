@@ -63,11 +63,12 @@ func movieNoDataError(field string, col MovieDataCol) error {
 
 // MovieData implementations may panic with these errors if the corresponding data is not available.
 var (
-	ErrMovieNoDataAdult    = movieNoDataError("Adult", movieDataNone)
-	ErrMovieNoDataBudget   = movieNoDataError("Budget", movieDataNone)
-	ErrMovieNoDataBackdrop = movieNoDataError("Backdrop", movieDataNone)
-	ErrMovieNoDataGenreIds = movieNoDataError("GenreIds", movieDataNone)
-	ErrMovieNoDataGenres   = movieNoDataError("Genres", movieDataNone)
+	ErrMovieNoDataAdult      = movieNoDataError("Adult", movieDataNone)
+	ErrMovieNoDataBackdrop   = movieNoDataError("Backdrop", movieDataNone)
+	ErrMovieNoDataCollection = movieNoDataError("BelongsToCollection", movieDataNone)
+	ErrMovieNoDataBudget     = movieNoDataError("Budget", movieDataNone)
+	ErrMovieNoDataGenreIds   = movieNoDataError("GenreIds", movieDataNone)
+	ErrMovieNoDataGenres     = movieNoDataError("Genres", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -96,6 +97,7 @@ type Movie interface {
 type MovieData interface {
 	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
 	Adult() bool
+	BelongsToCollection() string
 	Budget() int
 	Backdrop() Image
 	GenreIds() iter.Seq[GenreId]
@@ -149,12 +151,16 @@ func (movieNoData) Adult() bool {
 	panic(ErrMovieNoDataAdult)
 }
 
-func (movieNoData) Budget() int {
-	panic(ErrMovieNoDataBudget)
-}
-
 func (movieNoData) Backdrop() Image {
 	panic(ErrMovieNoDataBackdrop)
+}
+
+func (movieNoData) BelongsToCollection() string {
+	panic(ErrMovieNoDataCollection)
+}
+
+func (movieNoData) Budget() int {
+	panic(ErrMovieNoDataBudget)
 }
 
 func (movieNoData) GenreIds() iter.Seq[GenreId] {

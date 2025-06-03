@@ -98,15 +98,19 @@ func (p *getMovieData) Adult() bool {
 	return *p.rawDetails.Adult
 }
 
-func (p *getMovieData) Budget() int {
-	return p.rawDetails.Budget
-}
-
 func (p *getMovieData) Backdrop() Image {
 	return image{
 		raw:    p.rawDetails.BackdropPath,
 		client: p.client,
 	}
+}
+
+func (p *getMovieData) BelongsToCollection() string {
+	return p.rawDetails.BelongsToCollection
+}
+
+func (p *getMovieData) Budget() int {
+	return p.rawDetails.Budget
 }
 
 func (p *getMovieData) GenreIds() iter.Seq[GenreId] {
