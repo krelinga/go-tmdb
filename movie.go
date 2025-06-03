@@ -96,38 +96,38 @@ func movieUnsupportedPanic(method string) {
 	panic(fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method))
 }
 
-type movieNoParts struct{}
+type movieNoData struct{}
 
-func (movieNoParts) upgrade(parts *getMovieParts) MovieData {
+func (movieNoData) upgrade(parts *getMovieParts) MovieData {
 	return parts
 }
 
-func (movieNoParts) Adult() bool {
+func (movieNoData) Adult() bool {
 	movieUnsupportedPanic("Adult")
 	return false // unreachable, but required by the interface
 }
 
-func (movieNoParts) Budget() int {
+func (movieNoData) Budget() int {
 	movieUnsupportedPanic("Budget")
 	return 0 // unreachable, but required by the interface
 }
 
-func (movieNoParts) Cast() iter.Seq[Cast] {
+func (movieNoData) Cast() iter.Seq[Cast] {
 	movieUnsupportedPanic("Cast")
 	return nil // unreachable, but required by the interface
 }
 
-func (movieNoParts) Crew() iter.Seq[Crew] {
+func (movieNoData) Crew() iter.Seq[Crew] {
 	movieUnsupportedPanic("Crew")
 	return nil // unreachable, but required by the interface
 }
 
-func (movieNoParts) WikidataId() WikidataMovieId {
+func (movieNoData) WikidataId() WikidataMovieId {
 	movieUnsupportedPanic("WikidataId")
 	return "" // unreachable, but required by the interface
 }
 
-func (movieNoParts) Keywords() iter.Seq[Keyword] {
+func (movieNoData) Keywords() iter.Seq[Keyword] {
 	movieUnsupportedPanic("Keywords")
 	return nil // unreachable, but required by the interface
 }

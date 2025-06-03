@@ -85,7 +85,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 					language: language,
 					MovieData: &searchMovieResultParts{
 						raw:       smrMovie,
-						MovieData: movieNoParts{},
+						MovieData: movieNoData{},
 					},
 				}
 				if !yield(m, nil) {
