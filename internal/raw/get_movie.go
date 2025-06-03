@@ -10,8 +10,8 @@ type GetMovie struct {
 
 type GetMovieDetails struct {
 	Adult        *bool    `json:"adult"`
-	Budget       int      `json:"budget"`
 	BackdropPath string   `json:"backdrop_path"`
+	Budget       int      `json:"budget"`
 	Genres       []*Genre `json:"genres"`
 }
 
