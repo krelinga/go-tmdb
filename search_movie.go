@@ -83,7 +83,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 					client:   c,
 					id:       MovieId(smrMovie.Id),
 					language: language,
-					MovieData: &searchMovieResultParts{
+					MovieData: &searchMovieResultData{
 						raw:       smrMovie,
 						MovieData: movieNoData{},
 					},
@@ -99,16 +99,16 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 	}
 }
 
-type searchMovieResultParts struct {
+type searchMovieResultData struct {
 	raw *raw.SearchMovieResult
 	MovieData
 }
 
-func (s *searchMovieResultParts) upgrade(parts *getMovieData) MovieData {
+func (s *searchMovieResultData) upgrade(parts *getMovieData) MovieData {
 	s.MovieData = parts
 	return s
 }
 
-func (s *searchMovieResultParts) Adult() bool {
+func (s *searchMovieResultData) Adult() bool {
 	return *s.raw.Adult
 }
