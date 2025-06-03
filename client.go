@@ -3,6 +3,7 @@ package tmdb
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -60,6 +61,19 @@ func (c *Client) httpClient() *http.Client {
 	return c.options.HttpClient
 }
 
+var ErrApiHttpNotOk = errors.New("TMDB API returned non-OK HTTP status code")
+
+func checkResponseCode(resp *http.Response) error {
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		return nil
+	}
+	status := &raw.ApiStatus{}
+	if err := json.NewDecoder(resp.Body).Decode(status); err != nil {
+		return fmt.Errorf("decoding error response: %w", err)
+	}
+	return fmt.Errorf("%w: Code %d, Message: %s", ErrApiHttpNotOk, status.Code, status.Message)
+}
+
 func get(ctx context.Context, c *Client, endpoint string, params url.Values, out raw.Raw) error {
 	c.checkOk()
 	if c.options.ApiKey != "" {
@@ -86,11 +100,10 @@ func get(ctx context.Context, c *Client, endpoint string, params url.Values, out
 		return fmt.Errorf("making request: %w", err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("TMDB API returned status code %d", resp.StatusCode)
+	if err := checkResponseCode(resp); err != nil {
+		return err
 	}
-	decoder := json.NewDecoder(resp.Body)
-	if err := decoder.Decode(out); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
 		return fmt.Errorf("decoding response: %w", err)
 	}
 	out.SetDefaults()
