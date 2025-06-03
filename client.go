@@ -1,17 +1,19 @@
 package tmdb
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
 type NewClientOptions struct {
-	HttpClient *http.Client
+	HttpClient  *http.Client
 	ApiKey      string
 	BearerToken string
 }
@@ -33,28 +35,10 @@ func NewClient(options *NewClientOptions) *Client {
 	}
 
 	c.getConfiguration = sync.OnceValues(func() (*raw.Configuration, error) {
-		c.checkOk()
-		theUrl := &url.URL{
-			Path: "/3/configuration",
-		}
-		c.prepUrl(theUrl)
-		req, err := http.NewRequest("GET", theUrl.String(), nil)
-		if err != nil {
-			return nil, err
-		}
-		c.prepRequest(req)
-		reply, err := c.httpClient().Do(req)
-		if err != nil {
-			return nil, err
-		}
-		defer reply.Body.Close()
-		if reply.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("TMDB API returned status code %d", reply.StatusCode)
-		}
 		configuration := &raw.Configuration{}
-		decoder := json.NewDecoder(reply.Body)
-		if err := decoder.Decode(configuration); err != nil {
-			return nil, fmt.Errorf("decoding configuration: %w", err)
+		err := get(context.Background(), c, "configuration", nil, configuration)
+		if err != nil {
+			return nil, fmt.Errorf("getting configuration: %w", err)
 		}
 		return configuration, nil
 	})
@@ -76,20 +60,39 @@ func (c *Client) httpClient() *http.Client {
 	return c.options.HttpClient
 }
 
-func (c *Client) prepRequest(req *http.Request) {
+func get(ctx context.Context, c *Client, endpoint string, params url.Values, out raw.Raw) error {
 	c.checkOk()
+	if c.options.ApiKey != "" {
+		params.Add("api_key", c.options.ApiKey)
+	}
+	theUrl := &url.URL{
+		Scheme:   "https",
+		Host:     "api.themoviedb.org",
+		Path:     fmt.Sprintf("/3/%s", strings.TrimLeft(endpoint, "/")),
+		RawQuery: params.Encode(),
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, theUrl.String(), nil)
+	if err != nil {
+		return fmt.Errorf("creating request: %w", err)
+	}
 	if c.options.BearerToken != "" {
 		req.Header.Add("Authorization", "Bearer "+c.options.BearerToken)
 	}
-}
-
-func (c *Client) prepUrl(theUrl *url.URL) {
-	c.checkOk()
-	theUrl.Scheme = "https"
-	theUrl.Host = "api.themoviedb.org"
-	if c.options.ApiKey != "" {
-		q := theUrl.Query()
-		q.Add("api_key", c.options.ApiKey)
-		theUrl.RawQuery = q.Encode()
+	if ctx.Err() != nil {
+		return ctx.Err()
 	}
+	resp, err := c.httpClient().Do(req)
+	if err != nil {
+		return fmt.Errorf("making request: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("TMDB API returned status code %d", resp.StatusCode)
+	}
+	decoder := json.NewDecoder(resp.Body)
+	if err := decoder.Decode(out); err != nil {
+		return fmt.Errorf("decoding response: %w", err)
+	}
+	out.SetDefaults()
+	return nil
 }

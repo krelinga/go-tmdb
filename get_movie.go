@@ -2,10 +2,8 @@ package tmdb
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"iter"
-	"net/http"
 	"net/url"
 	"slices"
 
@@ -42,32 +40,12 @@ func getMovie(ctx context.Context, c *Client, id MovieId, language Language, col
 	if len(columns) > 0 {
 		v.Set("append_to_response", appendToResponse(columns))
 	}
-	theUrl := &url.URL{
-		Path:     fmt.Sprintf("/3/movie/%d", id),
-		RawQuery: v.Encode(),
-	}
-	c.prepUrl(theUrl)
-	req, err := http.NewRequestWithContext(ctx, "GET", theUrl.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-	c.prepRequest(req)
-	if ctx.Err() != nil {
-		return nil, ctx.Err()
-	}
-	reply, err := c.httpClient().Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer reply.Body.Close()
-	if reply.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("TMDB API returned status code %d", reply.StatusCode)
-	}
-	decoder := json.NewDecoder(reply.Body)
+
 	raw := &raw.GetMovie{}
-	if err := decoder.Decode(&raw); err != nil {
-		return nil, fmt.Errorf("decoding movie %d: %w", id, err)
+	if err := get(ctx, c, fmt.Sprintf("movie/%d", id), v, raw); err != nil {
+		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
+	
 	out := &getMovieData{}
 	out.init(raw)
 	return out, nil
