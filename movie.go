@@ -20,6 +20,23 @@ const (
 	movieDataMax
 )
 
+func (d MovieDataCol) String() string {
+	switch d {
+	case movieDataMin:
+		return "movieDataMin"
+	case MovieDataCredits:
+		return "MovieDataCredits"
+	case MovieDataExternalIds:
+		return "MovieDataExternalIds"
+	case MovieDataKeywords:
+		return "MovieDataKeywords"
+	case movieDataMax:
+		return "movieDataMax"
+	default:
+		return fmt.Sprintf("MovieDataCol(%d)", d)
+	}
+}
+
 func (d MovieDataCol) Endpoint() string {
 	switch d {
 	case MovieDataCredits:
