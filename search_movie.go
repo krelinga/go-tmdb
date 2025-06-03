@@ -104,8 +104,9 @@ type searchMovieResultParts struct {
 	MovieParts
 }
 
-func (s *searchMovieResultParts) setFallback(fallback MovieParts) {
-	s.MovieParts = fallback
+func (s *searchMovieResultParts) upgrade(parts *getMovieParts) MovieParts {
+	s.MovieParts = parts
+	return s
 }
 
 func (s *searchMovieResultParts) Adult() bool {

@@ -63,6 +63,9 @@ type MovieParts interface {
 
 	// Call Upgrade() with MoviePartKeywords to ensure this method will not panic.
 	Keywords() iter.Seq[Keyword]
+
+	// Internal methods, not safe to call together with any other method on MovieParts.
+	upgrade(*getMovieParts) MovieParts
 }
 
 type Cast any
@@ -85,15 +88,7 @@ func (m *movie) Upgrade(ctx context.Context, data ...MoviePart) error {
 	if err != nil {
 		return fmt.Errorf("upgrading movie %d: %w", m.id, err)
 	}
-	// TODO: this is getting complicated ... I should just add an upgrade() method to MovieParts
-	// and push these details down to the concrete types.
-	if oldParts, ok := m.MovieParts.(*getMovieParts); ok {
-		oldParts.upgradeFrom(newParts)
-	} else if oldParts, ok := m.MovieParts.(fallback[MovieParts]); ok {
-		oldParts.setFallback(newParts)
-	} else {
-		m.MovieParts = newParts
-	}
+	m.MovieParts = m.MovieParts.upgrade(newParts)
 	return nil
 }
 
@@ -102,6 +97,10 @@ func movieUnsupportedPanic(method string) {
 }
 
 type movieNoParts struct{}
+
+func (movieNoParts) upgrade(parts *getMovieParts) MovieParts {
+	return parts
+}
 
 func (movieNoParts) Adult() bool {
 	movieUnsupportedPanic("Adult")

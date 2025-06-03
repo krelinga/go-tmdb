@@ -97,9 +97,9 @@ func (p *getMovieParts) init(raw *raw.GetMovie) {
 	}
 }
 
-func (p *getMovieParts) upgradeFrom(other *getMovieParts) {
+func (p *getMovieParts) upgrade(other *getMovieParts) MovieParts{
 	if other == nil {
-		return
+		return p
 	}
 	if p.rawDetails == nil {
 		p.rawDetails = other.rawDetails
@@ -110,6 +110,7 @@ func (p *getMovieParts) upgradeFrom(other *getMovieParts) {
 	if p.rawExternalIds == nil {
 		p.rawExternalIds = other.rawExternalIds
 	}
+	return p
 }
 
 func (p *getMovieParts) Adult() bool {
