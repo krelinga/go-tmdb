@@ -85,6 +85,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 					language: language,
 					MovieParts: &searchMovieResultParts{
 						raw: smrMovie,
+						MovieParts: movieNoParts{},
 					},
 				}
 				if !yield(m, nil) {
@@ -100,7 +101,11 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 
 type searchMovieResultParts struct {
 	raw *raw.SearchMovieResult
-	movieNoParts
+	MovieParts
+}
+
+func (s *searchMovieResultParts) setFallback(fallback MovieParts) {
+	s.MovieParts = fallback
 }
 
 func (s *searchMovieResultParts) Adult() bool {
