@@ -24,6 +24,7 @@ type Client struct {
 
 	// Lazy initialization of shared state.
 	getConfiguration func() (*raw.Configuration, error)
+	getSecureImageBaseUrl func() (string, error)
 }
 
 func NewClient(options *NewClientOptions) *Client {
@@ -42,6 +43,16 @@ func NewClient(options *NewClientOptions) *Client {
 			return nil, fmt.Errorf("getting configuration: %w", err)
 		}
 		return configuration, nil
+	})
+	c.getSecureImageBaseUrl = sync.OnceValues(func() (string, error) {
+		configuration, err := c.getConfiguration()
+		if err != nil {
+			return "", fmt.Errorf("getting secure image base URL: %w", err)
+		}
+		if configuration.Images == nil || configuration.Images.SecureBaseUrl == "" {
+			return "", errors.New("no secure base URL found in configuration")
+		}
+		return configuration.Images.SecureBaseUrl, nil
 	})
 
 	return c

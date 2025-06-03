@@ -71,6 +71,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 }
 
 type searchMovieResultData struct {
+	client *Client
 	raw *raw.SearchMovieResult
 	MovieData
 }
@@ -82,4 +83,11 @@ func (s *searchMovieResultData) upgrade(in *getMovieData) MovieData {
 
 func (s *searchMovieResultData) Adult() bool {
 	return *s.raw.Adult
+}
+
+func (s *searchMovieResultData) Backdrop() Image {
+	return image{
+		client:   s.client,
+		raw:      s.raw.BackdropPath,
+	}
 }

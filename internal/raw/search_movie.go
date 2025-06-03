@@ -15,7 +15,8 @@ func (s *SearchMovie) SetDefaults() {
 type SearchMovieResult struct {
 	Id int `json:"id"`
 
-	Adult *bool `json:"adult"`
+	Adult        *bool  `json:"adult"`
+	BackdropPath string `json:"backdrop_path"`
 }
 
 func (s *SearchMovieResult) SetDefaults() {

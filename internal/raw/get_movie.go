@@ -3,14 +3,15 @@ package raw
 type GetMovie struct {
 	*GetMovieDetails
 
-	Credits *GetMovieCredits `json:"credits"`
-	Keywords *GetMovieKeywords `json:"keywords"`
+	Credits     *GetMovieCredits     `json:"credits"`
+	Keywords    *GetMovieKeywords    `json:"keywords"`
 	ExternalIds *GetMovieExternalIds `json:"external_ids"`
 }
 
 type GetMovieDetails struct {
-	Adult         *bool   `json:"adult"`
-	Budget        int     `json:"budget"`
+	Adult        *bool  `json:"adult"`
+	Budget       int    `json:"budget"`
+	BackdropPath string `json:"backdrop_path"`
 }
 
 func (g *GetMovie) SetDefaults() {

@@ -45,19 +45,22 @@ func getMovie(ctx context.Context, c *Client, id MovieId, language Language, col
 	if err := get(ctx, c, fmt.Sprintf("movie/%d", id), v, raw); err != nil {
 		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
-	
+
 	out := &getMovieData{}
-	out.init(raw)
+	out.init(raw, c)
 	return out, nil
 }
 
 type getMovieData struct {
+	client         *Client
 	rawDetails     *raw.GetMovieDetails
 	keywords       []Keyword
 	rawExternalIds *raw.GetMovieExternalIds
 }
 
-func (p *getMovieData) init(raw *raw.GetMovie) {
+func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
+	p.client = client
+
 	p.rawDetails = raw.GetMovieDetails
 
 	if raw.Keywords != nil {
@@ -97,6 +100,13 @@ func (p *getMovieData) Adult() bool {
 
 func (p *getMovieData) Budget() int {
 	return p.rawDetails.Budget
+}
+
+func (p *getMovieData) Backdrop() Image {
+	return image{
+		raw:    p.rawDetails.BackdropPath,
+		client: p.client,
+	}
 }
 
 func (p *getMovieData) Cast() iter.Seq[Cast] {

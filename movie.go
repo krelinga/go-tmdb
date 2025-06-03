@@ -63,12 +63,13 @@ func movieNoDataError(field string, col MovieDataCol) error {
 
 // MovieData implementations may panic with these errors if the corresponding data is not available.
 var (
-	ErrMovieNoDataAdult       = movieNoDataError("Adult", movieDataNone)
-	ErrMovieNoDataBudget      = movieNoDataError("Budget", movieDataNone)
-	ErrMovieNoDataCast        = movieNoDataError("Cast", MovieDataCredits)
-	ErrMovieNoDataCrew        = movieNoDataError("Crew", MovieDataCredits)
-	ErrMovieNoDataWikidataId  = movieNoDataError("WikidataId", MovieDataExternalIds)
-	ErrMovieNoDataKeywords    = movieNoDataError("Keywords", MovieDataKeywords)
+	ErrMovieNoDataAdult      = movieNoDataError("Adult", movieDataNone)
+	ErrMovieNoDataBudget     = movieNoDataError("Budget", movieDataNone)
+	ErrMovieNoDataBackdrop   = movieNoDataError("Backdrop", movieDataNone)
+	ErrMovieNoDataCast       = movieNoDataError("Cast", MovieDataCredits)
+	ErrMovieNoDataCrew       = movieNoDataError("Crew", MovieDataCredits)
+	ErrMovieNoDataWikidataId = movieNoDataError("WikidataId", MovieDataExternalIds)
+	ErrMovieNoDataKeywords   = movieNoDataError("Keywords", MovieDataKeywords)
 )
 
 type Movie interface {
@@ -91,6 +92,7 @@ type MovieData interface {
 	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
 	Adult() bool
 	Budget() int
+	Backdrop() Image
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -142,6 +144,10 @@ func (movieNoData) Adult() bool {
 
 func (movieNoData) Budget() int {
 	panic(ErrMovieNoDataBudget)
+}
+
+func (movieNoData) Backdrop() Image {
+	panic(ErrMovieNoDataBackdrop)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
