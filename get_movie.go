@@ -14,7 +14,7 @@ import (
 
 type GetMovieOptions struct {
 	Language Language
-	Parts    []MoviePart
+	Parts    []MovieDataCol
 }
 
 func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptions) (Movie, error) {
@@ -34,7 +34,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptio
 	}, nil
 }
 
-func getMovie(ctx context.Context, c *Client, id MovieId, language Language, parts ...MoviePart) (*getMovieParts, error) {
+func getMovie(ctx context.Context, c *Client, id MovieId, language Language, parts ...MovieDataCol) (*getMovieParts, error) {
 	v := url.Values{}
 	if language != "" {
 		v.Set("language", string(language))

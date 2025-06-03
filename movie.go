@@ -10,26 +10,26 @@ type MovieId int
 
 type WikidataMovieId string
 
-type MoviePart int
+type MovieDataCol int
 
 const (
-	moviePartMin MoviePart = iota
-	MoviePartCredits
-	MoviePartExternalIds
-	MoviePartKeywords
-	moviePartMax
+	movieDataMin MovieDataCol = iota
+	MovieDataCredits
+	MovieDataExternalIds
+	MovieDataKeywords
+	movieDataMax
 )
 
-func (d MoviePart) Endpoint() string {
+func (d MovieDataCol) Endpoint() string {
 	switch d {
-	case MoviePartCredits:
+	case MovieDataCredits:
 		return "credits"
-	case MoviePartExternalIds:
+	case MovieDataExternalIds:
 		return "external_ids"
-	case MoviePartKeywords:
+	case MovieDataKeywords:
 		return "keywords"
 	default:
-		panic(fmt.Sprintf("invalid MovieData value %d; must be between %d and %d", d, moviePartMin, moviePartMax))
+		panic(fmt.Sprintf("invalid MovieData value %d; must be between %d and %d", d, movieDataMin, movieDataMax))
 	}
 }
 
@@ -41,10 +41,10 @@ type Movie interface {
 	// Fetch more data for this movie.
 	// The movie will be unchanged if any error occurs (including context cancellation).
 	// It is unsafe to call Upgrade() concurrently with calls to the methods contained in MovieData.
-	Upgrade(context.Context, ...MoviePart) error
+	Upgrade(context.Context, ...MovieDataCol) error
 
 	// Calls to the methods contained in MovieData may panic if the data is not available.
-	// Call Upgrade() with the appropriate MoviePart to ensure these methods will not panic.
+	// Call Upgrade() with the appropriate MovieDataCol to ensure these methods will not panic.
 	// It is safe to call any methods on MovieData concurrently with each other, but not with Upgrade().
 	MovieData
 }
@@ -54,14 +54,14 @@ type MovieData interface {
 	Adult() bool
 	Budget() int
 
-	// Call Upgrade() with MoviePartCredits to ensure these methods will not panic.
+	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
 	Crew() iter.Seq[Crew]
 
-	// Call Upgrade() with MoviePartExternalIds to ensure these methods will not panic.
+	// Call Upgrade() with MovieDataExternalIds to ensure these methods will not panic.
 	WikidataId() WikidataMovieId
 
-	// Call Upgrade() with MoviePartKeywords to ensure this method will not panic.
+	// Call Upgrade() with MovieDataKeywords to ensure this method will not panic.
 	Keywords() iter.Seq[Keyword]
 
 	// Internal methods, not safe to call together with any other method on MovieData.
@@ -83,7 +83,7 @@ func (m *movie) Id() MovieId {
 	return m.id
 }
 
-func (m *movie) Upgrade(ctx context.Context, data ...MoviePart) error {
+func (m *movie) Upgrade(ctx context.Context, data ...MovieDataCol) error {
 	newParts, err := getMovie(ctx, m.client, m.id, m.language, data...)
 	if err != nil {
 		return fmt.Errorf("upgrading movie %d: %w", m.id, err)
