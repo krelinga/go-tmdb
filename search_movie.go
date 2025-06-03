@@ -75,11 +75,15 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 				yield(nil, fmt.Errorf("decoding search result: %w", err))
 				return
 			}
+			result.SetDefaults()
 			for _, smrMovie := range result.Results {
-				movie := &movie{
+				m := &movie{
 					id: MovieId(smrMovie.Id),
+					MovieParts: &searchMovieResultParts{
+						raw: smrMovie,
+					},
 				}
-				if !yield(movie, nil) {
+				if !yield(m, nil) {
 					return
 				}
 			}
@@ -88,4 +92,13 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 			}
 		}
 	}
+}
+
+type searchMovieResultParts struct {
+	raw *raw.SearchMovieResult
+	movieNoParts
+}
+
+func (s *searchMovieResultParts) Adult() bool {
+	return *s.raw.Adult
 }
