@@ -26,12 +26,14 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 				"query": []string{query},
 				"page":  []string{fmt.Sprint(page)},
 			}
+			var language Language
 			if options != nil {
 				if options.IncludeAdult {
 					params.Set("include_adult", fmt.Sprint(options.IncludeAdult))
 				}
 				if options.Language != "" {
 					params.Set("language", string(options.Language))
+					language = options.Language
 				}
 				if options.PrimaryReleaseYear > 0 {
 					params.Set("primary_release_year", fmt.Sprint(options.PrimaryReleaseYear))
@@ -78,7 +80,9 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 			result.SetDefaults()
 			for _, smrMovie := range result.Results {
 				m := &movie{
+					client: c,
 					id: MovieId(smrMovie.Id),
+					language: language,
 					MovieParts: &searchMovieResultParts{
 						raw: smrMovie,
 					},

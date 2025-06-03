@@ -3,7 +3,7 @@ package tmdb
 import (
 	"context"
 	"fmt"
-	"slices"
+	"iter"
 )
 
 type MovieId int
@@ -52,67 +52,79 @@ type Movie interface {
 type MovieParts interface {
 	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
 	Adult() bool
+	Budget() int
 
 	// Call Upgrade() with MoviePartCredits to ensure these methods will not panic.
-	Cast() []Cast
-	Crew() []Crew
+	Cast() iter.Seq[Cast]
+	Crew() iter.Seq[Crew]
 
 	// Call Upgrade() with MoviePartExternalIds to ensure these methods will not panic.
 	WikidataId() WikidataMovieId
 
 	// Call Upgrade() with MoviePartKeywords to ensure this method will not panic.
-	Keywords() []Keyword
+	Keywords() iter.Seq[Keyword]
 }
 
 type Cast any
 type Crew any
 
 type movie struct {
-	id MovieId
+	client   *Client
+	id       MovieId
+	language Language
+
 	MovieParts
 }
 
-func (m movie) Id() MovieId {
+func (m *movie) Id() MovieId {
 	return m.id
 }
 
-func (m movie) Upgrade(ctx context.Context, data ...MoviePart) error {
-	appendToResponse := make([]string, 0, len(data))
-	for _, d := range data {
-		appendToResponse = append(appendToResponse, d.Endpoint())
+func (m *movie) Upgrade(ctx context.Context, data ...MoviePart) error {
+	newParts, err := getMovie(ctx, m.client, m.id, m.language, data...)
+	if err != nil {
+		return fmt.Errorf("upgrading movie %d: %w", m.id, err)
 	}
-	slices.Sort(appendToResponse)
+	if oldParts, ok := m.MovieParts.(*getMovieParts); ok {
+		oldParts.upgradeFrom(newParts)
+	} else {
+		m.MovieParts = newParts
+	}
+	return nil
+}
 
-	return nil // TODO: implement the upgrade logic
+func movieUnsupportedPanic(method string) {
+	panic(fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method))
 }
 
 type movieNoParts struct{}
 
-func (movieNoParts) panic(method string) {
-	panic(fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method))
-}
-
-func (m movieNoParts) Adult() bool {
-	m.panic("Adult")
+func (movieNoParts) Adult() bool {
+	movieUnsupportedPanic("Adult")
 	return false // unreachable, but required by the interface
 }
 
-func (m movieNoParts) Cast() []Cast {
-	m.panic("Cast")
+func (movieNoParts) Budget() int {
+	movieUnsupportedPanic("Budget")
+	return 0 // unreachable, but required by the interface
+}
+
+func (movieNoParts) Cast() iter.Seq[Cast] {
+	movieUnsupportedPanic("Cast")
 	return nil // unreachable, but required by the interface
 }
 
-func (m movieNoParts) Crew() []Crew {
-	m.panic("Crew")
+func (movieNoParts) Crew() iter.Seq[Crew] {
+	movieUnsupportedPanic("Crew")
 	return nil // unreachable, but required by the interface
 }
 
-func (m movieNoParts) WikidataId() WikidataMovieId {
-	m.panic("WikidataId")
+func (movieNoParts) WikidataId() WikidataMovieId {
+	movieUnsupportedPanic("WikidataId")
 	return "" // unreachable, but required by the interface
 }
 
-func (m movieNoParts) Keywords() []Keyword {
-	m.panic("Keywords")
+func (movieNoParts) Keywords() iter.Seq[Keyword] {
+	movieUnsupportedPanic("Keywords")
 	return nil // unreachable, but required by the interface
 }
