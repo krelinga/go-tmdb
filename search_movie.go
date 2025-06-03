@@ -105,7 +105,7 @@ type searchMovieResultData struct {
 }
 
 func (s *searchMovieResultData) upgrade(in *getMovieData) MovieData {
-	s.MovieData = in
+	s.MovieData = s.MovieData.upgrade(in)
 	return s
 }
 
