@@ -92,8 +92,8 @@ func (m *movie) Upgrade(ctx context.Context, data ...MovieDataCol) error {
 	return nil
 }
 
-func movieUnsupportedPanic(method string) {
-	panic(fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method))
+func movieUnsupported(method string) string {
+	return fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method)
 }
 
 type movieNoData struct{}
@@ -103,31 +103,25 @@ func (movieNoData) upgrade(in *getMovieData) MovieData {
 }
 
 func (movieNoData) Adult() bool {
-	movieUnsupportedPanic("Adult")
-	return false // unreachable, but required by the interface
+	panic(movieUnsupported("Adult"))
 }
 
 func (movieNoData) Budget() int {
-	movieUnsupportedPanic("Budget")
-	return 0 // unreachable, but required by the interface
+	panic(movieUnsupported("Budget"))
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
-	movieUnsupportedPanic("Cast")
-	return nil // unreachable, but required by the interface
+	panic(movieUnsupported("Cast"))
 }
 
 func (movieNoData) Crew() iter.Seq[Crew] {
-	movieUnsupportedPanic("Crew")
-	return nil // unreachable, but required by the interface
+	panic(movieUnsupported("Crew"))
 }
 
 func (movieNoData) WikidataId() WikidataMovieId {
-	movieUnsupportedPanic("WikidataId")
-	return "" // unreachable, but required by the interface
+	panic(movieUnsupported("WikidataId"))
 }
 
 func (movieNoData) Keywords() iter.Seq[Keyword] {
-	movieUnsupportedPanic("Keywords")
-	return nil // unreachable, but required by the interface
+	panic(movieUnsupported("Keywords"))
 }
