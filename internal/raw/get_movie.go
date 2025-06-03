@@ -9,9 +9,10 @@ type GetMovie struct {
 }
 
 type GetMovieDetails struct {
-	Adult        *bool  `json:"adult"`
-	Budget       int    `json:"budget"`
-	BackdropPath string `json:"backdrop_path"`
+	Adult        *bool    `json:"adult"`
+	Budget       int      `json:"budget"`
+	BackdropPath string   `json:"backdrop_path"`
+	Genres       []*Genre `json:"genres"`
 }
 
 func (g *GetMovie) SetDefaults() {

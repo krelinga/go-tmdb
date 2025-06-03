@@ -91,3 +91,13 @@ func (s *searchMovieResultData) Backdrop() Image {
 		raw:      s.raw.BackdropPath,
 	}
 }
+
+func (s *searchMovieResultData) GenreIds() iter.Seq[GenreId] {
+	return func(yield func(GenreId) bool) {
+		for _, id := range s.raw.GenreIds {
+			if !yield(GenreId(id)) {
+				return
+			}
+		}
+	}
+}

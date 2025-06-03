@@ -109,6 +109,29 @@ func (p *getMovieData) Backdrop() Image {
 	}
 }
 
+func (p *getMovieData) GenreIds() iter.Seq[GenreId] {
+	return func(yield func(GenreId) bool) {
+		for _, genre := range p.rawDetails.Genres {
+			if !yield(GenreId(genre.Id)) {
+				return
+			}
+		}
+	}
+}
+
+func (p *getMovieData) Genres() iter.Seq[Genre] {
+	return func(yield func(Genre) bool) {
+		for _, g := range p.rawDetails.Genres {
+			if !yield(genre{
+				id:   GenreId(g.Id),
+				name: g.Name,
+			}) {
+				return
+			}
+		}
+	}
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
