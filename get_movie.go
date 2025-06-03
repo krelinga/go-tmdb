@@ -14,14 +14,14 @@ import (
 
 type GetMovieOptions struct {
 	Language Language
-	Parts    []MovieDataCol
+	Columns    []MovieDataCol
 }
 
 func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptions) (Movie, error) {
 	if options == nil {
 		options = &GetMovieOptions{}
 	}
-	parts, err := getMovie(ctx, c, id, options.Language, options.Parts...)
+	parts, err := getMovie(ctx, c, id, options.Language, options.Columns...)
 	if err != nil {
 		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
@@ -34,13 +34,13 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptio
 	}, nil
 }
 
-func getMovie(ctx context.Context, c *Client, id MovieId, language Language, parts ...MovieDataCol) (*getMovieData, error) {
+func getMovie(ctx context.Context, c *Client, id MovieId, language Language, columns ...MovieDataCol) (*getMovieData, error) {
 	v := url.Values{}
 	if language != "" {
 		v.Set("language", string(language))
 	}
-	if len(parts) > 0 {
-		v.Set("append_to_response", appendToResponse(parts))
+	if len(columns) > 0 {
+		v.Set("append_to_response", appendToResponse(columns))
 	}
 	theUrl := &url.URL{
 		Path:     fmt.Sprintf("/3/movie/%d", id),
