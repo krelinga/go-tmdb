@@ -17,6 +17,10 @@ type SearchMovieOptions struct {
 	Year               int
 }
 
+// The resulting Movie instances will have the following data available:
+// - Adult()
+// - Backdrop()
+// - GenreIds()
 func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMovieOptions) iter.Seq2[Movie, error] {
 	return func(yield func(Movie, error) bool) {
 		for page := 1; ; page++ {
