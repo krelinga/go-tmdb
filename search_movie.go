@@ -104,8 +104,8 @@ type searchMovieResultData struct {
 	MovieData
 }
 
-func (s *searchMovieResultData) upgrade(parts *getMovieData) MovieData {
-	s.MovieData = parts
+func (s *searchMovieResultData) upgrade(in *getMovieData) MovieData {
+	s.MovieData = in
 	return s
 }
 

@@ -97,18 +97,18 @@ func (p *getMovieData) init(raw *raw.GetMovie) {
 	}
 }
 
-func (p *getMovieData) upgrade(other *getMovieData) MovieData {
-	if other == nil {
+func (p *getMovieData) upgrade(in *getMovieData) MovieData {
+	if in == nil {
 		return p
 	}
 	if p.rawDetails == nil {
-		p.rawDetails = other.rawDetails
+		p.rawDetails = in.rawDetails
 	}
 	if p.keywords == nil {
-		p.keywords = other.keywords
+		p.keywords = in.keywords
 	}
 	if p.rawExternalIds == nil {
-		p.rawExternalIds = other.rawExternalIds
+		p.rawExternalIds = in.rawExternalIds
 	}
 	return p
 }

@@ -98,8 +98,8 @@ func movieUnsupportedPanic(method string) {
 
 type movieNoData struct{}
 
-func (movieNoData) upgrade(parts *getMovieData) MovieData {
-	return parts
+func (movieNoData) upgrade(in *getMovieData) MovieData {
+	return in
 }
 
 func (movieNoData) Adult() bool {
