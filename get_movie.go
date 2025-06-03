@@ -34,7 +34,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptio
 	}, nil
 }
 
-func getMovie(ctx context.Context, c *Client, id MovieId, language Language, parts ...MovieDataCol) (*getMovieParts, error) {
+func getMovie(ctx context.Context, c *Client, id MovieId, language Language, parts ...MovieDataCol) (*getMovieData, error) {
 	v := url.Values{}
 	if language != "" {
 		v.Set("language", string(language))
@@ -68,18 +68,18 @@ func getMovie(ctx context.Context, c *Client, id MovieId, language Language, par
 	if err := decoder.Decode(&raw); err != nil {
 		return nil, fmt.Errorf("decoding movie %d: %w", id, err)
 	}
-	out := &getMovieParts{}
+	out := &getMovieData{}
 	out.init(raw)
 	return out, nil
 }
 
-type getMovieParts struct {
+type getMovieData struct {
 	rawDetails     *raw.GetMovieDetails
 	keywords       []Keyword
 	rawExternalIds *raw.GetMovieExternalIds
 }
 
-func (p *getMovieParts) init(raw *raw.GetMovie) {
+func (p *getMovieData) init(raw *raw.GetMovie) {
 	p.rawDetails = raw.GetMovieDetails
 
 	if raw.Keywords != nil {
@@ -97,7 +97,7 @@ func (p *getMovieParts) init(raw *raw.GetMovie) {
 	}
 }
 
-func (p *getMovieParts) upgrade(other *getMovieParts) MovieData {
+func (p *getMovieData) upgrade(other *getMovieData) MovieData {
 	if other == nil {
 		return p
 	}
@@ -113,30 +113,30 @@ func (p *getMovieParts) upgrade(other *getMovieParts) MovieData {
 	return p
 }
 
-func (p *getMovieParts) Adult() bool {
+func (p *getMovieData) Adult() bool {
 	return *p.rawDetails.Adult
 }
 
-func (p *getMovieParts) Budget() int {
+func (p *getMovieData) Budget() int {
 	return p.rawDetails.Budget
 }
 
-func (p *getMovieParts) Cast() iter.Seq[Cast] {
+func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
 
-func (p *getMovieParts) Crew() iter.Seq[Crew] {
+func (p *getMovieData) Crew() iter.Seq[Crew] {
 	return nil // TODO: implement
 }
 
-func (p *getMovieParts) WikidataId() WikidataMovieId {
+func (p *getMovieData) WikidataId() WikidataMovieId {
 	if p.rawExternalIds == nil {
 		movieUnsupportedPanic("WikidataId")
 	}
 	return WikidataMovieId(p.rawExternalIds.WikidataId)
 }
 
-func (p *getMovieParts) Keywords() iter.Seq[Keyword] {
+func (p *getMovieData) Keywords() iter.Seq[Keyword] {
 	if p.keywords == nil {
 		movieUnsupportedPanic("Keywords")
 	}

@@ -65,7 +65,7 @@ type MovieData interface {
 	Keywords() iter.Seq[Keyword]
 
 	// Internal methods, not safe to call together with any other method on MovieData.
-	upgrade(*getMovieParts) MovieData
+	upgrade(*getMovieData) MovieData
 }
 
 type Cast any
@@ -98,7 +98,7 @@ func movieUnsupportedPanic(method string) {
 
 type movieNoData struct{}
 
-func (movieNoData) upgrade(parts *getMovieParts) MovieData {
+func (movieNoData) upgrade(parts *getMovieData) MovieData {
 	return parts
 }
 
