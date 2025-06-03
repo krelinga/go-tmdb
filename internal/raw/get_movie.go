@@ -16,6 +16,7 @@ type GetMovieDetails struct {
 	Genres              []*Genre `json:"genres"`
 	Homepage            string   `json:"homepage"`
 	ImdbId              string   `json:"imdb_id"`
+	OriginalLanguage    string   `json:"original_language"`
 }
 
 func (g *GetMovie) SetDefaults() {

@@ -63,14 +63,15 @@ func movieNoDataError(field string, col MovieDataCol) error {
 
 // MovieData implementations may panic with these errors if the corresponding data is not available.
 var (
-	ErrMovieNoDataAdult      = movieNoDataError("Adult", movieDataNone)
-	ErrMovieNoDataBackdrop   = movieNoDataError("Backdrop", movieDataNone)
-	ErrMovieNoDataCollection = movieNoDataError("BelongsToCollection", movieDataNone)
-	ErrMovieNoDataBudget     = movieNoDataError("Budget", movieDataNone)
-	ErrMovieNoDataGenreIds   = movieNoDataError("GenreIds", movieDataNone)
-	ErrMovieNoDataGenres     = movieNoDataError("Genres", movieDataNone)
-	ErrMovieNoDataHomepage   = movieNoDataError("Homepage", movieDataNone)
-	ErrMovieNoDataImdbId     = movieNoDataError("ImdbId", movieDataNone)
+	ErrMovieNoDataAdult            = movieNoDataError("Adult", movieDataNone)
+	ErrMovieNoDataBackdrop         = movieNoDataError("Backdrop", movieDataNone)
+	ErrMovieNoDataCollection       = movieNoDataError("BelongsToCollection", movieDataNone)
+	ErrMovieNoDataBudget           = movieNoDataError("Budget", movieDataNone)
+	ErrMovieNoDataGenreIds         = movieNoDataError("GenreIds", movieDataNone)
+	ErrMovieNoDataGenres           = movieNoDataError("Genres", movieDataNone)
+	ErrMovieNoDataHomepage         = movieNoDataError("Homepage", movieDataNone)
+	ErrMovieNoDataImdbId           = movieNoDataError("ImdbId", movieDataNone)
+	ErrMovieNoDataOriginalLanguage = movieNoDataError("OriginalLanguage", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -108,6 +109,7 @@ type MovieData interface {
 	Genres() iter.Seq[Genre]
 	Homepage() string
 	ImdbId() ImdbMovieId
+	OriginalLanguage() Language
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -183,6 +185,10 @@ func (movieNoData) Homepage() string {
 
 func (movieNoData) ImdbId() ImdbMovieId {
 	panic(ErrMovieNoDataImdbId)
+}
+
+func (movieNoData) OriginalLanguage() Language {
+	panic(ErrMovieNoDataOriginalLanguage)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {

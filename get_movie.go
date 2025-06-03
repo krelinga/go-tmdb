@@ -144,6 +144,10 @@ func (p *getMovieData) ImdbId() ImdbMovieId {
 	return ImdbMovieId(p.rawDetails.ImdbId)
 }
 
+func (p *getMovieData) OriginalLanguage() Language {
+	return Language(p.rawDetails.OriginalLanguage)
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
