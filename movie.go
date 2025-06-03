@@ -40,16 +40,16 @@ type Movie interface {
 
 	// Fetch more data for this movie.
 	// The movie will be unchanged if any error occurs (including context cancellation).
-	// It is unsafe to call Upgrade() concurrently with calls to the methods contained in MovieParts.
+	// It is unsafe to call Upgrade() concurrently with calls to the methods contained in MovieData.
 	Upgrade(context.Context, ...MoviePart) error
 
 	// Calls to the methods contained in MovieData may panic if the data is not available.
 	// Call Upgrade() with the appropriate MoviePart to ensure these methods will not panic.
-	// It is safe to call any methods on MovieParts concurrently with each other, but not with Upgrade().
-	MovieParts
+	// It is safe to call any methods on MovieData concurrently with each other, but not with Upgrade().
+	MovieData
 }
 
-type MovieParts interface {
+type MovieData interface {
 	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
 	Adult() bool
 	Budget() int
@@ -64,8 +64,8 @@ type MovieParts interface {
 	// Call Upgrade() with MoviePartKeywords to ensure this method will not panic.
 	Keywords() iter.Seq[Keyword]
 
-	// Internal methods, not safe to call together with any other method on MovieParts.
-	upgrade(*getMovieParts) MovieParts
+	// Internal methods, not safe to call together with any other method on MovieData.
+	upgrade(*getMovieParts) MovieData
 }
 
 type Cast any
@@ -76,7 +76,7 @@ type movie struct {
 	id       MovieId
 	language Language
 
-	MovieParts
+	MovieData
 }
 
 func (m *movie) Id() MovieId {
@@ -88,7 +88,7 @@ func (m *movie) Upgrade(ctx context.Context, data ...MoviePart) error {
 	if err != nil {
 		return fmt.Errorf("upgrading movie %d: %w", m.id, err)
 	}
-	m.MovieParts = m.MovieParts.upgrade(newParts)
+	m.MovieData = m.MovieData.upgrade(newParts)
 	return nil
 }
 
@@ -98,7 +98,7 @@ func movieUnsupportedPanic(method string) {
 
 type movieNoParts struct{}
 
-func (movieNoParts) upgrade(parts *getMovieParts) MovieParts {
+func (movieNoParts) upgrade(parts *getMovieParts) MovieData {
 	return parts
 }
 

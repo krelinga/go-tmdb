@@ -27,10 +27,10 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptio
 	}
 
 	return &movie{
-		client:     c,
-		id:         id,
-		language:   options.Language,
-		MovieParts: parts,
+		client:    c,
+		id:        id,
+		language:  options.Language,
+		MovieData: parts,
 	}, nil
 }
 
@@ -97,7 +97,7 @@ func (p *getMovieParts) init(raw *raw.GetMovie) {
 	}
 }
 
-func (p *getMovieParts) upgrade(other *getMovieParts) MovieParts{
+func (p *getMovieParts) upgrade(other *getMovieParts) MovieData {
 	if other == nil {
 		return p
 	}

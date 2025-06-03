@@ -80,12 +80,12 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 			result.SetDefaults()
 			for _, smrMovie := range result.Results {
 				m := &movie{
-					client: c,
-					id: MovieId(smrMovie.Id),
+					client:   c,
+					id:       MovieId(smrMovie.Id),
 					language: language,
-					MovieParts: &searchMovieResultParts{
-						raw: smrMovie,
-						MovieParts: movieNoParts{},
+					MovieData: &searchMovieResultParts{
+						raw:       smrMovie,
+						MovieData: movieNoParts{},
 					},
 				}
 				if !yield(m, nil) {
@@ -101,11 +101,11 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 
 type searchMovieResultParts struct {
 	raw *raw.SearchMovieResult
-	MovieParts
+	MovieData
 }
 
-func (s *searchMovieResultParts) upgrade(parts *getMovieParts) MovieParts {
-	s.MovieParts = parts
+func (s *searchMovieResultParts) upgrade(parts *getMovieParts) MovieData {
+	s.MovieData = parts
 	return s
 }
 
