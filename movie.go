@@ -70,6 +70,7 @@ var (
 	ErrMovieNoDataGenreIds   = movieNoDataError("GenreIds", movieDataNone)
 	ErrMovieNoDataGenres     = movieNoDataError("Genres", movieDataNone)
 	ErrMovieNoDataHomepage   = movieNoDataError("Homepage", movieDataNone)
+	ErrMovieNoDataImdbId     = movieNoDataError("ImdbId", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -95,6 +96,8 @@ type Movie interface {
 	MovieData
 }
 
+type ImdbMovieId string
+
 type MovieData interface {
 	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
 	Adult() bool
@@ -104,6 +107,7 @@ type MovieData interface {
 	GenreIds() iter.Seq[GenreId]
 	Genres() iter.Seq[Genre]
 	Homepage() string
+	ImdbId() ImdbMovieId
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -175,6 +179,10 @@ func (movieNoData) Genres() iter.Seq[Genre] {
 
 func (movieNoData) Homepage() string {
 	panic(ErrMovieNoDataHomepage)
+}
+
+func (movieNoData) ImdbId() ImdbMovieId {
+	panic(ErrMovieNoDataImdbId)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {

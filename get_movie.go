@@ -140,6 +140,10 @@ func (p *getMovieData) Homepage() string {
 	return p.rawDetails.Homepage
 }
 
+func (p *getMovieData) ImdbId() ImdbMovieId {
+	return ImdbMovieId(p.rawDetails.ImdbId)
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
