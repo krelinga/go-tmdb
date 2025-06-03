@@ -136,6 +136,10 @@ func (p *getMovieData) Genres() iter.Seq[Genre] {
 	}
 }
 
+func (p *getMovieData) Homepage() string {
+	return p.rawDetails.Homepage
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }

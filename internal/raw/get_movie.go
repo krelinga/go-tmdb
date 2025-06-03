@@ -14,6 +14,7 @@ type GetMovieDetails struct {
 	BelongsToCollection string   `json:"belongs_to_collection"`
 	Budget              int      `json:"budget"`
 	Genres              []*Genre `json:"genres"`
+	Homepage            string   `json:"homepage"`
 }
 
 func (g *GetMovie) SetDefaults() {

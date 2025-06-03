@@ -69,6 +69,7 @@ var (
 	ErrMovieNoDataBudget     = movieNoDataError("Budget", movieDataNone)
 	ErrMovieNoDataGenreIds   = movieNoDataError("GenreIds", movieDataNone)
 	ErrMovieNoDataGenres     = movieNoDataError("Genres", movieDataNone)
+	ErrMovieNoDataHomepage   = movieNoDataError("Homepage", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -102,6 +103,7 @@ type MovieData interface {
 	Backdrop() Image
 	GenreIds() iter.Seq[GenreId]
 	Genres() iter.Seq[Genre]
+	Homepage() string
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -169,6 +171,10 @@ func (movieNoData) GenreIds() iter.Seq[GenreId] {
 
 func (movieNoData) Genres() iter.Seq[Genre] {
 	panic(ErrMovieNoDataGenres)
+}
+
+func (movieNoData) Homepage() string {
+	panic(ErrMovieNoDataHomepage)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
