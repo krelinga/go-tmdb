@@ -10,22 +10,22 @@ import (
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
-type ClientOptions struct {
+type NewClientOptions struct {
 	HttpClient *http.Client
 	ApiKey      string
 	BearerToken string
 }
 
 type Client struct {
-	options *ClientOptions
+	options *NewClientOptions
 
 	// Lazy initialization of shared state.
 	getConfiguration func() (*raw.Configuration, error)
 }
 
-func NewClient(options *ClientOptions) *Client {
+func NewClient(options *NewClientOptions) *Client {
 	if options == nil {
-		options = &ClientOptions{}
+		options = &NewClientOptions{}
 	}
 
 	c := &Client{
