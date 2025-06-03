@@ -14,7 +14,7 @@ import (
 
 type GetMovieOptions struct {
 	Language Language
-	Columns    []MovieDataCol
+	Columns  []MovieDataCol
 }
 
 func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptions) (Movie, error) {
