@@ -10,52 +10,26 @@ import (
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
+type ClientOptions struct {
+	HttpClient *http.Client
+	ApiKey      string
+	BearerToken string
+}
+
 type Client struct {
-	// used to determine if the client is properly initialized.
-	ok bool
-
-	// Client to use for making requests
-	httpClient *http.Client
-
-	// Authentication details
-	apiKey      string
-	bearerToken string
+	options *ClientOptions
 
 	// Lazy initialization of shared state.
 	getConfiguration func() (*raw.Configuration, error)
 }
 
-type ClientOption func(*Client)
-
-func WithHTTPClient(client *http.Client) ClientOption {
-	return func(c *Client) {
-		c.httpClient = client
+func NewClient(options *ClientOptions) *Client {
+	if options == nil {
+		options = &ClientOptions{}
 	}
-}
 
-func WithAPIKey(apiKey string) ClientOption {
-	return func(c *Client) {
-		c.apiKey = apiKey
-	}
-}
-
-func WithBearerToken(token string) ClientOption {
-	return func(c *Client) {
-		c.bearerToken = token
-	}
-}
-
-func NewClient(options ...ClientOption) *Client {
 	c := &Client{
-		ok: true,
-	}
-
-	for _, opt := range options {
-		opt(c)
-	}
-
-	if c.httpClient == nil {
-		c.httpClient = http.DefaultClient
+		options: options,
 	}
 
 	c.getConfiguration = sync.OnceValues(func() (*raw.Configuration, error) {
@@ -69,7 +43,7 @@ func NewClient(options ...ClientOption) *Client {
 			return nil, err
 		}
 		c.prepRequest(req)
-		reply, err := c.httpClient.Do(req)
+		reply, err := c.httpClient().Do(req)
 		if err != nil {
 			return nil, err
 		}
@@ -89,15 +63,23 @@ func NewClient(options ...ClientOption) *Client {
 }
 
 func (c *Client) checkOk() {
-	if !c.ok {
+	if c.options == nil {
 		panic("TMDB client is not properly initialized.  Use NewClient to create a new client.")
 	}
 }
 
+func (c *Client) httpClient() *http.Client {
+	c.checkOk()
+	if c.options.HttpClient == nil {
+		return http.DefaultClient
+	}
+	return c.options.HttpClient
+}
+
 func (c *Client) prepRequest(req *http.Request) {
 	c.checkOk()
-	if c.bearerToken != "" {
-		req.Header.Add("Authorization", "Bearer "+c.bearerToken)
+	if c.options.BearerToken != "" {
+		req.Header.Add("Authorization", "Bearer "+c.options.BearerToken)
 	}
 }
 
@@ -105,9 +87,9 @@ func (c *Client) prepUrl(theUrl *url.URL) {
 	c.checkOk()
 	theUrl.Scheme = "https"
 	theUrl.Host = "api.themoviedb.org"
-	if c.apiKey != "" {
+	if c.options.ApiKey != "" {
 		q := theUrl.Query()
-		q.Add("api_key", c.apiKey)
+		q.Add("api_key", c.options.ApiKey)
 		theUrl.RawQuery = q.Encode()
 	}
 }

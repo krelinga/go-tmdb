@@ -58,7 +58,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 			if ctx.Err() != nil {
 				return
 			}
-			resp, err := c.httpClient.Do(req)
+			resp, err := c.httpClient().Do(req)
 			if err != nil {
 				yield(nil, err)
 				return
