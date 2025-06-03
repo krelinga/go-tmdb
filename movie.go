@@ -13,7 +13,8 @@ type WikidataMovieId string
 type MovieDataCol int
 
 const (
-	movieDataMin MovieDataCol = iota
+	movieDataNone MovieDataCol = iota
+	movieDataMin
 	MovieDataCredits
 	MovieDataExternalIds
 	MovieDataKeywords
@@ -22,6 +23,8 @@ const (
 
 func (d MovieDataCol) String() string {
 	switch d {
+	case movieDataNone:
+		return "movieDataNone"
 	case movieDataMin:
 		return "movieDataMin"
 	case MovieDataCredits:
@@ -49,6 +52,24 @@ func (d MovieDataCol) Endpoint() string {
 		panic(fmt.Sprintf("invalid MovieData value %d; must be between %d and %d", d, movieDataMin, movieDataMax))
 	}
 }
+
+func movieNoDataError(field string, col MovieDataCol) error {
+	var colPart string
+	if col != movieDataNone {
+		colPart = fmt.Sprintf(" with %s", col)
+	}
+	return fmt.Errorf("cannot access %s on MovieData without calling Upgrade()%s first", field, colPart)
+}
+
+// MovieData implementations may panic with these errors if the corresponding data is not available.
+var (
+	ErrMovieNoDataAdult       = movieNoDataError("Adult", movieDataNone)
+	ErrMovieNoDataBudget      = movieNoDataError("Budget", movieDataNone)
+	ErrMovieNoDataCast        = movieNoDataError("Cast", MovieDataCredits)
+	ErrMovieNoDataCrew        = movieNoDataError("Crew", MovieDataCredits)
+	ErrMovieNoDataWikidataId  = movieNoDataError("WikidataId", MovieDataExternalIds)
+	ErrMovieNoDataKeywords    = movieNoDataError("Keywords", MovieDataKeywords)
+)
 
 type Movie interface {
 	// This method will never panic.
@@ -109,10 +130,6 @@ func (m *movie) Upgrade(ctx context.Context, data ...MovieDataCol) error {
 	return nil
 }
 
-func movieUnsupported(method string) string {
-	return fmt.Sprintf("method %s() is not supported on this Movie; call Upgrade() first", method)
-}
-
 type movieNoData struct{}
 
 func (movieNoData) upgrade(in *getMovieData) MovieData {
@@ -120,25 +137,25 @@ func (movieNoData) upgrade(in *getMovieData) MovieData {
 }
 
 func (movieNoData) Adult() bool {
-	panic(movieUnsupported("Adult"))
+	panic(ErrMovieNoDataAdult)
 }
 
 func (movieNoData) Budget() int {
-	panic(movieUnsupported("Budget"))
+	panic(ErrMovieNoDataBudget)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
-	panic(movieUnsupported("Cast"))
+	panic(ErrMovieNoDataCast)
 }
 
 func (movieNoData) Crew() iter.Seq[Crew] {
-	panic(movieUnsupported("Crew"))
+	panic(ErrMovieNoDataCrew)
 }
 
 func (movieNoData) WikidataId() WikidataMovieId {
-	panic(movieUnsupported("WikidataId"))
+	panic(ErrMovieNoDataWikidataId)
 }
 
 func (movieNoData) Keywords() iter.Seq[Keyword] {
-	panic(movieUnsupported("Keywords"))
+	panic(ErrMovieNoDataKeywords)
 }

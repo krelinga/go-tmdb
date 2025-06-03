@@ -131,14 +131,14 @@ func (p *getMovieData) Crew() iter.Seq[Crew] {
 
 func (p *getMovieData) WikidataId() WikidataMovieId {
 	if p.rawExternalIds == nil {
-		panic(movieUnsupported("WikidataId"))
+		panic(ErrMovieNoDataWikidataId)
 	}
 	return WikidataMovieId(p.rawExternalIds.WikidataId)
 }
 
 func (p *getMovieData) Keywords() iter.Seq[Keyword] {
 	if p.keywords == nil {
-		panic(movieUnsupported("Keywords"))
+		panic(ErrMovieNoDataKeywords)
 	}
 	return slices.Values(p.keywords)
 }
