@@ -15,6 +15,11 @@ type GetMovieOptions struct {
 	Columns  []MovieDataCol
 }
 
+// In addition to what is listed in MovieData, the following data is also available:
+// - Companies()
+//   - Logo()
+//   - Name()
+//   - OriginCountry()
 func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptions) (Movie, error) {
 	if options == nil {
 		options = &GetMovieOptions{}
@@ -56,6 +61,7 @@ type getMovieData struct {
 	rawDetails     *raw.GetMovieDetails
 	keywords       []Keyword
 	rawExternalIds *raw.GetMovieExternalIds
+	companies      []Company
 }
 
 func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
@@ -75,6 +81,18 @@ func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
 
 	if raw.ExternalIds != nil {
 		p.rawExternalIds = raw.ExternalIds
+	}
+
+	p.companies = make([]Company, 0, len(raw.ProductionCompanies))
+	for _, rawCompany := range raw.ProductionCompanies {
+		p.companies = append(p.companies, &company{
+			id:            CompanyId(rawCompany.Id),
+			CompanyData: &getMovieCompanyData{
+				client: client,
+				raw: rawCompany,
+				CompanyData: companyNoData{},
+			},
+		})
 	}
 }
 
@@ -187,4 +205,25 @@ func (p *getMovieData) Keywords() iter.Seq[Keyword] {
 		panic(ErrMovieNoDataKeywords)
 	}
 	return slices.Values(p.keywords)
+}
+
+type getMovieCompanyData struct {
+	client *Client
+	raw *raw.GetMovieProductionCompany
+	CompanyData
+}
+
+func (c *getMovieCompanyData) Logo() Image {
+	return image{
+		raw:    c.raw.LogoPath,
+		client: c.client,
+	}
+}
+
+func (c *getMovieCompanyData) Name() string {
+	return c.raw.Name
+}
+
+func (c *getMovieCompanyData) OriginCountry() Country {
+	return Country(c.raw.OriginCountry)
 }
