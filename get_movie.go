@@ -185,6 +185,29 @@ func (p *getMovieData) Poster() Image {
 	}
 }
 
+func (p *getMovieData) Companies() iter.Seq[Company] {
+	return func(yield func(Company) bool) {
+		for _, c := range p.companies {
+			if !yield(c) {
+				return
+			}
+		}
+	}
+}
+
+func (p *getMovieData) Countries() iter.Seq[Country] {
+	return func(yield func(Country) bool) {
+		for _, rawCountry := range p.rawDetails.ProductionCountries {
+			if !yield(country{
+				id:   CountryId(rawCountry.Iso3166_1),
+				name: rawCountry.Name,
+			}) {
+				return
+			}
+		}
+	}
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }

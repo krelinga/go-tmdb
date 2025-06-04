@@ -22,6 +22,7 @@ type GetMovieDetails struct {
 	Popularity          float64                      `json:"popularity"`
 	PosterPath          string                       `json:"poster_path"`
 	ProductionCompanies []*GetMovieProductionCompany `json:"production_companies"`
+	ProductionCountries []*GetMovieProductionCountry `json:"production_countries"`
 }
 
 func (g *GetMovie) SetDefaults() {
@@ -36,6 +37,11 @@ type GetMovieProductionCompany struct {
 	LogoPath      string `json:"logo_path"`
 	Name          string `json:"name"`
 	OriginCountry string `json:"origin_country"`
+}
+
+type GetMovieProductionCountry struct {
+	Iso3166_1 string `json:"iso_3166_1"`
+	Name      string `json:"name"`
 }
 
 type GetMovieCredits struct {

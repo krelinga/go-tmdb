@@ -76,6 +76,8 @@ var (
 	ErrMovieNoDataOverview         = movieNoDataError("Overview", movieDataNone)
 	ErrMovieNoDataPopularity       = movieNoDataError("Popularity", movieDataNone)
 	ErrMovieNoDataPoster           = movieNoDataError("Poster", movieDataNone)
+	ErrMovieNoDataCompanies        = movieNoDataError("Companies", movieDataNone)
+	ErrMovieNoDataCountries        = movieNoDataError("Countries", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -118,6 +120,8 @@ type MovieData interface {
 	Overview() string
 	Popularity() float64
 	Poster() Image
+	Companies() iter.Seq[Company]
+	Countries() iter.Seq[Country]
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -213,6 +217,14 @@ func (movieNoData) Popularity() float64 {
 
 func (movieNoData) Poster() Image {
 	panic(ErrMovieNoDataPoster)
+}
+
+func (movieNoData) Companies() iter.Seq[Company] {
+	panic(ErrMovieNoDataCompanies)
+}
+
+func (movieNoData) Countries() iter.Seq[Country] {
+	panic(ErrMovieNoDataCountries)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
