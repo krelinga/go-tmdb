@@ -63,6 +63,8 @@ type getMovieData struct {
 	keywords       []Keyword
 	rawExternalIds *raw.GetMovieExternalIds
 	companies      []Company
+	cast           []MovieCast
+	crew           []MovieCrew
 }
 
 func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
@@ -94,6 +96,20 @@ func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
 				CompanyData: companyNoData{},
 			},
 		})
+	}
+
+	p.cast = make([]MovieCast, 0, len(raw.Credits.Cast))
+	for _, rawCast := range raw.Credits.Cast {
+		c := &getMovieCast{}
+		c.init(client, rawCast)
+		p.cast = append(p.cast, c)
+	}
+
+	p.crew = make([]MovieCrew, 0, len(raw.Credits.Crew))
+	for _, rawCrew := range raw.Credits.Crew {
+		c := &getMovieCrew{}
+		c.init(client, rawCrew)
+		p.crew = append(p.crew, c)
 	}
 }
 
@@ -257,12 +273,12 @@ func (p *getMovieData) VoteCount() int {
 	return p.rawDetails.VoteCount
 }
 
-func (p *getMovieData) Cast() iter.Seq[Cast] {
-	return nil // TODO: implement
+func (p *getMovieData) Cast() iter.Seq[MovieCast] {
+	return slices.Values(p.cast)
 }
 
-func (p *getMovieData) Crew() iter.Seq[Crew] {
-	return nil // TODO: implement
+func (p *getMovieData) Crew() iter.Seq[MovieCrew] {
+	return slices.Values(p.crew)
 }
 
 func (p *getMovieData) WikidataId() WikidataMovieId {
@@ -314,4 +330,150 @@ func (l getMovieSpokenLanguage) Name() string {
 
 func (l getMovieSpokenLanguage) EnglishName() string {
 	return l.raw.EnglishName
+}
+
+type getMovieCastPerson struct {
+	client *Client
+	raw    *raw.GetMovieCreditsCast
+}
+
+func (c getMovieCastPerson) Id() PersonId {
+	return PersonId(c.raw.Id)
+}
+
+func (c getMovieCastPerson) Adult() bool {
+	return c.raw.Adult
+}
+
+func (c getMovieCastPerson) Gender() Gender {
+	return Gender(c.raw.Gender)
+}
+
+func (c getMovieCastPerson) KnownForDepartment() string {
+	return c.raw.KnownForDepartment
+}
+
+func (c getMovieCastPerson) Name() string {
+	return c.raw.Name
+}
+
+func (c getMovieCastPerson) Popularity() float64 {
+	return c.raw.Popularity
+}
+
+func (c getMovieCastPerson) Profile() Image {
+	return image{
+		raw:    c.raw.ProfilePath,
+		client: c.client,
+	}
+}
+
+type getMovieCast struct {
+	client *Client
+	raw    *raw.GetMovieCreditsCast
+	person Person
+}
+
+func (c *getMovieCast) init(client *Client, raw *raw.GetMovieCreditsCast) {
+	c.client = client
+	c.raw = raw
+	c.person = &getMovieCastPerson{
+		client: client,
+		raw:    c.raw,
+	}
+}
+
+func (c *getMovieCast) Id() CreditId {
+	return CreditId(c.raw.CreditId)
+}
+
+func (c *getMovieCast) Person() Person {
+	return c.person
+}
+
+func (c *getMovieCast) OriginalName() string {
+	return c.raw.OriginalName
+}
+
+func (c *getMovieCast) Character() string {
+	return c.raw.Character
+}
+
+func (c *getMovieCast) CastId() MovieCastId {
+	return MovieCastId(c.raw.CastId)
+}
+
+func (c *getMovieCast) Order() int {
+	return c.raw.Order
+}
+
+type getMovieCrewPerson struct {
+	client *Client
+	raw    *raw.GetMovieCreditsCrew
+}
+
+func (c *getMovieCrewPerson) Id() PersonId {
+	return PersonId(c.raw.Id)
+}
+
+func (c *getMovieCrewPerson) Adult() bool {
+	return c.raw.Adult
+}
+
+func (c *getMovieCrewPerson) Gender() Gender {
+	return Gender(c.raw.Gender)
+}
+
+func (c *getMovieCrewPerson) KnownForDepartment() string {
+	return c.raw.KnownForDepartment
+}
+
+func (c *getMovieCrewPerson) Name() string {
+	return c.raw.Name
+}
+
+func (c *getMovieCrewPerson) Popularity() float64 {
+	return c.raw.Popularity
+}
+
+func (c *getMovieCrewPerson) Profile() Image {
+	return image{
+		raw:    c.raw.ProfilePath,
+		client: c.client,
+	}
+}
+
+type getMovieCrew struct {
+	client *Client
+	raw    *raw.GetMovieCreditsCrew
+	person Person
+}
+
+func (c *getMovieCrew) init(client *Client, raw *raw.GetMovieCreditsCrew) {
+	c.client = client
+	c.raw = raw
+	c.person = &getMovieCrewPerson{
+		client: client,
+		raw:    c.raw,
+	}
+}
+
+func (c *getMovieCrew) Id() CreditId {
+	return CreditId(c.raw.CreditId)
+}
+
+func (c *getMovieCrew) Person() Person {
+	return c.person
+}
+
+func (c *getMovieCrew) OriginalName() string {
+	return c.raw.OriginalName
+}
+
+func (c *getMovieCrew) Department() string {
+	return c.raw.Department
+}
+
+func (c *getMovieCrew) Job() string {
+	return c.raw.Job
 }

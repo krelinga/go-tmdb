@@ -145,8 +145,8 @@ type MovieData interface {
 	VoteCount() int
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
-	Cast() iter.Seq[Cast]
-	Crew() iter.Seq[Crew]
+	Cast() iter.Seq[MovieCast]
+	Crew() iter.Seq[MovieCrew]
 
 	// Call Upgrade() with MovieDataExternalIds to ensure these methods will not panic.
 	WikidataId() WikidataMovieId
@@ -157,9 +157,6 @@ type MovieData interface {
 	// Internal methods, not safe to call together with any other method on MovieData.
 	upgrade(*getMovieData) MovieData
 }
-
-type Cast any
-type Crew any
 
 type movie struct {
 	client   *Client
@@ -288,11 +285,11 @@ func (movieNoData) VoteCount() int {
 	panic(ErrMovieNoDataVoteCount)
 }
 
-func (movieNoData) Cast() iter.Seq[Cast] {
+func (movieNoData) Cast() iter.Seq[MovieCast] {
 	panic(ErrMovieNoDataCast)
 }
 
-func (movieNoData) Crew() iter.Seq[Crew] {
+func (movieNoData) Crew() iter.Seq[MovieCrew] {
 	panic(ErrMovieNoDataCrew)
 }
 
