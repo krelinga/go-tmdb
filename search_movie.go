@@ -25,6 +25,11 @@ type SearchMovieOptions struct {
 // - OriginalTitle()
 // - Popularity()
 // - Poster()
+// - ReleaseDate()
+// - Title()
+// - Video()
+// - VoteAverage()
+// - VoteCount()
 func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMovieOptions) iter.Seq2[Movie, error] {
 	return func(yield func(Movie, error) bool) {
 		for page := 1; ; page++ {
