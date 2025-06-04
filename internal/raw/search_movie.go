@@ -19,6 +19,7 @@ type SearchMovieResult struct {
 	BackdropPath     string `json:"backdrop_path"`
 	GenreIds         []int  `json:"genre_ids"`
 	OriginalLanguage string `json:"original_language"`
+	OriginalTitle    string `json:"original_title"`
 }
 
 func (s *SearchMovieResult) SetDefaults() {

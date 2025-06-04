@@ -148,6 +148,10 @@ func (p *getMovieData) OriginalLanguage() Language {
 	return Language(p.rawDetails.OriginalLanguage)
 }
 
+func (p *getMovieData) OriginalTitle() string {
+	return p.rawDetails.OriginalTitle
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }

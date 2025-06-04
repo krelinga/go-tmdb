@@ -22,6 +22,7 @@ type SearchMovieOptions struct {
 // - Backdrop()
 // - GenreIds()
 // - OriginalLanguage()
+// - OriginalTitle()
 func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMovieOptions) iter.Seq2[Movie, error] {
 	return func(yield func(Movie, error) bool) {
 		for page := 1; ; page++ {
@@ -109,4 +110,8 @@ func (s *searchMovieResultData) GenreIds() iter.Seq[GenreId] {
 
 func (s *searchMovieResultData) OriginalLanguage() Language {
 	return Language(s.raw.OriginalLanguage)
+}
+
+func (s *searchMovieResultData) OriginalTitle() string {
+	return s.raw.OriginalTitle
 }
