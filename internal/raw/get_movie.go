@@ -25,6 +25,7 @@ type GetMovieDetails struct {
 	ProductionCountries []*GetMovieProductionCountry `json:"production_countries"`
 	ReleaseDate         string                       `json:"release_date"`
 	Revenue             int                          `json:"revenue"`
+	Runtime             int                          `json:"runtime"`
 }
 
 func (g *GetMovie) SetDefaults() {

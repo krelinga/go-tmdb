@@ -6,6 +6,7 @@ import (
 	"iter"
 	"net/url"
 	"slices"
+	"time"
 
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
@@ -214,6 +215,10 @@ func (p *getMovieData) ReleaseDate() Date {
 
 func (p *getMovieData) Revenue() int {
 	return p.rawDetails.Revenue
+}
+
+func (p *getMovieData) Runtime() time.Duration {
+	return time.Duration(p.rawDetails.Runtime) * time.Minute
 }
 
 func (p *getMovieData) Cast() iter.Seq[Cast] {

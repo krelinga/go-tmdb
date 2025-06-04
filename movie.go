@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"iter"
+	"time"
 )
 
 type MovieId int
@@ -80,6 +81,7 @@ var (
 	ErrMovieNoDataCountries        = movieNoDataError("Countries", movieDataNone)
 	ErrMovieNoDataReleaseDate      = movieNoDataError("ReleaseDate", movieDataNone)
 	ErrMovieNoDataRevenue          = movieNoDataError("Revenue", movieDataNone)
+	ErrMovieNoDataRuntime          = movieNoDataError("Runtime", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -126,6 +128,7 @@ type MovieData interface {
 	Countries() iter.Seq[Country]
 	ReleaseDate() Date
 	Revenue() int
+	Runtime() time.Duration
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -237,6 +240,10 @@ func (movieNoData) ReleaseDate() Date {
 
 func (movieNoData) Revenue() int {
 	panic(ErrMovieNoDataRevenue)
+}
+
+func (movieNoData) Runtime() time.Duration {
+	panic(ErrMovieNoDataRuntime)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
