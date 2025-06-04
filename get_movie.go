@@ -233,6 +233,10 @@ func (p *getMovieData) SpokenLanguages() iter.Seq[Language] {
 	}
 }
 
+func (p *getMovieData) Status() string {
+	return p.rawDetails.Status
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
