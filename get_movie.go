@@ -212,6 +212,10 @@ func (p *getMovieData) ReleaseDate() Date {
 	return newDateYYYYMMDD(p.rawDetails.ReleaseDate)
 }
 
+func (p *getMovieData) Revenue() int {
+	return p.rawDetails.Revenue
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
