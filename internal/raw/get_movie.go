@@ -19,6 +19,7 @@ type GetMovieDetails struct {
 	OriginalLanguage    string   `json:"original_language"`
 	OriginalTitle       string   `json:"original_title"`
 	Overview            string   `json:"overview"`
+	Popularity          float64  `json:"popularity"`
 }
 
 func (g *GetMovie) SetDefaults() {
