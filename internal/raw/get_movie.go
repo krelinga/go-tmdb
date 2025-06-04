@@ -26,6 +26,7 @@ type GetMovieDetails struct {
 	ReleaseDate         string                       `json:"release_date"`
 	Revenue             int                          `json:"revenue"`
 	Runtime             int                          `json:"runtime"`
+	SpokenLanguages     []*GetMovieSpokenLanguage    `json:"spoken_languages"`
 }
 
 func (g *GetMovie) SetDefaults() {
@@ -45,6 +46,12 @@ type GetMovieProductionCompany struct {
 type GetMovieProductionCountry struct {
 	Iso3166_1 string `json:"iso_3166_1"`
 	Name      string `json:"name"`
+}
+
+type GetMovieSpokenLanguage struct {
+	Iso639_1    string `json:"iso_639_1"`
+	Name        string `json:"name"`
+	EnglishName string `json:"english_name"`
 }
 
 type GetMovieCredits struct {

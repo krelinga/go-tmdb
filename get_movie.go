@@ -221,6 +221,18 @@ func (p *getMovieData) Runtime() time.Duration {
 	return time.Duration(p.rawDetails.Runtime) * time.Minute
 }
 
+func (p *getMovieData) SpokenLanguages() iter.Seq[Language] {
+	return func(yield func(Language) bool) {
+		for _, rawLang := range p.rawDetails.SpokenLanguages {
+			if !yield(getMovieSpokenLanguage{
+				raw: rawLang,
+			}) {
+				return
+			}
+		}
+	}
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
@@ -262,4 +274,20 @@ func (c *getMovieCompanyData) Name() string {
 
 func (c *getMovieCompanyData) OriginCountry() CountryId {
 	return CountryId(c.raw.OriginCountry)
+}
+
+type getMovieSpokenLanguage struct {
+	raw *raw.GetMovieSpokenLanguage
+}
+
+func (l getMovieSpokenLanguage) Id() LanguageId {
+	return LanguageId(l.raw.Iso639_1)
+}
+
+func (l getMovieSpokenLanguage) Name() string {
+	return l.raw.Name
+}
+
+func (l getMovieSpokenLanguage) EnglishName() string {
+	return l.raw.EnglishName
 }
