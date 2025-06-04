@@ -23,6 +23,7 @@ type GetMovieDetails struct {
 	PosterPath          string                       `json:"poster_path"`
 	ProductionCompanies []*GetMovieProductionCompany `json:"production_companies"`
 	ProductionCountries []*GetMovieProductionCountry `json:"production_countries"`
+	ReleaseDate         string                       `json:"release_date"`
 }
 
 func (g *GetMovie) SetDefaults() {

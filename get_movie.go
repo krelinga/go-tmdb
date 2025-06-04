@@ -208,6 +208,10 @@ func (p *getMovieData) Countries() iter.Seq[Country] {
 	}
 }
 
+func (p *getMovieData) ReleaseDate() Date {
+	return newDateYYYYMMDD(p.rawDetails.ReleaseDate)
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }

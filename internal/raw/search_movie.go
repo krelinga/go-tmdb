@@ -23,6 +23,7 @@ type SearchMovieResult struct {
 	Overview         string  `json:"overview"`
 	Popularity       float64 `json:"popularity"`
 	PosterPath       string  `json:"poster_path"`
+	ReleaseDate      string  `json:"release_date"`
 }
 
 func (s *SearchMovieResult) SetDefaults() {
