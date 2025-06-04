@@ -20,6 +20,7 @@ type SearchMovieResult struct {
 	GenreIds         []int  `json:"genre_ids"`
 	OriginalLanguage string `json:"original_language"`
 	OriginalTitle    string `json:"original_title"`
+	Overview         string `json:"overview"`
 }
 
 func (s *SearchMovieResult) SetDefaults() {

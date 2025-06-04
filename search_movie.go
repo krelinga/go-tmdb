@@ -115,3 +115,7 @@ func (s *searchMovieResultData) OriginalLanguage() Language {
 func (s *searchMovieResultData) OriginalTitle() string {
 	return s.raw.OriginalTitle
 }
+
+func (s *searchMovieResultData) Overview() string {
+	return s.raw.Overview
+}

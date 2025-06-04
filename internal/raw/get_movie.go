@@ -18,6 +18,7 @@ type GetMovieDetails struct {
 	ImdbId              string   `json:"imdb_id"`
 	OriginalLanguage    string   `json:"original_language"`
 	OriginalTitle       string   `json:"original_title"`
+	Overview            string   `json:"overview"`
 }
 
 func (g *GetMovie) SetDefaults() {

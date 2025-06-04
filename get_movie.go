@@ -152,6 +152,10 @@ func (p *getMovieData) OriginalTitle() string {
 	return p.rawDetails.OriginalTitle
 }
 
+func (p *getMovieData) Overview() string {
+	return p.rawDetails.Overview
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
