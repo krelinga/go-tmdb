@@ -245,6 +245,18 @@ func (p *getMovieData) Title() string {
 	return p.rawDetails.Title
 }
 
+func (p *getMovieData) Video() bool {
+	return p.rawDetails.Video
+}
+
+func (p *getMovieData) VoteAverage() float64 {
+	return p.rawDetails.VoteAverage
+}
+
+func (p *getMovieData) VoteCount() int {
+	return p.rawDetails.VoteCount
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }

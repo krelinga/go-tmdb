@@ -140,3 +140,15 @@ func (s *searchMovieResultData) ReleaseDate() Date {
 func (s *searchMovieResultData) Title() string {
 	return s.raw.Title
 }
+
+func (s *searchMovieResultData) Video() bool {
+	return s.raw.Video
+}
+
+func (s *searchMovieResultData) VoteAverage() float64 {
+	return s.raw.VoteAverage
+}
+
+func (s *searchMovieResultData) VoteCount() int {
+	return s.raw.VoteCount
+}

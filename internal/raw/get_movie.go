@@ -30,6 +30,9 @@ type GetMovieDetails struct {
 	Status              string                       `json:"status"`
 	Tagline             string                       `json:"tagline"`
 	Title               string                       `json:"title"`
+	Video               bool                         `json:"video"`
+	VoteAverage         float64                      `json:"vote_average"`
+	VoteCount           int                          `json:"vote_count"`
 }
 
 func (g *GetMovie) SetDefaults() {
