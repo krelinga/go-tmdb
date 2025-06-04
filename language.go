@@ -1,3 +1,3 @@
 package tmdb
 
-type Language string
+type LanguageId string

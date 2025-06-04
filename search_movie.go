@@ -11,7 +11,7 @@ import (
 
 type SearchMovieOptions struct {
 	IncludeAdult       bool
-	Language           Language
+	Language           LanguageId
 	PrimaryReleaseYear int
 	Region             string
 	Year               int
@@ -32,7 +32,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 				"query": []string{query},
 				"page":  []string{fmt.Sprint(page)},
 			}
-			var language Language
+			var language LanguageId
 			if options != nil {
 				if options.IncludeAdult {
 					params.Set("include_adult", fmt.Sprint(options.IncludeAdult))
@@ -110,8 +110,8 @@ func (s *searchMovieResultData) GenreIds() iter.Seq[GenreId] {
 	}
 }
 
-func (s *searchMovieResultData) OriginalLanguage() Language {
-	return Language(s.raw.OriginalLanguage)
+func (s *searchMovieResultData) OriginalLanguage() LanguageId {
+	return LanguageId(s.raw.OriginalLanguage)
 }
 
 func (s *searchMovieResultData) OriginalTitle() string {

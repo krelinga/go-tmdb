@@ -12,7 +12,7 @@ import (
 )
 
 type GetMovieOptions struct {
-	Language Language
+	Language LanguageId
 	Columns  []MovieDataCol
 }
 
@@ -38,7 +38,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptio
 	}, nil
 }
 
-func getMovie(ctx context.Context, c *Client, id MovieId, language Language, columns ...MovieDataCol) (*getMovieData, error) {
+func getMovie(ctx context.Context, c *Client, id MovieId, language LanguageId, columns ...MovieDataCol) (*getMovieData, error) {
 	v := url.Values{}
 	if language != "" {
 		v.Set("language", string(language))
@@ -163,8 +163,8 @@ func (p *getMovieData) ImdbId() ImdbMovieId {
 	return ImdbMovieId(p.rawDetails.ImdbId)
 }
 
-func (p *getMovieData) OriginalLanguage() Language {
-	return Language(p.rawDetails.OriginalLanguage)
+func (p *getMovieData) OriginalLanguage() LanguageId {
+	return LanguageId(p.rawDetails.OriginalLanguage)
 }
 
 func (p *getMovieData) OriginalTitle() string {

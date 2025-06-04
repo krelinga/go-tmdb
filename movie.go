@@ -119,7 +119,7 @@ type MovieData interface {
 	Genres() iter.Seq[Genre]
 	Homepage() string
 	ImdbId() ImdbMovieId
-	OriginalLanguage() Language
+	OriginalLanguage() LanguageId
 	OriginalTitle() string
 	Overview() string
 	Popularity() float64
@@ -150,7 +150,7 @@ type Crew any
 type movie struct {
 	client   *Client
 	id       MovieId
-	language Language
+	language LanguageId
 
 	MovieData
 }
@@ -206,7 +206,7 @@ func (movieNoData) ImdbId() ImdbMovieId {
 	panic(ErrMovieNoDataImdbId)
 }
 
-func (movieNoData) OriginalLanguage() Language {
+func (movieNoData) OriginalLanguage() LanguageId {
 	panic(ErrMovieNoDataOriginalLanguage)
 }
 
