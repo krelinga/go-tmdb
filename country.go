@@ -1,3 +1,3 @@
 package tmdb
 
-type Country string
+type CountryId string

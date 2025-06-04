@@ -51,7 +51,7 @@ var (
 type CompanyData interface {
 	Logo() Image
 	Name() string
-	OriginCountry() Country
+	OriginCountry() CountryId
 }
 
 type companyNoData struct{}
@@ -64,7 +64,7 @@ func (c companyNoData) Name() string {
 	panic(ErrCompanyNoDataName)
 }
 
-func (c companyNoData) OriginCountry() Country {
+func (c companyNoData) OriginCountry() CountryId {
 	panic(ErrCompanyNoDataOriginCountry)
 }
 

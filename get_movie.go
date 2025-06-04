@@ -86,10 +86,10 @@ func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
 	p.companies = make([]Company, 0, len(raw.ProductionCompanies))
 	for _, rawCompany := range raw.ProductionCompanies {
 		p.companies = append(p.companies, &company{
-			id:            CompanyId(rawCompany.Id),
+			id: CompanyId(rawCompany.Id),
 			CompanyData: &getMovieCompanyData{
-				client: client,
-				raw: rawCompany,
+				client:      client,
+				raw:         rawCompany,
 				CompanyData: companyNoData{},
 			},
 		})
@@ -209,7 +209,7 @@ func (p *getMovieData) Keywords() iter.Seq[Keyword] {
 
 type getMovieCompanyData struct {
 	client *Client
-	raw *raw.GetMovieProductionCompany
+	raw    *raw.GetMovieProductionCompany
 	CompanyData
 }
 
@@ -224,6 +224,6 @@ func (c *getMovieCompanyData) Name() string {
 	return c.raw.Name
 }
 
-func (c *getMovieCompanyData) OriginCountry() Country {
-	return Country(c.raw.OriginCountry)
+func (c *getMovieCompanyData) OriginCountry() CountryId {
+	return CountryId(c.raw.OriginCountry)
 }
