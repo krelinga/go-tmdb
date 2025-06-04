@@ -72,6 +72,34 @@ func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
 
 	p.rawDetails = raw.GetMovieDetails
 
+	p.companies = make([]Company, 0, len(raw.ProductionCompanies))
+	for _, rawCompany := range raw.ProductionCompanies {
+		p.companies = append(p.companies, &company{
+			id: CompanyId(rawCompany.Id),
+			CompanyData: &getMovieCompanyData{
+				client:      client,
+				raw:         rawCompany,
+				CompanyData: companyNoData{},
+			},
+		})
+	}
+
+	if raw.Credits != nil {
+		p.cast = make([]MovieCast, 0, len(raw.Credits.Cast))
+		for _, rawCast := range raw.Credits.Cast {
+			c := &getMovieCast{}
+			c.init(client, rawCast)
+			p.cast = append(p.cast, c)
+		}
+
+		p.crew = make([]MovieCrew, 0, len(raw.Credits.Crew))
+		for _, rawCrew := range raw.Credits.Crew {
+			c := &getMovieCrew{}
+			c.init(client, rawCrew)
+			p.crew = append(p.crew, c)
+		}
+	}
+
 	if raw.Keywords != nil {
 		p.keywords = make([]Keyword, len(raw.Keywords.Keywords))
 		for i, kw := range raw.Keywords.Keywords {
@@ -85,32 +113,6 @@ func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
 	if raw.ExternalIds != nil {
 		p.rawExternalIds = raw.ExternalIds
 	}
-
-	p.companies = make([]Company, 0, len(raw.ProductionCompanies))
-	for _, rawCompany := range raw.ProductionCompanies {
-		p.companies = append(p.companies, &company{
-			id: CompanyId(rawCompany.Id),
-			CompanyData: &getMovieCompanyData{
-				client:      client,
-				raw:         rawCompany,
-				CompanyData: companyNoData{},
-			},
-		})
-	}
-
-	p.cast = make([]MovieCast, 0, len(raw.Credits.Cast))
-	for _, rawCast := range raw.Credits.Cast {
-		c := &getMovieCast{}
-		c.init(client, rawCast)
-		p.cast = append(p.cast, c)
-	}
-
-	p.crew = make([]MovieCrew, 0, len(raw.Credits.Crew))
-	for _, rawCrew := range raw.Credits.Crew {
-		c := &getMovieCrew{}
-		c.init(client, rawCrew)
-		p.crew = append(p.crew, c)
-	}
 }
 
 func (p *getMovieData) upgrade(in *getMovieData) MovieData {
@@ -119,6 +121,12 @@ func (p *getMovieData) upgrade(in *getMovieData) MovieData {
 	}
 	if p.rawDetails == nil {
 		p.rawDetails = in.rawDetails
+	}
+	if p.cast == nil {
+		p.cast = in.cast
+	}
+	if p.crew == nil {
+		p.crew = in.crew
 	}
 	if p.keywords == nil {
 		p.keywords = in.keywords
