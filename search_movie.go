@@ -24,6 +24,7 @@ type SearchMovieOptions struct {
 // - OriginalLanguage()
 // - OriginalTitle()
 // - Popularity()
+// - Poster()
 func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMovieOptions) iter.Seq2[Movie, error] {
 	return func(yield func(Movie, error) bool) {
 		for page := 1; ; page++ {
@@ -123,4 +124,11 @@ func (s *searchMovieResultData) Overview() string {
 
 func (s *searchMovieResultData) Popularity() float64 {
 	return s.raw.Popularity
+}
+
+func (s *searchMovieResultData) Poster() Image {
+	return image{
+		client: s.client,
+		raw:    s.raw.PosterPath,
+	}
 }

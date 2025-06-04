@@ -160,6 +160,13 @@ func (p *getMovieData) Popularity() float64 {
 	return p.rawDetails.Popularity
 }
 
+func (p *getMovieData) Poster() Image {
+	return image{
+		raw:    p.rawDetails.PosterPath,
+		client: p.client,
+	}
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
