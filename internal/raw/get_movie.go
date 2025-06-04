@@ -28,6 +28,7 @@ type GetMovieDetails struct {
 	Runtime             int                          `json:"runtime"`
 	SpokenLanguages     []*GetMovieSpokenLanguage    `json:"spoken_languages"`
 	Status              string                       `json:"status"`
+	Tagline             string                       `json:"tagline"`
 }
 
 func (g *GetMovie) SetDefaults() {

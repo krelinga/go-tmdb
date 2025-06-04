@@ -83,7 +83,8 @@ var (
 	ErrMovieNoDataRevenue          = movieNoDataError("Revenue", movieDataNone)
 	ErrMovieNoDataRuntime          = movieNoDataError("Runtime", movieDataNone)
 	ErrMovieNoDataSpokenLanguages  = movieNoDataError("SpokenLanguages", movieDataNone)
-	ErrMovieNoDataStatus		   = movieNoDataError("Status", movieDataNone)
+	ErrMovieNoDataStatus           = movieNoDataError("Status", movieDataNone)
+	ErrMovieNoDataTagline          = movieNoDataError("Tagline", movieDataNone)
 
 	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
 	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
@@ -133,6 +134,7 @@ type MovieData interface {
 	Runtime() time.Duration
 	SpokenLanguages() iter.Seq[Language]
 	Status() string
+	Tagline() string
 
 	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
 	Cast() iter.Seq[Cast]
@@ -256,6 +258,10 @@ func (movieNoData) SpokenLanguages() iter.Seq[Language] {
 
 func (movieNoData) Status() string {
 	panic(ErrMovieNoDataStatus)
+}
+
+func (movieNoData) Tagline() string {
+	panic(ErrMovieNoDataTagline)
 }
 
 func (movieNoData) Cast() iter.Seq[Cast] {
