@@ -136,3 +136,7 @@ func (s *searchMovieResultData) Poster() Image {
 func (s *searchMovieResultData) ReleaseDate() Date {
 	return newDateYYYYMMDD(s.raw.ReleaseDate)
 }
+
+func (s *searchMovieResultData) Title() string {
+	return s.raw.Title
+}

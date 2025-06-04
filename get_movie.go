@@ -241,6 +241,10 @@ func (p *getMovieData) Tagline() string {
 	return p.rawDetails.Tagline
 }
 
+func (p *getMovieData) Title() string {
+	return p.rawDetails.Title
+}
+
 func (p *getMovieData) Cast() iter.Seq[Cast] {
 	return nil // TODO: implement
 }
