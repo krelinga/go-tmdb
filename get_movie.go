@@ -3,9 +3,7 @@ package tmdb
 import (
 	"context"
 	"fmt"
-	"iter"
 	"net/url"
-	"slices"
 	"time"
 
 	"github.com/krelinga/go-tmdb/internal/raw"
@@ -13,7 +11,7 @@ import (
 
 type GetMovieOptions struct {
 	Language LanguageId
-	Columns  []MovieDataCol
+	Columns  []MovieDataColumn
 }
 
 // In addition to what is listed in MovieData, the following data is also available:
@@ -21,30 +19,15 @@ type GetMovieOptions struct {
 //   - Logo()
 //   - Name()
 //   - OriginCountry()
-func GetMovie(ctx context.Context, c *Client, id MovieId, options *GetMovieOptions) (Movie, error) {
-	if options == nil {
-		options = &GetMovieOptions{}
-	}
-	parts, err := getMovie(ctx, c, id, options.Language, options.Columns...)
-	if err != nil {
-		return nil, fmt.Errorf("getting movie %d: %w", id, err)
-	}
-
-	return &movie{
-		client:    c,
-		id:        id,
-		language:  options.Language,
-		MovieData: parts,
-	}, nil
-}
-
-func getMovie(ctx context.Context, c *Client, id MovieId, language LanguageId, columns ...MovieDataCol) (*getMovieData, error) {
+func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*Movie, error) {
+	var callOpts allOptions
+	callOpts.apply(options)
 	v := url.Values{}
-	if language != "" {
-		v.Set("language", string(language))
+	if callOpts.Language != nil {
+		v.Set("language", *callOpts.Language)
 	}
-	if len(columns) > 0 {
-		v.Set("append_to_response", appendToResponse(columns))
+	if len(callOpts.MovieDataColumns) > 0 {
+		v.Set("append_to_response", appendToResponse(callOpts.MovieDataColumns))
 	}
 
 	raw := &raw.GetMovie{}
@@ -52,436 +35,64 @@ func getMovie(ctx context.Context, c *Client, id MovieId, language LanguageId, c
 		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
 
-	out := &getMovieData{}
-	out.init(raw, c)
+	genres := make([]Genre, len(raw.Genres))
+	for i, g := range raw.Genres {
+		genres[i] = Genre{
+			Id:   GenreId(g.Id),
+			Name: &g.Name,
+		}
+	}
+	companies := make([]*Company, len(raw.ProductionCompanies))
+	for i, rawCompany := range raw.ProductionCompanies {
+		companies[i] = &Company{
+			Id: CompanyId(rawCompany.Id),
+			Logo: NewPtr[Image](Image(rawCompany.LogoPath)),
+			Name: &rawCompany.Name,
+			OriginCountry: &rawCompany.OriginCountry,
+		}
+	}
+	countries := make([]*Country, len(raw.ProductionCountries))
+	for i, rawCountry := range raw.ProductionCountries {
+		countries[i] = &Country{
+			Code: &rawCountry.Iso3166_1,
+			Name: &rawCountry.Name,
+		}
+	}
+	spokenLanguages := make([]*Language, len(raw.SpokenLanguages))
+	for i, rawLang := range raw.SpokenLanguages {
+		spokenLanguages[i] = &Language{
+			Code: &rawLang.Iso639_1,
+			Name: &rawLang.Name,
+			EnglishName: &rawLang.EnglishName,
+		}
+	}
+	out := &Movie{
+		Id: MovieId(raw.Id),
+		Adult: raw.Adult,
+		Backdrop: NewPtr[Image](Image(raw.BackdropPath)),
+		BelongsToCollection: &raw.BelongsToCollection,
+		Budget: &raw.Budget,
+		Genres: genres,
+		Homepage: &raw.Homepage,
+		ImdbId: &raw.ImdbId,
+		OriginalLanguage: &raw.OriginalLanguage,
+		OriginalTitle: &raw.OriginalTitle,
+		Overview: &raw.Overview,
+		Popularity: &raw.Popularity,
+		Poster: NewPtr[Image](Image(raw.PosterPath)),
+		ProductionCompanies: companies,
+		ProductionCountries: countries,
+		ReleaseDate: NewPtr(DateYYYYMMDD(raw.ReleaseDate)),
+		Revenue: &raw.Revenue,
+		Runtime: NewPtr(time.Duration(raw.Runtime) * time.Minute),
+		SpokenLanguages: spokenLanguages,
+		Status: &raw.Status,
+		Tagline: &raw.Tagline,
+		Title: &raw.Title,
+		Video: &raw.Video,
+		VoteAverage: &raw.VoteAverage,
+		VoteCount: &raw.VoteCount,
+	}
 	return out, nil
 }
 
-type getMovieData struct {
-	client         *Client
-	rawDetails     *raw.GetMovieDetails
-	keywords       []Keyword
-	rawExternalIds *raw.GetMovieExternalIds
-	companies      []Company
-	cast           []MovieCast
-	crew           []MovieCrew
-}
-
-func (p *getMovieData) init(raw *raw.GetMovie, client *Client) {
-	p.client = client
-
-	p.rawDetails = raw.GetMovieDetails
-
-	p.companies = make([]Company, 0, len(raw.ProductionCompanies))
-	for _, rawCompany := range raw.ProductionCompanies {
-		p.companies = append(p.companies, &company{
-			id: CompanyId(rawCompany.Id),
-			CompanyData: &getMovieCompanyData{
-				client:      client,
-				raw:         rawCompany,
-				CompanyData: companyNoData{},
-			},
-		})
-	}
-
-	if raw.Credits != nil {
-		p.cast = make([]MovieCast, 0, len(raw.Credits.Cast))
-		for _, rawCast := range raw.Credits.Cast {
-			c := &getMovieCast{}
-			c.init(client, rawCast)
-			p.cast = append(p.cast, c)
-		}
-
-		p.crew = make([]MovieCrew, 0, len(raw.Credits.Crew))
-		for _, rawCrew := range raw.Credits.Crew {
-			c := &getMovieCrew{}
-			c.init(client, rawCrew)
-			p.crew = append(p.crew, c)
-		}
-	}
-
-	if raw.Keywords != nil {
-		p.keywords = make([]Keyword, len(raw.Keywords.Keywords))
-		for i, kw := range raw.Keywords.Keywords {
-			p.keywords[i] = keyword{
-				id:   KeywordId(kw.Id),
-				name: kw.Name,
-			}
-		}
-	}
-
-	if raw.ExternalIds != nil {
-		p.rawExternalIds = raw.ExternalIds
-	}
-}
-
-func (p *getMovieData) upgrade(in *getMovieData) MovieData {
-	if in == nil {
-		return p
-	}
-	if p.rawDetails == nil {
-		p.rawDetails = in.rawDetails
-	}
-	if p.cast == nil {
-		p.cast = in.cast
-	}
-	if p.crew == nil {
-		p.crew = in.crew
-	}
-	if p.keywords == nil {
-		p.keywords = in.keywords
-	}
-	if p.rawExternalIds == nil {
-		p.rawExternalIds = in.rawExternalIds
-	}
-	return p
-}
-
-func (p *getMovieData) Adult() bool {
-	return *p.rawDetails.Adult
-}
-
-func (p *getMovieData) Backdrop() Image {
-	return image{
-		raw:    p.rawDetails.BackdropPath,
-		client: p.client,
-	}
-}
-
-func (p *getMovieData) BelongsToCollection() string {
-	return p.rawDetails.BelongsToCollection
-}
-
-func (p *getMovieData) Budget() int {
-	return p.rawDetails.Budget
-}
-
-func (p *getMovieData) GenreIds() iter.Seq[GenreId] {
-	return func(yield func(GenreId) bool) {
-		for _, genre := range p.rawDetails.Genres {
-			if !yield(GenreId(genre.Id)) {
-				return
-			}
-		}
-	}
-}
-
-func (p *getMovieData) Genres() iter.Seq[Genre] {
-	return func(yield func(Genre) bool) {
-		for _, g := range p.rawDetails.Genres {
-			if !yield(genre{
-				id:   GenreId(g.Id),
-				name: g.Name,
-			}) {
-				return
-			}
-		}
-	}
-}
-
-func (p *getMovieData) Homepage() string {
-	return p.rawDetails.Homepage
-}
-
-func (p *getMovieData) ImdbId() ImdbMovieId {
-	return ImdbMovieId(p.rawDetails.ImdbId)
-}
-
-func (p *getMovieData) OriginalLanguage() LanguageId {
-	return LanguageId(p.rawDetails.OriginalLanguage)
-}
-
-func (p *getMovieData) OriginalTitle() string {
-	return p.rawDetails.OriginalTitle
-}
-
-func (p *getMovieData) Overview() string {
-	return p.rawDetails.Overview
-}
-
-func (p *getMovieData) Popularity() float64 {
-	return p.rawDetails.Popularity
-}
-
-func (p *getMovieData) Poster() Image {
-	return image{
-		raw:    p.rawDetails.PosterPath,
-		client: p.client,
-	}
-}
-
-func (p *getMovieData) Companies() iter.Seq[Company] {
-	return func(yield func(Company) bool) {
-		for _, c := range p.companies {
-			if !yield(c) {
-				return
-			}
-		}
-	}
-}
-
-func (p *getMovieData) Countries() iter.Seq[Country] {
-	return func(yield func(Country) bool) {
-		for _, rawCountry := range p.rawDetails.ProductionCountries {
-			if !yield(country{
-				id:   CountryId(rawCountry.Iso3166_1),
-				name: rawCountry.Name,
-			}) {
-				return
-			}
-		}
-	}
-}
-
-func (p *getMovieData) ReleaseDate() Date {
-	return newDateYYYYMMDD(p.rawDetails.ReleaseDate)
-}
-
-func (p *getMovieData) Revenue() int {
-	return p.rawDetails.Revenue
-}
-
-func (p *getMovieData) Runtime() time.Duration {
-	return time.Duration(p.rawDetails.Runtime) * time.Minute
-}
-
-func (p *getMovieData) SpokenLanguages() iter.Seq[Language] {
-	return func(yield func(Language) bool) {
-		for _, rawLang := range p.rawDetails.SpokenLanguages {
-			if !yield(getMovieSpokenLanguage{
-				raw: rawLang,
-			}) {
-				return
-			}
-		}
-	}
-}
-
-func (p *getMovieData) Status() string {
-	return p.rawDetails.Status
-}
-
-func (p *getMovieData) Tagline() string {
-	return p.rawDetails.Tagline
-}
-
-func (p *getMovieData) Title() string {
-	return p.rawDetails.Title
-}
-
-func (p *getMovieData) Video() bool {
-	return p.rawDetails.Video
-}
-
-func (p *getMovieData) VoteAverage() float64 {
-	return p.rawDetails.VoteAverage
-}
-
-func (p *getMovieData) VoteCount() int {
-	return p.rawDetails.VoteCount
-}
-
-func (p *getMovieData) Cast() iter.Seq[MovieCast] {
-	return slices.Values(p.cast)
-}
-
-func (p *getMovieData) Crew() iter.Seq[MovieCrew] {
-	return slices.Values(p.crew)
-}
-
-func (p *getMovieData) WikidataId() WikidataMovieId {
-	if p.rawExternalIds == nil {
-		panic(ErrMovieNoDataWikidataId)
-	}
-	return WikidataMovieId(p.rawExternalIds.WikidataId)
-}
-
-func (p *getMovieData) Keywords() iter.Seq[Keyword] {
-	if p.keywords == nil {
-		panic(ErrMovieNoDataKeywords)
-	}
-	return slices.Values(p.keywords)
-}
-
-type getMovieCompanyData struct {
-	client *Client
-	raw    *raw.GetMovieProductionCompany
-	CompanyData
-}
-
-func (c *getMovieCompanyData) Logo() Image {
-	return image{
-		raw:    c.raw.LogoPath,
-		client: c.client,
-	}
-}
-
-func (c *getMovieCompanyData) Name() string {
-	return c.raw.Name
-}
-
-func (c *getMovieCompanyData) OriginCountry() CountryId {
-	return CountryId(c.raw.OriginCountry)
-}
-
-type getMovieSpokenLanguage struct {
-	raw *raw.GetMovieSpokenLanguage
-}
-
-func (l getMovieSpokenLanguage) Id() LanguageId {
-	return LanguageId(l.raw.Iso639_1)
-}
-
-func (l getMovieSpokenLanguage) Name() string {
-	return l.raw.Name
-}
-
-func (l getMovieSpokenLanguage) EnglishName() string {
-	return l.raw.EnglishName
-}
-
-type getMovieCastPerson struct {
-	client *Client
-	raw    *raw.GetMovieCreditsCast
-}
-
-func (c getMovieCastPerson) Id() PersonId {
-	return PersonId(c.raw.Id)
-}
-
-func (c getMovieCastPerson) Adult() bool {
-	return c.raw.Adult
-}
-
-func (c getMovieCastPerson) Gender() Gender {
-	return Gender(c.raw.Gender)
-}
-
-func (c getMovieCastPerson) KnownForDepartment() string {
-	return c.raw.KnownForDepartment
-}
-
-func (c getMovieCastPerson) Name() string {
-	return c.raw.Name
-}
-
-func (c getMovieCastPerson) Popularity() float64 {
-	return c.raw.Popularity
-}
-
-func (c getMovieCastPerson) Profile() Image {
-	return image{
-		raw:    c.raw.ProfilePath,
-		client: c.client,
-	}
-}
-
-type getMovieCast struct {
-	client *Client
-	raw    *raw.GetMovieCreditsCast
-	person Person
-}
-
-func (c *getMovieCast) init(client *Client, raw *raw.GetMovieCreditsCast) {
-	c.client = client
-	c.raw = raw
-	c.person = &getMovieCastPerson{
-		client: client,
-		raw:    c.raw,
-	}
-}
-
-func (c *getMovieCast) Id() CreditId {
-	return CreditId(c.raw.CreditId)
-}
-
-func (c *getMovieCast) Person() Person {
-	return c.person
-}
-
-func (c *getMovieCast) OriginalName() string {
-	return c.raw.OriginalName
-}
-
-func (c *getMovieCast) Character() string {
-	return c.raw.Character
-}
-
-func (c *getMovieCast) CastId() MovieCastId {
-	return MovieCastId(c.raw.CastId)
-}
-
-func (c *getMovieCast) Order() int {
-	return c.raw.Order
-}
-
-type getMovieCrewPerson struct {
-	client *Client
-	raw    *raw.GetMovieCreditsCrew
-}
-
-func (c *getMovieCrewPerson) Id() PersonId {
-	return PersonId(c.raw.Id)
-}
-
-func (c *getMovieCrewPerson) Adult() bool {
-	return c.raw.Adult
-}
-
-func (c *getMovieCrewPerson) Gender() Gender {
-	return Gender(c.raw.Gender)
-}
-
-func (c *getMovieCrewPerson) KnownForDepartment() string {
-	return c.raw.KnownForDepartment
-}
-
-func (c *getMovieCrewPerson) Name() string {
-	return c.raw.Name
-}
-
-func (c *getMovieCrewPerson) Popularity() float64 {
-	return c.raw.Popularity
-}
-
-func (c *getMovieCrewPerson) Profile() Image {
-	return image{
-		raw:    c.raw.ProfilePath,
-		client: c.client,
-	}
-}
-
-type getMovieCrew struct {
-	client *Client
-	raw    *raw.GetMovieCreditsCrew
-	person Person
-}
-
-func (c *getMovieCrew) init(client *Client, raw *raw.GetMovieCreditsCrew) {
-	c.client = client
-	c.raw = raw
-	c.person = &getMovieCrewPerson{
-		client: client,
-		raw:    c.raw,
-	}
-}
-
-func (c *getMovieCrew) Id() CreditId {
-	return CreditId(c.raw.CreditId)
-}
-
-func (c *getMovieCrew) Person() Person {
-	return c.person
-}
-
-func (c *getMovieCrew) OriginalName() string {
-	return c.raw.OriginalName
-}
-
-func (c *getMovieCrew) Department() string {
-	return c.raw.Department
-}
-
-func (c *getMovieCrew) Job() string {
-	return c.raw.Job
-}

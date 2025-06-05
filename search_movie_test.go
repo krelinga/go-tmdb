@@ -12,14 +12,19 @@ func TestSearchMovie(t *testing.T) {
 	ctx := context.Background()
 
 	// Test with a simple query
-	for movie, err := range tmdb.SearchMovie(ctx, client, "Inception", nil) {
+	for result, err := range tmdb.SearchMovie(ctx, client, "Inception") {
 		if err != nil {
 			t.Errorf("SearchMovie failed: %v", err)
 			return
 		}
-		if movie == nil {
-			break
+		if result == nil {
+			t.Error("SearchMovie returned nil result")
+			return
 		}
-		t.Logf("Found movie: %d", movie.Id())
+		if result.Movie == nil {
+			t.Error("SearchMovie returned result with nil Movie")
+			return
+		}
+		t.Logf("Found movie: %d", result.Movie.Id)
 	}
 }

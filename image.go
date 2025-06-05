@@ -1,28 +1,11 @@
 package tmdb
 
-import "fmt"
+type Image string
 
-type Image interface {
-	Raw() string
-	Url(size string) (string, error)
-}
-
-type image struct {
-	raw    string
-	client *Client
-}
-
-func (i image) Raw() string {
-	return i.raw
-}
-
-func (i image) Url(size string) (string, error) {
-	if i.raw == "" {
-		return "", fmt.Errorf("image URL is empty")
+func (i Image) Url(client *Client, size string) string {
+	if i == "" {
+		return ""
 	}
-	baseUrl, err := i.client.getSecureImageBaseUrl()
-	if err != nil {
-		return "", fmt.Errorf("getting secure image base URL: %w", err)
-	}
-	return baseUrl + size + i.raw, nil
+	baseUrl, _ := client.getSecureImageBaseUrl()
+	return baseUrl + size + string(i)
 }

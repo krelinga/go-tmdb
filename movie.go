@@ -1,9 +1,7 @@
 package tmdb
 
 import (
-	"context"
 	"fmt"
-	"iter"
 	"time"
 )
 
@@ -11,23 +9,20 @@ type MovieId int
 
 type WikidataMovieId string
 
-type MovieDataCol int
+type MovieDataColumn int
 
 const (
-	movieDataNone MovieDataCol = iota
-	movieDataMin
+	movieDataNone MovieDataColumn = iota
 	MovieDataCredits
 	MovieDataExternalIds
 	MovieDataKeywords
 	movieDataMax
 )
 
-func (d MovieDataCol) String() string {
+func (d MovieDataColumn) String() string {
 	switch d {
 	case movieDataNone:
 		return "movieDataNone"
-	case movieDataMin:
-		return "movieDataMin"
 	case MovieDataCredits:
 		return "MovieDataCredits"
 	case MovieDataExternalIds:
@@ -37,11 +32,11 @@ func (d MovieDataCol) String() string {
 	case movieDataMax:
 		return "movieDataMax"
 	default:
-		return fmt.Sprintf("MovieDataCol(%d)", d)
+		return fmt.Sprintf("MovieDataColumn(%d)", d)
 	}
 }
 
-func (d MovieDataCol) Endpoint() string {
+func (d MovieDataColumn) Endpoint() string {
 	switch d {
 	case MovieDataCredits:
 		return "credits"
@@ -50,253 +45,35 @@ func (d MovieDataCol) Endpoint() string {
 	case MovieDataKeywords:
 		return "keywords"
 	default:
-		panic(fmt.Sprintf("invalid MovieData value %d; must be between %d and %d", d, movieDataMin, movieDataMax))
+		panic(fmt.Sprintf("no endpoint for %s", d))
 	}
 }
 
-func movieNoDataError(field string, col MovieDataCol) error {
-	var colPart string
-	if col != movieDataNone {
-		colPart = fmt.Sprintf(" with %s", col)
-	}
-	return fmt.Errorf("cannot access %s on MovieData without calling Upgrade()%s first", field, colPart)
-}
+type Movie struct {
+	Id MovieId
 
-// MovieData implementations may panic with these errors if the corresponding data is not available.
-var (
-	ErrMovieNoDataAdult            = movieNoDataError("Adult", movieDataNone)
-	ErrMovieNoDataBackdrop         = movieNoDataError("Backdrop", movieDataNone)
-	ErrMovieNoDataCollection       = movieNoDataError("BelongsToCollection", movieDataNone)
-	ErrMovieNoDataBudget           = movieNoDataError("Budget", movieDataNone)
-	ErrMovieNoDataGenreIds         = movieNoDataError("GenreIds", movieDataNone)
-	ErrMovieNoDataGenres           = movieNoDataError("Genres", movieDataNone)
-	ErrMovieNoDataHomepage         = movieNoDataError("Homepage", movieDataNone)
-	ErrMovieNoDataImdbId           = movieNoDataError("ImdbId", movieDataNone)
-	ErrMovieNoDataOriginalLanguage = movieNoDataError("OriginalLanguage", movieDataNone)
-	ErrMovieNoDataOriginalTitle    = movieNoDataError("OriginalTitle", movieDataNone)
-	ErrMovieNoDataOverview         = movieNoDataError("Overview", movieDataNone)
-	ErrMovieNoDataPopularity       = movieNoDataError("Popularity", movieDataNone)
-	ErrMovieNoDataPoster           = movieNoDataError("Poster", movieDataNone)
-	ErrMovieNoDataCompanies        = movieNoDataError("Companies", movieDataNone)
-	ErrMovieNoDataCountries        = movieNoDataError("Countries", movieDataNone)
-	ErrMovieNoDataReleaseDate      = movieNoDataError("ReleaseDate", movieDataNone)
-	ErrMovieNoDataRevenue          = movieNoDataError("Revenue", movieDataNone)
-	ErrMovieNoDataRuntime          = movieNoDataError("Runtime", movieDataNone)
-	ErrMovieNoDataSpokenLanguages  = movieNoDataError("SpokenLanguages", movieDataNone)
-	ErrMovieNoDataStatus           = movieNoDataError("Status", movieDataNone)
-	ErrMovieNoDataTagline          = movieNoDataError("Tagline", movieDataNone)
-	ErrMovieNoDataTitle            = movieNoDataError("Title", movieDataNone)
-	ErrMovieNoDataVideo            = movieNoDataError("Video", movieDataNone)
-	ErrMovieNoDataVoteAverage      = movieNoDataError("VoteAverage", movieDataNone)
-	ErrMovieNoDataVoteCount        = movieNoDataError("VoteCount", movieDataNone)
-
-	ErrMovieNoDataCast = movieNoDataError("Cast", MovieDataCredits)
-	ErrMovieNoDataCrew = movieNoDataError("Crew", MovieDataCredits)
-
-	ErrMovieNoDataWikidataId = movieNoDataError("WikidataId", MovieDataExternalIds)
-
-	ErrMovieNoDataKeywords = movieNoDataError("Keywords", MovieDataKeywords)
-)
-
-type Movie interface {
-	// This method will never panic.
-	// It is safe to call this method concurrently with any other methods.
-	Id() MovieId
-
-	// Fetch more data for this movie.
-	// The movie will be unchanged if any error occurs (including context cancellation).
-	// It is unsafe to call Upgrade() concurrently with calls to the methods contained in MovieData.
-	Upgrade(context.Context, ...MovieDataCol) error
-
-	// Calls to the methods contained in MovieData may panic if the data is not available.
-	// Call Upgrade() with the appropriate MovieDataCol to ensure these methods will not panic.
-	// It is safe to call any methods on MovieData concurrently with each other, but not with Upgrade().
-	MovieData
-}
-
-type ImdbMovieId string
-
-type MovieData interface {
-	// Call Upgrade() (with any or no arguments) to ensure these methods will not panic.
-	Adult() bool
-	BelongsToCollection() string
-	Budget() int
-	Backdrop() Image
-	GenreIds() iter.Seq[GenreId]
-	Genres() iter.Seq[Genre]
-	Homepage() string
-	ImdbId() ImdbMovieId
-	OriginalLanguage() LanguageId
-	OriginalTitle() string
-	Overview() string
-	Popularity() float64
-	Poster() Image
-	Companies() iter.Seq[Company]
-	Countries() iter.Seq[Country]
-	ReleaseDate() Date
-	Revenue() int
-	Runtime() time.Duration
-	SpokenLanguages() iter.Seq[Language]
-	Status() string
-	Tagline() string
-	Title() string
-	Video() bool
-	VoteAverage() float64
-	VoteCount() int
-
-	// Call Upgrade() with MovieDataCredits to ensure these methods will not panic.
-	Cast() iter.Seq[MovieCast]
-	Crew() iter.Seq[MovieCrew]
-
-	// Call Upgrade() with MovieDataExternalIds to ensure these methods will not panic.
-	WikidataId() WikidataMovieId
-
-	// Call Upgrade() with MovieDataKeywords to ensure this method will not panic.
-	Keywords() iter.Seq[Keyword]
-
-	// Internal methods, not safe to call together with any other method on MovieData.
-	upgrade(*getMovieData) MovieData
-}
-
-type movie struct {
-	client   *Client
-	id       MovieId
-	language LanguageId
-
-	MovieData
-}
-
-func (m *movie) Id() MovieId {
-	return m.id
-}
-
-func (m *movie) Upgrade(ctx context.Context, data ...MovieDataCol) error {
-	newParts, err := getMovie(ctx, m.client, m.id, m.language, data...)
-	if err != nil {
-		return fmt.Errorf("upgrading movie %d: %w", m.id, err)
-	}
-	m.MovieData = m.MovieData.upgrade(newParts)
-	return nil
-}
-
-type movieNoData struct{}
-
-func (movieNoData) upgrade(in *getMovieData) MovieData {
-	return in
-}
-
-func (movieNoData) Adult() bool {
-	panic(ErrMovieNoDataAdult)
-}
-
-func (movieNoData) Backdrop() Image {
-	panic(ErrMovieNoDataBackdrop)
-}
-
-func (movieNoData) BelongsToCollection() string {
-	panic(ErrMovieNoDataCollection)
-}
-
-func (movieNoData) Budget() int {
-	panic(ErrMovieNoDataBudget)
-}
-
-func (movieNoData) GenreIds() iter.Seq[GenreId] {
-	panic(ErrMovieNoDataGenreIds)
-}
-
-func (movieNoData) Genres() iter.Seq[Genre] {
-	panic(ErrMovieNoDataGenres)
-}
-
-func (movieNoData) Homepage() string {
-	panic(ErrMovieNoDataHomepage)
-}
-
-func (movieNoData) ImdbId() ImdbMovieId {
-	panic(ErrMovieNoDataImdbId)
-}
-
-func (movieNoData) OriginalLanguage() LanguageId {
-	panic(ErrMovieNoDataOriginalLanguage)
-}
-
-func (movieNoData) OriginalTitle() string {
-	panic(ErrMovieNoDataOriginalTitle)
-}
-
-func (movieNoData) Overview() string {
-	panic(ErrMovieNoDataOverview)
-}
-
-func (movieNoData) Popularity() float64 {
-	panic(ErrMovieNoDataPopularity)
-}
-
-func (movieNoData) Poster() Image {
-	panic(ErrMovieNoDataPoster)
-}
-
-func (movieNoData) Companies() iter.Seq[Company] {
-	panic(ErrMovieNoDataCompanies)
-}
-
-func (movieNoData) Countries() iter.Seq[Country] {
-	panic(ErrMovieNoDataCountries)
-}
-
-func (movieNoData) ReleaseDate() Date {
-	panic(ErrMovieNoDataReleaseDate)
-}
-
-func (movieNoData) Revenue() int {
-	panic(ErrMovieNoDataRevenue)
-}
-
-func (movieNoData) Runtime() time.Duration {
-	panic(ErrMovieNoDataRuntime)
-}
-
-func (movieNoData) SpokenLanguages() iter.Seq[Language] {
-	panic(ErrMovieNoDataSpokenLanguages)
-}
-
-func (movieNoData) Status() string {
-	panic(ErrMovieNoDataStatus)
-}
-
-func (movieNoData) Tagline() string {
-	panic(ErrMovieNoDataTagline)
-}
-
-func (movieNoData) Title() string {
-	panic(ErrMovieNoDataTitle)
-}
-
-func (movieNoData) Video() bool {
-	panic(ErrMovieNoDataVideo)
-}
-
-func (movieNoData) VoteAverage() float64 {
-	panic(ErrMovieNoDataVoteAverage)
-}
-
-func (movieNoData) VoteCount() int {
-	panic(ErrMovieNoDataVoteCount)
-}
-
-func (movieNoData) Cast() iter.Seq[MovieCast] {
-	panic(ErrMovieNoDataCast)
-}
-
-func (movieNoData) Crew() iter.Seq[MovieCrew] {
-	panic(ErrMovieNoDataCrew)
-}
-
-func (movieNoData) WikidataId() WikidataMovieId {
-	panic(ErrMovieNoDataWikidataId)
-}
-
-func (movieNoData) Keywords() iter.Seq[Keyword] {
-	panic(ErrMovieNoDataKeywords)
+	Adult *bool
+	Backdrop *Image
+	BelongsToCollection *string
+	Budget *int
+	Genres []Genre
+	Homepage *string
+	ImdbId *string
+	OriginalLanguage *string
+	OriginalTitle *string
+	Overview *string
+	Popularity *float64
+	Poster *Image
+	ProductionCompanies []*Company
+	ProductionCountries []*Country
+	ReleaseDate *DateYYYYMMDD
+	Revenue *int
+	Runtime *time.Duration
+	SpokenLanguages []*Language
+	Status *string
+	Tagline *string
+	Title *string
+	Video *bool
+	VoteAverage *float64
+	VoteCount *int
 }

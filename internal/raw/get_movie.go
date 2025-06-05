@@ -9,6 +9,7 @@ type GetMovie struct {
 }
 
 type GetMovieDetails struct {
+	Id                  int                          `json:"id"`
 	Adult               *bool                        `json:"adult"`
 	BackdropPath        string                       `json:"backdrop_path"`
 	BelongsToCollection string                       `json:"belongs_to_collection"`

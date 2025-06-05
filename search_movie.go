@@ -9,52 +9,46 @@ import (
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
-type SearchMovieOptions struct {
-	IncludeAdult       bool
-	Language           LanguageId
-	PrimaryReleaseYear int
-	Region             string
-	Year               int
+type SearchMovieResult struct {
+	Movie        *Movie
+	Page         int
+	TotalPages   int
+	TotalResults int
 }
 
-// The resulting Movie instances will have the following data available:
-// - Adult()
-// - Backdrop()
-// - GenreIds()
-// - OriginalLanguage()
-// - OriginalTitle()
-// - Popularity()
-// - Poster()
-// - ReleaseDate()
-// - Title()
-// - Video()
-// - VoteAverage()
-// - VoteCount()
-func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMovieOptions) iter.Seq2[Movie, error] {
-	return func(yield func(Movie, error) bool) {
-		for page := 1; ; page++ {
+// The resulting Movie instances will have the following fields set:
+// - Id
+// - Adult
+// - Backdrop
+// - Genres.Id (NOT Genres.Name)
+// - OriginalLanguage
+// - OriginalTitle
+// - Popularity
+// - Poster
+// - ReleaseDate
+// - Title
+// - Video
+// - VoteAverage
+// - VoteCount
+func SearchMovie(ctx context.Context, c *Client, query string, options ...Option) iter.Seq2[*SearchMovieResult, error] {
+	return func(yield func(*SearchMovieResult, error) bool) {
+		var callOpts allOptions
+		callOpts.apply(options)
+
+		if callOpts.StartPage == nil {
+			callOpts.StartPage = NewPtr(1)
+		}
+
+		for page := *callOpts.StartPage; ; page++ {
 			params := url.Values{
 				"query": []string{query},
 				"page":  []string{fmt.Sprint(page)},
 			}
-			var language LanguageId
-			if options != nil {
-				if options.IncludeAdult {
-					params.Set("include_adult", fmt.Sprint(options.IncludeAdult))
-				}
-				if options.Language != "" {
-					params.Set("language", string(options.Language))
-					language = options.Language
-				}
-				if options.PrimaryReleaseYear > 0 {
-					params.Set("primary_release_year", fmt.Sprint(options.PrimaryReleaseYear))
-				}
-				if options.Region != "" {
-					params.Set("region", options.Region)
-				}
-				if options.Year > 0 {
-					params.Set("year", fmt.Sprint(options.Year))
-				}
+			if callOpts.IncludeAdult != nil {
+				params.Set("include_adult", fmt.Sprint(*callOpts.IncludeAdult))
+			}
+			if callOpts.Language != nil {
+				params.Set("language", string(*callOpts.Language))
 			}
 			var result raw.SearchMovie
 			if err := get(ctx, c, "search/movie", params, &result); err != nil {
@@ -63,97 +57,38 @@ func SearchMovie(ctx context.Context, c *Client, query string, options *SearchMo
 			}
 
 			for _, smrMovie := range result.Results {
-				m := &movie{
-					client:   c,
-					id:       MovieId(smrMovie.Id),
-					language: language,
-					MovieData: &searchMovieResultData{
-						raw:       smrMovie,
-						MovieData: movieNoData{},
+				genres := make([]Genre, len(smrMovie.GenreIds))
+				for i, id := range smrMovie.GenreIds {
+					genres[i] = Genre{Id: GenreId(id)}
+				}
+				out := &SearchMovieResult{
+					Page:         page,
+					TotalPages:   result.TotalPages,
+					TotalResults: result.TotalResults,
+					Movie: &Movie{
+						Id:               MovieId(smrMovie.Id),
+						Adult:            smrMovie.Adult,
+						Backdrop:         NewPtr(Image(smrMovie.BackdropPath)),
+						Genres:           genres,
+						OriginalLanguage: &smrMovie.OriginalLanguage,
+						OriginalTitle:    &smrMovie.OriginalTitle,
+						Overview:         &smrMovie.Overview,
+						Popularity:       &smrMovie.Popularity,
+						Poster:           NewPtr(Image(smrMovie.PosterPath)),
+						ReleaseDate:      NewPtr(DateYYYYMMDD(smrMovie.ReleaseDate)),
+						Title:            &smrMovie.Title,
+						VoteAverage:      &smrMovie.VoteAverage,
+						VoteCount:        &smrMovie.VoteCount,
 					},
 				}
-				if !yield(m, nil) {
+				if !yield(out, nil) {
 					return
 				}
 			}
-			if page >= result.TotalPages {
+			overLimitPage := callOpts.LimitPage != nil && page >= *callOpts.LimitPage
+			if page >= result.TotalPages || overLimitPage {
 				return
 			}
 		}
 	}
-}
-
-type searchMovieResultData struct {
-	client *Client
-	raw    *raw.SearchMovieResult
-	MovieData
-}
-
-func (s *searchMovieResultData) upgrade(in *getMovieData) MovieData {
-	s.MovieData = s.MovieData.upgrade(in)
-	return s
-}
-
-func (s *searchMovieResultData) Adult() bool {
-	return *s.raw.Adult
-}
-
-func (s *searchMovieResultData) Backdrop() Image {
-	return image{
-		client: s.client,
-		raw:    s.raw.BackdropPath,
-	}
-}
-
-func (s *searchMovieResultData) GenreIds() iter.Seq[GenreId] {
-	return func(yield func(GenreId) bool) {
-		for _, id := range s.raw.GenreIds {
-			if !yield(GenreId(id)) {
-				return
-			}
-		}
-	}
-}
-
-func (s *searchMovieResultData) OriginalLanguage() LanguageId {
-	return LanguageId(s.raw.OriginalLanguage)
-}
-
-func (s *searchMovieResultData) OriginalTitle() string {
-	return s.raw.OriginalTitle
-}
-
-func (s *searchMovieResultData) Overview() string {
-	return s.raw.Overview
-}
-
-func (s *searchMovieResultData) Popularity() float64 {
-	return s.raw.Popularity
-}
-
-func (s *searchMovieResultData) Poster() Image {
-	return image{
-		client: s.client,
-		raw:    s.raw.PosterPath,
-	}
-}
-
-func (s *searchMovieResultData) ReleaseDate() Date {
-	return newDateYYYYMMDD(s.raw.ReleaseDate)
-}
-
-func (s *searchMovieResultData) Title() string {
-	return s.raw.Title
-}
-
-func (s *searchMovieResultData) Video() bool {
-	return s.raw.Video
-}
-
-func (s *searchMovieResultData) VoteAverage() float64 {
-	return s.raw.VoteAverage
-}
-
-func (s *searchMovieResultData) VoteCount() int {
-	return s.raw.VoteCount
 }
