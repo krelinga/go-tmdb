@@ -102,4 +102,7 @@ type GetMovieKeywords struct {
 
 type GetMovieExternalIds struct {
 	WikidataId string `json:"wikidata_id"`
+	FacebookId string `json:"facebook_id"`
+	InstagramId string `json:"instagram_id"`
+	TwitterId  string `json:"twitter_id"`
 }

@@ -81,6 +81,12 @@ type Movie struct {
 	Cast []*Credit
 	Crew []*Credit
 
+	// MovieDataExternalIds
+	WikidataId *string
+	FacebookId *string
+	InstagramId *string
+	TwitterId *string
+
 	// MovieDataKeywords
 	Keywords []*Keyword
 }

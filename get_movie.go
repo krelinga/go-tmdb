@@ -146,6 +146,13 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 
 		Keywords: keywords,
 	}
+
+	if rawGetMovie.ExternalIds != nil {
+		out.WikidataId = &rawGetMovie.ExternalIds.WikidataId
+		out.FacebookId = &rawGetMovie.ExternalIds.FacebookId
+		out.TwitterId = &rawGetMovie.ExternalIds.TwitterId
+		out.InstagramId = &rawGetMovie.ExternalIds.InstagramId
+	}
 	return out, nil
 }
 
