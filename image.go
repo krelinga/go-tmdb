@@ -6,6 +6,5 @@ func (i Image) Url(client *Client, size string) string {
 	if i == "" {
 		return ""
 	}
-	baseUrl, _ := client.getSecureImageBaseUrl()
-	return baseUrl + size + string(i)
+	return client.configuration.Images.SecureBaseUrl + size + string(i)
 }

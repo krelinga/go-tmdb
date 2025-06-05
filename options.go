@@ -6,6 +6,10 @@ type allOptions struct {
 	StartPage *int
 	LimitPage *int
 	MovieDataColumns []MovieDataColumn
+
+	// Auth
+	ApiKey *string
+	BearerToken *string
 }
 
 func (o *allOptions) apply(options []Option) {
@@ -73,5 +77,29 @@ func WithMovieDataColumns(columns ...MovieDataColumn) Option {
 func WithoutMovieDataColumns() Option {
 	return func(o *allOptions) {
 		o.MovieDataColumns = nil
+	}
+}
+
+func WithApiKey(apiKey string) Option {
+	return func(o *allOptions) {
+		o.ApiKey = &apiKey
+	}
+}
+
+func WithoutApiKey() Option {
+	return func(o *allOptions) {
+		o.ApiKey = nil
+	}
+}
+
+func WithBearerToken(token string) Option {
+	return func(o *allOptions) {
+		o.BearerToken = &token
+	}
+}
+
+func WithoutBearerToken() Option {
+	return func(o *allOptions) {
+		o.BearerToken = nil
 	}
 }

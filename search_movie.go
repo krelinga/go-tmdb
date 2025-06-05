@@ -32,7 +32,7 @@ type SearchMovieResult struct {
 // - VoteCount
 func SearchMovie(ctx context.Context, c *Client, query string, options ...Option) iter.Seq2[*SearchMovieResult, error] {
 	return func(yield func(*SearchMovieResult, error) bool) {
-		var callOpts allOptions
+		callOpts := c.globalOpts
 		callOpts.apply(options)
 
 		if callOpts.StartPage == nil {
@@ -51,7 +51,7 @@ func SearchMovie(ctx context.Context, c *Client, query string, options ...Option
 				params.Set("language", string(*callOpts.Language))
 			}
 			var result raw.SearchMovie
-			if err := get(ctx, c, "search/movie", params, &result); err != nil {
+			if err := get(ctx, c, "search/movie", params, callOpts, &result); err != nil {
 				yield(nil, fmt.Errorf("searching for movie %q: %w", query, err))
 				return
 			}

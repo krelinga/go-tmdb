@@ -20,7 +20,7 @@ type GetMovieOptions struct {
 //   - Name()
 //   - OriginCountry()
 func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*Movie, error) {
-	var callOpts allOptions
+	callOpts := c.globalOpts
 	callOpts.apply(options)
 	v := url.Values{}
 	if callOpts.Language != nil {
@@ -31,7 +31,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	}
 
 	rawGetMovie := &raw.GetMovie{}
-	if err := get(ctx, c, fmt.Sprintf("movie/%d", id), v, rawGetMovie); err != nil {
+	if err := get(ctx, c, fmt.Sprintf("movie/%d", id), v, callOpts, rawGetMovie); err != nil {
 		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
 

@@ -100,9 +100,13 @@ func getClient(t *testing.T) *tmdb.Client {
 			t.Errorf("Failed to stop recorder: %v", err)
 		}
 	})
-	return tmdb.NewClient(&tmdb.NewClientOptions{
-		ApiKey:      envString,
-		BearerToken: envToken,
-		HttpClient:  r.GetDefaultClient(),
-	})
+	client, err := tmdb.NewClient(r.GetDefaultClient(),
+		tmdb.WithApiKey(envString),
+		tmdb.WithBearerToken(envToken),
+	)
+	if err != nil {
+		t.Fatalf("Failed to create TMDB client: %v", err)
+		return nil
+	}
+	return client
 }

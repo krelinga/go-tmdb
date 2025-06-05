@@ -8,68 +8,32 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
 
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
-type NewClientOptions struct {
-	HttpClient  *http.Client
-	ApiKey      string
-	BearerToken string
-}
-
 type Client struct {
-	options *NewClientOptions
-
-	// Lazy initialization of shared state.
-	getConfiguration func() (*raw.Configuration, error)
-	getSecureImageBaseUrl func() (string, error)
+	httpClient    *http.Client
+	globalOpts    allOptions
+	configuration *raw.Configuration
 }
 
-func NewClient(options *NewClientOptions) *Client {
-	if options == nil {
-		options = &NewClientOptions{}
+func NewClient(httpClient *http.Client, options ...Option) (*Client, error) {
+	c := &Client{httpClient: httpClient}
+	c.globalOpts.apply(options)
+
+	c.configuration = &raw.Configuration{}
+	if err := get(context.Background(), c, "configuration", nil, c.globalOpts, c.configuration); err != nil {
+		return nil, fmt.Errorf("initializing TMDB client: %w", err)
 	}
 
-	c := &Client{
-		options: options,
-	}
-
-	c.getConfiguration = sync.OnceValues(func() (*raw.Configuration, error) {
-		configuration := &raw.Configuration{}
-		err := get(context.Background(), c, "configuration", nil, configuration)
-		if err != nil {
-			return nil, fmt.Errorf("getting configuration: %w", err)
-		}
-		return configuration, nil
-	})
-	c.getSecureImageBaseUrl = sync.OnceValues(func() (string, error) {
-		configuration, err := c.getConfiguration()
-		if err != nil {
-			return "", fmt.Errorf("getting secure image base URL: %w", err)
-		}
-		if configuration.Images == nil || configuration.Images.SecureBaseUrl == "" {
-			return "", errors.New("no secure base URL found in configuration")
-		}
-		return configuration.Images.SecureBaseUrl, nil
-	})
-
-	return c
+	return c, nil
 }
 
 func (c *Client) checkOk() {
-	if c.options == nil {
+	if c.httpClient == nil {
 		panic("TMDB client is not properly initialized.  Use NewClient to create a new client.")
 	}
-}
-
-func (c *Client) httpClient() *http.Client {
-	c.checkOk()
-	if c.options.HttpClient == nil {
-		return http.DefaultClient
-	}
-	return c.options.HttpClient
 }
 
 var ErrApiHttpNotOk = errors.New("TMDB API returned non-OK HTTP status code")
@@ -85,10 +49,13 @@ func checkResponseCode(resp *http.Response) error {
 	return fmt.Errorf("%w: Code %d, Message: %s", ErrApiHttpNotOk, status.Code, status.Message)
 }
 
-func get(ctx context.Context, c *Client, endpoint string, params url.Values, out raw.Raw) error {
+func get(ctx context.Context, c *Client, endpoint string, params url.Values, callOpts allOptions, out raw.Raw) error {
 	c.checkOk()
-	if c.options.ApiKey != "" {
-		params.Add("api_key", c.options.ApiKey)
+	if params == nil {
+		params = url.Values{}
+	}
+	if callOpts.ApiKey != nil {
+		params.Add("api_key", *callOpts.ApiKey)
 	}
 	theUrl := &url.URL{
 		Scheme:   "https",
@@ -100,13 +67,13 @@ func get(ctx context.Context, c *Client, endpoint string, params url.Values, out
 	if err != nil {
 		return fmt.Errorf("creating request: %w", err)
 	}
-	if c.options.BearerToken != "" {
-		req.Header.Add("Authorization", "Bearer "+c.options.BearerToken)
+	if callOpts.BearerToken != nil {
+		req.Header.Add("Authorization", "Bearer "+*callOpts.BearerToken)
 	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
-	resp, err := c.httpClient().Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("making request: %w", err)
 	}
