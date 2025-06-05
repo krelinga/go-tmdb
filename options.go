@@ -1,5 +1,10 @@
 package tmdb
 
+import (
+	"fmt"
+	"net/url"
+)
+
 type allOptions struct {
 	Language *string
 	IncludeAdult *bool
@@ -15,6 +20,24 @@ type allOptions struct {
 func (o *allOptions) apply(options []Option) {
 	for _, opt := range options {
 		opt(o)
+	}
+}
+
+func (o *allOptions) applyIncludeAdult(v url.Values) {
+	if o.IncludeAdult != nil {
+		v.Set("include_adult", fmt.Sprint(*o.IncludeAdult))
+	}
+}
+
+func (o *allOptions) applyLanguage(v url.Values) {
+	if o.Language != nil {
+		v.Set("language", *o.Language)
+	}
+}
+
+func (o *allOptions) applyMovieDataColumns(v url.Values) {
+	if len(o.MovieDataColumns) > 0 {
+		v.Set("append_to_response", appendToResponse(o.MovieDataColumns))
 	}
 }
 

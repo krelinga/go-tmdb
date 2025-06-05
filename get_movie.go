@@ -22,13 +22,10 @@ type GetMovieOptions struct {
 func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*Movie, error) {
 	callOpts := c.globalOpts
 	callOpts.apply(options)
+
 	v := url.Values{}
-	if callOpts.Language != nil {
-		v.Set("language", *callOpts.Language)
-	}
-	if len(callOpts.MovieDataColumns) > 0 {
-		v.Set("append_to_response", appendToResponse(callOpts.MovieDataColumns))
-	}
+	callOpts.applyLanguage(v)
+	callOpts.applyMovieDataColumns(v)
 
 	rawGetMovie := &raw.GetMovie{}
 	if err := get(ctx, c, fmt.Sprintf("movie/%d", id), v, callOpts, rawGetMovie); err != nil {

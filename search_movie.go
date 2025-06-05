@@ -44,12 +44,9 @@ func SearchMovie(ctx context.Context, c *Client, query string, options ...Option
 				"query": []string{query},
 				"page":  []string{fmt.Sprint(page)},
 			}
-			if callOpts.IncludeAdult != nil {
-				params.Set("include_adult", fmt.Sprint(*callOpts.IncludeAdult))
-			}
-			if callOpts.Language != nil {
-				params.Set("language", string(*callOpts.Language))
-			}
+			callOpts.applyIncludeAdult(params)
+			callOpts.applyLanguage(params)
+			
 			var result raw.SearchMovie
 			if err := get(ctx, c, "search/movie", params, callOpts, &result); err != nil {
 				yield(nil, fmt.Errorf("searching for movie %q: %w", query, err))
