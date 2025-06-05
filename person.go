@@ -11,12 +11,13 @@ const (
 	GenderNonBinary Gender = 3
 )
 
-type Person interface {
-	Id() PersonId
-	Adult() bool
-	Gender() Gender
-	KnownForDepartment() string
-	Name() string
-	Popularity() float64
-	Profile() Image
+type Person struct {
+	Id PersonId
+	
+	Adult *bool
+	Gender *Gender
+	KnownForDepartment *string
+	Name *string
+	Popularity *float64
+	Profile *Image
 }

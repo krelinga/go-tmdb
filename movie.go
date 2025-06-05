@@ -77,6 +77,10 @@ type Movie struct {
 	VoteAverage *float64
 	VoteCount *int
 
+	// MovieDataCredits
+	Cast []*Credit
+	Crew []*Credit
+
 	// MovieDataKeywords
 	Keywords []*Keyword
 }
