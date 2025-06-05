@@ -73,8 +73,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 			}
 		}
 	}
-	var cast []*Credit
-	var crew []*Credit
+	var cast, crew []*Credit
 	if rawGetMovie.Credits != nil {
 		toPerson := func(rawPerson *raw.GetMovieCreditsPerson) *Person {
 			return &Person{
