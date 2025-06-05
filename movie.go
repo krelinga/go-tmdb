@@ -76,4 +76,7 @@ type Movie struct {
 	Video *bool
 	VoteAverage *float64
 	VoteCount *int
+
+	// MovieDataKeywords
+	Keywords []*Keyword
 }

@@ -2,21 +2,9 @@ package tmdb
 
 type KeywordId int
 
-type Keyword interface {
-	// These methods never panic.
-	Id() KeywordId
-	Name() string
-}
+type Keyword struct {
+	Id KeywordId
 
-type keyword struct {
-	id   KeywordId
-	name string
-}
-
-func (k keyword) Id() KeywordId {
-	return k.id
-}
-
-func (k keyword) Name() string {
-	return k.name
+	// TODO: does this really need to be a pointer?
+	Name *string
 }

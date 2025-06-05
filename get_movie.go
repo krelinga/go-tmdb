@@ -66,8 +66,19 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 			EnglishName: &rawLang.EnglishName,
 		}
 	}
+	var keywords []*Keyword
+	if raw.Keywords != nil {
+		keywords = make([]*Keyword, len(raw.Keywords.Keywords))
+		for i, rawKeyword := range raw.Keywords.Keywords {
+			keywords[i] = &Keyword{
+				Id:   KeywordId(rawKeyword.Id),
+				Name: &rawKeyword.Name,
+			}
+		}
+	}
 	out := &Movie{
 		Id: MovieId(raw.Id),
+		
 		Adult: raw.Adult,
 		Backdrop: NewPtr[Image](Image(raw.BackdropPath)),
 		BelongsToCollection: &raw.BelongsToCollection,
@@ -92,6 +103,8 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		Video: &raw.Video,
 		VoteAverage: &raw.VoteAverage,
 		VoteCount: &raw.VoteCount,
+
+		Keywords: keywords,
 	}
 	return out, nil
 }
