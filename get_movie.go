@@ -42,9 +42,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	companies := make([]*Company, len(rawGetMovie.ProductionCompanies))
 	for i, rawCompany := range rawGetMovie.ProductionCompanies {
 		companies[i] = &Company{
-			Id: CompanyId(rawCompany.Id),
-			Logo: NewPtr[Image](Image(rawCompany.LogoPath)),
-			Name: &rawCompany.Name,
+			Id:            CompanyId(rawCompany.Id),
+			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
+			Name:          &rawCompany.Name,
 			OriginCountry: &rawCompany.OriginCountry,
 		}
 	}
@@ -58,8 +58,8 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	spokenLanguages := make([]*Language, len(rawGetMovie.SpokenLanguages))
 	for i, rawLang := range rawGetMovie.SpokenLanguages {
 		spokenLanguages[i] = &Language{
-			Code: &rawLang.Iso639_1,
-			Name: &rawLang.Name,
+			Code:        &rawLang.Iso639_1,
+			Name:        &rawLang.Name,
 			EnglishName: &rawLang.EnglishName,
 		}
 	}
@@ -79,63 +79,63 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 			return &Person{
 				Id: PersonId(rawPerson.Id),
 
-				Adult: &rawPerson.Adult,
-				Gender: NewPtr(Gender(rawPerson.Gender)),
+				Adult:              &rawPerson.Adult,
+				Gender:             NewPtr(Gender(rawPerson.Gender)),
 				KnownForDepartment: &rawPerson.KnownForDepartment,
-				Name: &rawPerson.Name,
-				Popularity: &rawPerson.Popularity,
-				Profile: NewPtr[Image](Image(rawPerson.ProfilePath)),
+				Name:               &rawPerson.Name,
+				Popularity:         &rawPerson.Popularity,
+				Profile:            NewPtr(Image(rawPerson.ProfilePath)),
 			}
 		}
 		cast = make([]*Credit, len(rawGetMovie.Credits.Cast))
 		for i, rawCast := range rawGetMovie.Credits.Cast {
 			cast[i] = &Credit{
-				Id: CreditId(rawCast.CreditId),
-				Person: toPerson(&rawCast.GetMovieCreditsPerson),
+				Id:           CreditId(rawCast.CreditId),
+				Person:       toPerson(&rawCast.GetMovieCreditsPerson),
 				OriginalName: &rawCast.OriginalName,
-				CastId: NewPtr(CastId(rawCast.CastId)),
-				Character: &rawCast.Character,
-				Order: &rawCast.Order,
+				CastId:       NewPtr(CastId(rawCast.CastId)),
+				Character:    &rawCast.Character,
+				Order:        &rawCast.Order,
 			}
 		}
 		crew = make([]*Credit, len(rawGetMovie.Credits.Crew))
 		for i, rawCrew := range rawGetMovie.Credits.Crew {
 			crew[i] = &Credit{
-				Id: CreditId(rawCrew.CreditId),
-				Person: toPerson(&rawCrew.GetMovieCreditsPerson),
+				Id:           CreditId(rawCrew.CreditId),
+				Person:       toPerson(&rawCrew.GetMovieCreditsPerson),
 				OriginalName: &rawCrew.OriginalName,
-				Department: &rawCrew.Department,
-				Job: &rawCrew.Job,
+				Department:   &rawCrew.Department,
+				Job:          &rawCrew.Job,
 			}
 		}
 	}
 	out := &Movie{
 		Id: MovieId(rawGetMovie.Id),
 
-		Adult: rawGetMovie.Adult,
-		Backdrop: NewPtr[Image](Image(rawGetMovie.BackdropPath)),
+		Adult:               rawGetMovie.Adult,
+		Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),
 		BelongsToCollection: &rawGetMovie.BelongsToCollection,
-		Budget: &rawGetMovie.Budget,
-		Genres: genres,
-		Homepage: &rawGetMovie.Homepage,
-		ImdbId: &rawGetMovie.ImdbId,
-		OriginalLanguage: &rawGetMovie.OriginalLanguage,
-		OriginalTitle: &rawGetMovie.OriginalTitle,
-		Overview: &rawGetMovie.Overview,
-		Popularity: &rawGetMovie.Popularity,
-		Poster: NewPtr[Image](Image(rawGetMovie.PosterPath)),
+		Budget:              &rawGetMovie.Budget,
+		Genres:              genres,
+		Homepage:            &rawGetMovie.Homepage,
+		ImdbId:              &rawGetMovie.ImdbId,
+		OriginalLanguage:    &rawGetMovie.OriginalLanguage,
+		OriginalTitle:       &rawGetMovie.OriginalTitle,
+		Overview:            &rawGetMovie.Overview,
+		Popularity:          &rawGetMovie.Popularity,
+		Poster:              NewPtr(Image(rawGetMovie.PosterPath)),
 		ProductionCompanies: companies,
 		ProductionCountries: countries,
-		ReleaseDate: NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
-		Revenue: &rawGetMovie.Revenue,
-		Runtime: NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
-		SpokenLanguages: spokenLanguages,
-		Status: &rawGetMovie.Status,
-		Tagline: &rawGetMovie.Tagline,
-		Title: &rawGetMovie.Title,
-		Video: &rawGetMovie.Video,
-		VoteAverage: &rawGetMovie.VoteAverage,
-		VoteCount: &rawGetMovie.VoteCount,
+		ReleaseDate:         NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
+		Revenue:             &rawGetMovie.Revenue,
+		Runtime:             NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
+		SpokenLanguages:     spokenLanguages,
+		Status:              &rawGetMovie.Status,
+		Tagline:             &rawGetMovie.Tagline,
+		Title:               &rawGetMovie.Title,
+		Video:               &rawGetMovie.Video,
+		VoteAverage:         &rawGetMovie.VoteAverage,
+		VoteCount:           &rawGetMovie.VoteCount,
 
 		Cast: cast,
 		Crew: crew,
@@ -151,4 +151,3 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	}
 	return out, nil
 }
-
