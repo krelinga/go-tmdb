@@ -68,7 +68,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		keywords = make([]*Keyword, len(rawGetMovie.Keywords.Keywords))
 		for i, rawKeyword := range rawGetMovie.Keywords.Keywords {
 			keywords[i] = &Keyword{
-				Id:   KeywordId(rawKeyword.Id),
+				KeywordKey: KeywordKey{
+					Id: KeywordId(rawKeyword.Id),
+				},
 				Name: &rawKeyword.Name,
 			}
 		}
@@ -77,7 +79,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	if rawGetMovie.Credits != nil {
 		toPerson := func(rawPerson *raw.GetMovieCreditsPerson) *Person {
 			return &Person{
-				Id: PersonId(rawPerson.Id),
+				PersonKey: PersonKey{
+					Id: PersonId(rawPerson.Id),
+				},
 
 				Adult:              &rawPerson.Adult,
 				Gender:             NewPtr(Gender(rawPerson.Gender)),
@@ -90,7 +94,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		cast = make([]*Credit, len(rawGetMovie.Credits.Cast))
 		for i, rawCast := range rawGetMovie.Credits.Cast {
 			cast[i] = &Credit{
-				Id:           CreditId(rawCast.CreditId),
+				CreditKey: CreditKey{
+					Id: CreditId(rawCast.CreditId),
+				},
 				Person:       toPerson(&rawCast.GetMovieCreditsPerson),
 				OriginalName: &rawCast.OriginalName,
 				CastId:       NewPtr(CastId(rawCast.CastId)),
@@ -101,7 +107,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		crew = make([]*Credit, len(rawGetMovie.Credits.Crew))
 		for i, rawCrew := range rawGetMovie.Credits.Crew {
 			crew[i] = &Credit{
-				Id:           CreditId(rawCrew.CreditId),
+				CreditKey: CreditKey{
+					Id: CreditId(rawCrew.CreditId),
+				},
 				Person:       toPerson(&rawCrew.GetMovieCreditsPerson),
 				OriginalName: &rawCrew.OriginalName,
 				Department:   &rawCrew.Department,
@@ -110,7 +118,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		}
 	}
 	out := &Movie{
-		Id: MovieId(rawGetMovie.Id),
+		MovieKey: MovieKey{
+			Id: MovieId(rawGetMovie.Id),
+		},
 
 		Adult:               rawGetMovie.Adult,
 		Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),

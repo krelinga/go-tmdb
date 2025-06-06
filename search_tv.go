@@ -10,10 +10,10 @@ import (
 )
 
 type SearchTvResult struct {
-	Tv *Tv
-	Page int
+	Tv           *Tv
+	Page         int
 	TotalResults int
-	TotalPages int
+	TotalPages   int
 }
 
 func SearchTv(ctx context.Context, client *Client, query string, options ...Option) iter.Seq2[*SearchTvResult, error] {
@@ -45,24 +45,26 @@ func SearchTv(ctx context.Context, client *Client, query string, options ...Opti
 					genres[i] = Genre{Id: GenreId(id)}
 				}
 				out := &SearchTvResult{
-					Page: 	   page,
+					Page:         page,
 					TotalResults: result.TotalResults,
-					TotalPages:  result.TotalPages,
+					TotalPages:   result.TotalPages,
 					Tv: &Tv{
-						Id: TvId(resultTv.Id),
-						Adult: resultTv.Adult,
-						Backdrop: NewPtr(Image(resultTv.BackdropPath)),
-						Genres: genres,
-						OriginCountry: resultTv.OriginCountry,
+						TvKey: TvKey{
+							Id: TvId(resultTv.Id),
+						},
+						Adult:            resultTv.Adult,
+						Backdrop:         NewPtr(Image(resultTv.BackdropPath)),
+						Genres:           genres,
+						OriginCountry:    resultTv.OriginCountry,
 						OriginalLanguage: &resultTv.OriginalLanguage,
-						OriginalName: &resultTv.OriginalName,
-						Overview: &resultTv.Overview,
-						Popularity: &resultTv.Popularity,
-						Poster: NewPtr(Image(resultTv.PosterPath)),
-						FirstAirDate: NewPtr(DateYYYYMMDD(resultTv.FirstAirDate)),
-						Name: &resultTv.Name,
-						VoteAverage: &resultTv.VoteAverage,
-						VoteCount: &resultTv.VoteCount,
+						OriginalName:     &resultTv.OriginalName,
+						Overview:         &resultTv.Overview,
+						Popularity:       &resultTv.Popularity,
+						Poster:           NewPtr(Image(resultTv.PosterPath)),
+						FirstAirDate:     NewPtr(DateYYYYMMDD(resultTv.FirstAirDate)),
+						Name:             &resultTv.Name,
+						VoteAverage:      &resultTv.VoteAverage,
+						VoteCount:        &resultTv.VoteCount,
 					},
 				}
 

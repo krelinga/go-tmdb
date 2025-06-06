@@ -4,12 +4,15 @@ import "time"
 
 type EpisodeId int
 
-type Episode struct {
-	Id            EpisodeId
+type EpisodeKey struct {
 	SeasonNumber  int
 	EpisodeNumber int
 	TvId          TvId
+}
 
+type Episode struct {
+	EpisodeKey
+	Id             *EpisodeId
 	Name           *string
 	Overview       *string
 	VoteAverage    *float64

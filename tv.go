@@ -4,8 +4,12 @@ import "time"
 
 type TvId int
 
-type Tv struct {
+type TvKey struct {
 	Id TvId
+}
+
+type Tv struct {
+	TvKey
 
 	Adult *bool
 	Backdrop *Image

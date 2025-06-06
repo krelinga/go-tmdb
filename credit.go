@@ -3,8 +3,12 @@ package tmdb
 type CreditId string
 type CastId int
 
-type Credit struct {
+type CreditKey struct {
 	Id CreditId
+}
+
+type Credit struct {
+	CreditKey
 
 	Person *Person
 	// TODO: does this really need to be a pointer?

@@ -11,8 +11,12 @@ const (
 	GenderNonBinary Gender = 3
 )
 
-type Person struct {
+type PersonKey struct {
 	Id PersonId
+}
+
+type Person struct {
+	PersonKey
 	
 	Adult *bool
 	Gender *Gender
