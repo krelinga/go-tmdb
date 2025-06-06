@@ -79,7 +79,9 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	companies := make([]*Company, len(rawTv.ProductionCompanies))
 	for i, rawCompany := range rawTv.ProductionCompanies {
 		companies[i] = &Company{
-			Id:            CompanyId(rawCompany.Id),
+			CompanyKey: CompanyKey{
+				Id: CompanyId(rawCompany.Id),
+			},
 			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
 			Name:          &rawCompany.Name,
 			OriginCountry: &rawCompany.OriginCountry,

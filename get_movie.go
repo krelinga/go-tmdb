@@ -42,7 +42,9 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	companies := make([]*Company, len(rawGetMovie.ProductionCompanies))
 	for i, rawCompany := range rawGetMovie.ProductionCompanies {
 		companies[i] = &Company{
-			Id:            CompanyId(rawCompany.Id),
+			CompanyKey: CompanyKey{
+				Id: CompanyId(rawCompany.Id),
+			},
 			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
 			Name:          &rawCompany.Name,
 			OriginCountry: &rawCompany.OriginCountry,
