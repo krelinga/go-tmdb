@@ -44,7 +44,9 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	genres := make([]Genre, len(rawTv.Genres))
 	for i, g := range rawTv.Genres {
 		genres[i] = Genre{
-			Id:   GenreId(g.Id),
+			GenreKey: GenreKey{
+				Id: GenreId(g.Id),
+			},
 			Name: &g.Name,
 		}
 	}

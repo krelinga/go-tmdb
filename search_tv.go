@@ -42,7 +42,11 @@ func SearchTv(ctx context.Context, client *Client, query string, options ...Opti
 			for _, resultTv := range result.Results {
 				genres := make([]Genre, len(resultTv.GenreIds))
 				for i, id := range resultTv.GenreIds {
-					genres[i] = Genre{Id: GenreId(id)}
+					genres[i] = Genre{
+						GenreKey: GenreKey{
+							Id: GenreId(id),
+						},
+					}
 				}
 				out := &SearchTvResult{
 					Page:         page,

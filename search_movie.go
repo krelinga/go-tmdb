@@ -56,7 +56,11 @@ func SearchMovie(ctx context.Context, c *Client, query string, options ...Option
 			for _, smrMovie := range result.Results {
 				genres := make([]Genre, len(smrMovie.GenreIds))
 				for i, id := range smrMovie.GenreIds {
-					genres[i] = Genre{Id: GenreId(id)}
+					genres[i] = Genre{
+						GenreKey: GenreKey{
+							Id: GenreId(id),
+						},
+					}
 				}
 				out := &SearchMovieResult{
 					Page:         page,
