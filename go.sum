@@ -1,5 +1,7 @@
 github.com/krelinga/go-errgrp v0.1.1 h1:m5tIHMh7Hmf7Cy3W+SrPEp4OQDwMHMeyIkwZrAmkzDM=
 github.com/krelinga/go-errgrp v0.1.1/go.mod h1:6PpvdbopYRK9qmCVSG1KBs1zJPZ2A1YTKQ9lenOIxVg=
+github.com/krelinga/go-views v1.0.0 h1:SwtQFKRIy3YRNQ7Zr9ffIuirmIS0MrdtLA+J39WoM5E=
+github.com/krelinga/go-views v1.0.0/go.mod h1:I2uEw4PIVaZOHVHSUVNHyemc8/oMgVa8sVT2NLkGGg4=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/dnaeon/go-vcr.v4 v4.0.2 h1:7T5VYf2ifyK01ETHbJPl5A6XTpUljD4Trw3GEDcdedk=
