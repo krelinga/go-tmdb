@@ -5,18 +5,22 @@ type CastId int
 
 type Credit struct {
 	Key CreditId
+	Data CreditData
 
 	Person *Person
+}
+
+type CreditData struct {
 	// TODO: does this really need to be a pointer?
 	// They are always set for movie cast & crew.
 	OriginalName *string
 
 	// Set for movie cast.
-	CastId *CastId
+	CastId    *CastId
 	Character *string
-	Order *int
+	Order     *int
 
 	// Set for movie crew.
 	Department *string
-	Job *string
+	Job        *string
 }

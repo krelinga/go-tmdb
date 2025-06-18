@@ -92,22 +92,26 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		cast = make([]*Credit, len(rawGetMovie.Credits.Cast))
 		for i, rawCast := range rawGetMovie.Credits.Cast {
 			cast[i] = &Credit{
-				Key:          CreditId(rawCast.CreditId),
-				Person:       toPerson(&rawCast.GetMovieCreditsPerson),
-				OriginalName: &rawCast.OriginalName,
-				CastId:       NewPtr(CastId(rawCast.CastId)),
-				Character:    &rawCast.Character,
-				Order:        &rawCast.Order,
+				Key: CreditId(rawCast.CreditId),
+				Data: CreditData{
+					OriginalName: &rawCast.OriginalName,
+					CastId:       NewPtr(CastId(rawCast.CastId)),
+					Character:    &rawCast.Character,
+					Order:        &rawCast.Order,
+				},
+				Person: toPerson(&rawCast.GetMovieCreditsPerson),
 			}
 		}
 		crew = make([]*Credit, len(rawGetMovie.Credits.Crew))
 		for i, rawCrew := range rawGetMovie.Credits.Crew {
 			crew[i] = &Credit{
-				Key:          CreditId(rawCrew.CreditId),
-				Person:       toPerson(&rawCrew.GetMovieCreditsPerson),
-				OriginalName: &rawCrew.OriginalName,
-				Department:   &rawCrew.Department,
-				Job:          &rawCrew.Job,
+				Key: CreditId(rawCrew.CreditId),
+				Data: CreditData{
+					OriginalName: &rawCrew.OriginalName,
+					Department:   &rawCrew.Department,
+					Job:          &rawCrew.Job,
+				},
+				Person: toPerson(&rawCrew.GetMovieCreditsPerson),
 			}
 		}
 	}
