@@ -103,12 +103,14 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 				TvId:         TvId(rawTv.Id),
 				SeasonNumber: rawSeason.SeasonNumber,
 			},
-			AirDate:      NewPtr(DateYYYYMMDD(rawSeason.AirDate)),
-			EpisodeCount: &rawSeason.EpisodeCount,
-			Id:           NewPtr(SeasonId(rawSeason.Id)),
-			Name:         &rawSeason.Name,
-			Overview:     &rawSeason.Overview,
-			Poster:       NewPtr(Image(rawSeason.PosterPath)),
+			Data: SeasonData{
+				AirDate:      NewPtr(DateYYYYMMDD(rawSeason.AirDate)),
+				EpisodeCount: &rawSeason.EpisodeCount,
+				Id:           NewPtr(SeasonId(rawSeason.Id)),
+				Name:         &rawSeason.Name,
+				Overview:     &rawSeason.Overview,
+				Poster:       NewPtr(Image(rawSeason.PosterPath)),
+			},
 		}
 	}
 	spokenLanguages := make([]*Language, len(rawTv.SpokenLanguages))

@@ -3,17 +3,20 @@ package tmdb
 type SeasonId int
 
 type SeasonKey struct {
-	TvId TvId
+	TvId         TvId
 	SeasonNumber int
 }
 
 type Season struct {
-	Key SeasonKey
+	Key  SeasonKey
+	Data SeasonData
+}
 
-	Id *SeasonId
-	AirDate *DateYYYYMMDD
+type SeasonData struct {
+	Id           *SeasonId
+	AirDate      *DateYYYYMMDD
 	EpisodeCount *int
-	Name *string
-	Overview *string
-	Poster *Image
+	Name         *string
+	Overview     *string
+	Poster       *Image
 }
