@@ -50,16 +50,18 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 			EpisodeNumber: rawTv.LastEpisodeToAir.EpisodeNumber,
 			TvId:          TvId(rawTv.Id),
 		},
-		Id:          NewPtr(EpisodeId(rawTv.LastEpisodeToAir.Id)),
-		Name:        &rawTv.LastEpisodeToAir.Name,
-		Overview:    &rawTv.LastEpisodeToAir.Overview,
-		VoteAverage: &rawTv.LastEpisodeToAir.VoteAverage,
-		VoteCount:   &rawTv.LastEpisodeToAir.VoteCount,
-		AirDate:     NewPtr(DateYYYYMMDD(rawTv.LastEpisodeToAir.AirDate)),
+		Data: EpisodeData{
+			Id:          NewPtr(EpisodeId(rawTv.LastEpisodeToAir.Id)),
+			Name:        &rawTv.LastEpisodeToAir.Name,
+			Overview:    &rawTv.LastEpisodeToAir.Overview,
+			VoteAverage: &rawTv.LastEpisodeToAir.VoteAverage,
+			VoteCount:   &rawTv.LastEpisodeToAir.VoteCount,
+			AirDate:     NewPtr(DateYYYYMMDD(rawTv.LastEpisodeToAir.AirDate)),
 
-		ProductionCode: &rawTv.LastEpisodeToAir.ProductionCode,
-		Runtime:        NewPtr(time.Duration(rawTv.LastEpisodeToAir.Runtime) * time.Minute),
-		Still:          NewPtr(Image(rawTv.LastEpisodeToAir.StillPath)),
+			ProductionCode: &rawTv.LastEpisodeToAir.ProductionCode,
+			Runtime:        NewPtr(time.Duration(rawTv.LastEpisodeToAir.Runtime) * time.Minute),
+			Still:          NewPtr(Image(rawTv.LastEpisodeToAir.StillPath)),
+		},
 	}
 	networks := make([]*Network, len(rawTv.Networks))
 	for i, rawNetwork := range rawTv.Networks {
