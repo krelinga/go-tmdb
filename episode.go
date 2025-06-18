@@ -7,7 +7,7 @@ type EpisodeId int
 type EpisodeKey struct {
 	SeasonNumber  int
 	EpisodeNumber int
-	TvId          TvId
+	ShowId        ShowId
 }
 
 type Episode struct {

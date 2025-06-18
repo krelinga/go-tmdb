@@ -4,26 +4,26 @@ import "github.com/krelinga/go-views"
 
 type Graph struct {
 	companies map[CompanyId]*Company
-	credits map[CreditId]*Credit
-	episodes map[EpisodeKey]*Episode
-	genres map[GenreId]*Genre
-	keywords map[KeywordId]*Keyword
-	movies map[MovieId]*Movie
-	networks map[NetworkId]*Network
-	people map[PersonId]*Person
-	seasons map[SeasonKey]*Season
-	tvShows map[TvId]*Tv
+	credits   map[CreditId]*Credit
+	episodes  map[EpisodeKey]*Episode
+	genres    map[GenreId]*Genre
+	keywords  map[KeywordId]*Keyword
+	movies    map[MovieId]*Movie
+	networks  map[NetworkId]*Network
+	people    map[PersonId]*Person
+	seasons   map[SeasonKey]*Season
+	tvShows   map[ShowId]*Show
 
 	Companies views.Dict[CompanyId, *Company]
-	Credits views.Dict[CreditId, *Credit]
-	Episodes views.Dict[EpisodeKey, *Episode]
-	Genres views.Dict[GenreId, *Genre]
-	Keywords views.Dict[KeywordId, *Keyword]
-	Movies views.Dict[MovieId, *Movie]
-	Networks views.Dict[NetworkId, *Network]
-	People views.Dict[PersonId, *Person]
-	Seasons views.Dict[SeasonKey, *Season]
-	TvShows views.Dict[TvId, *Tv]
+	Credits   views.Dict[CreditId, *Credit]
+	Episodes  views.Dict[EpisodeKey, *Episode]
+	Genres    views.Dict[GenreId, *Genre]
+	Keywords  views.Dict[KeywordId, *Keyword]
+	Movies    views.Dict[MovieId, *Movie]
+	Networks  views.Dict[NetworkId, *Network]
+	People    views.Dict[PersonId, *Person]
+	Seasons   views.Dict[SeasonKey, *Season]
+	TvShows   views.Dict[ShowId, *Show]
 }
 
 func (g *Graph) init() {
@@ -36,7 +36,7 @@ func (g *Graph) init() {
 	g.Networks = views.DictOfMap[NetworkId, *Network]{M: g.networks}
 	g.People = views.DictOfMap[PersonId, *Person]{M: g.people}
 	g.Seasons = views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
-	g.TvShows = views.DictOfMap[TvId, *Tv]{M: g.tvShows}
+	g.TvShows = views.DictOfMap[ShowId, *Show]{M: g.tvShows}
 }
 
 // I've thought a lot about this and here's how this is going to go:
@@ -53,7 +53,7 @@ func (g *Graph) init() {
 // - Merge(), which will take pointers to other graph structures to be merged into this one.
 
 // Why not merge "data" and "node" structs?
-// - This is nicer for testing & creation syntax.  The "data" struct can be created with a simple literal, 
+// - This is nicer for testing & creation syntax.  The "data" struct can be created with a simple literal,
 //   and the "node" struct can be created with a few terse AddEdge() calls.
 
 // for keys, let's keep it simple:

@@ -3,7 +3,7 @@ package tmdb
 type SeasonId int
 
 type SeasonKey struct {
-	TvId         TvId
+	ShowId       ShowId
 	SeasonNumber int
 }
 

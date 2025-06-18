@@ -10,7 +10,7 @@ import (
 )
 
 type SearchTvResult struct {
-	Tv           *Tv
+	Tv           *Show
 	Page         int
 	TotalResults int
 	TotalPages   int
@@ -50,9 +50,9 @@ func SearchTv(ctx context.Context, client *Client, query string, options ...Opti
 					Page:         page,
 					TotalResults: result.TotalResults,
 					TotalPages:   result.TotalPages,
-					Tv: &Tv{
-						Key: TvId(resultTv.Id),
-						Data: TvData{
+					Tv: &Show{
+						Key: ShowId(resultTv.Id),
+						Data: ShowData{
 							Adult:            resultTv.Adult,
 							Backdrop:         NewPtr(Image(resultTv.BackdropPath)),
 							Genres:           genres,

@@ -2,44 +2,44 @@ package tmdb
 
 import "time"
 
-type TvId int
+type ShowId int
 
-type Tv struct {
-	Key TvId
-	Data TvData
+type Show struct {
+	Key  ShowId
+	Data ShowData
 
-	LastEpisodeToAir *Episode
-	Networks []*Network
+	LastEpisodeToAir    *Episode
+	Networks            []*Network
 	ProductionCompanies []*Company
 	ProductionCountries []*Country
-	Seasons []*Season
-	SpokenLanguages []*Language
+	Seasons             []*Season
+	SpokenLanguages     []*Language
 }
 
-type TvData struct {
-	Adult *bool
-	Backdrop *Image
-	CreatedBy []*Credit
-	EpisodeRunTime []time.Duration
-	FirstAirDate *DateYYYYMMDD
-	Genres []Genre
-	Homepage *string
-	InProduction *bool
-	Languages []string  // TODO: use Language type?
-	LastAirDate *DateYYYYMMDD
-	Name *string
+type ShowData struct {
+	Adult            *bool
+	Backdrop         *Image
+	CreatedBy        []*Credit
+	EpisodeRunTime   []time.Duration
+	FirstAirDate     *DateYYYYMMDD
+	Genres           []Genre
+	Homepage         *string
+	InProduction     *bool
+	Languages        []string // TODO: use Language type?
+	LastAirDate      *DateYYYYMMDD
+	Name             *string
 	NextEpisodeToAir *string // TODO: what's up with this?
 	NumberOfEpisodes *int
-	NumberOfSeasons *int
-	OriginCountry []string
+	NumberOfSeasons  *int
+	OriginCountry    []string
 	OriginalLanguage *string
-	OriginalName *string
-	Overview *string
-	Popularity *float64
-	Poster *Image
-	Status *string
-	Tagline *string
-	Type *string
-	VoteAverage *float64
-	VoteCount *int
+	OriginalName     *string
+	Overview         *string
+	Popularity       *float64
+	Poster           *Image
+	Status           *string
+	Tagline          *string
+	Type             *string
+	VoteAverage      *float64
+	VoteCount        *int
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
-func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv, error) {
+func GetTv(ctx context.Context, client *Client, id ShowId, options ...Option) (*Show, error) {
 	callOpts := client.globalOpts
 	callOpts.apply(options)
 
@@ -52,7 +52,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 		Key: EpisodeKey{
 			SeasonNumber:  rawTv.LastEpisodeToAir.SeasonNumber,
 			EpisodeNumber: rawTv.LastEpisodeToAir.EpisodeNumber,
-			TvId:          TvId(rawTv.Id),
+			ShowId:        ShowId(rawTv.Id),
 		},
 		Data: EpisodeData{
 			Id:          NewPtr(EpisodeId(rawTv.LastEpisodeToAir.Id)),
@@ -100,7 +100,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	for i, rawSeason := range rawTv.Seasons {
 		seasons[i] = &Season{
 			Key: SeasonKey{
-				TvId:         TvId(rawTv.Id),
+				ShowId:       ShowId(rawTv.Id),
 				SeasonNumber: rawSeason.SeasonNumber,
 			},
 			Data: SeasonData{
@@ -121,9 +121,9 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 			EnglishName: &rawLang.EnglishName,
 		}
 	}
-	out := &Tv{
+	out := &Show{
 		Key: id,
-		Data: TvData{
+		Data: ShowData{
 			Adult:            rawTv.Adult,
 			Backdrop:         NewPtr(Image(rawTv.BackdropPath)),
 			CreatedBy:        createdBy,
@@ -151,8 +151,8 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 			VoteCount:        &rawTv.VoteCount,
 		},
 
-		LastEpisodeToAir: lastEpisodeToAir,
-		Networks: networks,
+		LastEpisodeToAir:    lastEpisodeToAir,
+		Networks:            networks,
 		ProductionCompanies: companies,
 		ProductionCountries: countries,
 		Seasons:             seasons,
