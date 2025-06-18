@@ -40,8 +40,10 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	genres := make([]Genre, len(rawTv.Genres))
 	for i, g := range rawTv.Genres {
 		genres[i] = Genre{
-			Key:  GenreId(g.Id),
-			Name: &g.Name,
+			Key: GenreId(g.Id),
+			Data: GenreData{
+				Name: &g.Name,
+			},
 		}
 	}
 	lastEpisodeToAir := &Episode{

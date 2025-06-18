@@ -35,8 +35,10 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	genres := make([]Genre, len(rawGetMovie.Genres))
 	for i, g := range rawGetMovie.Genres {
 		genres[i] = Genre{
-			Key:  GenreId(g.Id),
-			Name: &g.Name,
+			Key: GenreId(g.Id),
+			Data: GenreData{
+				Name: &g.Name,
+			},
 		}
 	}
 	companies := make([]*Company, len(rawGetMovie.ProductionCompanies))
