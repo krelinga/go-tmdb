@@ -68,10 +68,12 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	networks := make([]*Network, len(rawTv.Networks))
 	for i, rawNetwork := range rawTv.Networks {
 		networks[i] = &Network{
-			Key:           NetworkId(rawNetwork.Id),
-			Name:          &rawNetwork.Name,
-			Logo:          NewPtr(Image(rawNetwork.LogoPath)),
-			OriginCountry: &rawNetwork.OriginCountry,
+			Key: NetworkId(rawNetwork.Id),
+			Data: NetworkData{
+				Name:          &rawNetwork.Name,
+				Logo:          NewPtr(Image(rawNetwork.LogoPath)),
+				OriginCountry: &rawNetwork.OriginCountry,
+			},
 		}
 	}
 	companies := make([]*Company, len(rawTv.ProductionCompanies))
