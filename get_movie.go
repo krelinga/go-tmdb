@@ -9,11 +9,6 @@ import (
 	"github.com/krelinga/go-tmdb/internal/raw"
 )
 
-type GetMovieOptions struct {
-	Language LanguageId
-	Columns  []MovieDataColumn
-}
-
 // In addition to what is listed in MovieData, the following data is also available:
 // - Companies()
 //   - Logo()
