@@ -121,31 +121,32 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	}
 	out := &Movie{
 		Key: MovieId(rawGetMovie.Id),
-
-		Adult:               rawGetMovie.Adult,
-		Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),
-		BelongsToCollection: &rawGetMovie.BelongsToCollection,
-		Budget:              &rawGetMovie.Budget,
-		Genres:              genres,
-		Homepage:            &rawGetMovie.Homepage,
-		ImdbId:              &rawGetMovie.ImdbId,
-		OriginalLanguage:    &rawGetMovie.OriginalLanguage,
-		OriginalTitle:       &rawGetMovie.OriginalTitle,
-		Overview:            &rawGetMovie.Overview,
-		Popularity:          &rawGetMovie.Popularity,
-		Poster:              NewPtr(Image(rawGetMovie.PosterPath)),
-		ProductionCompanies: companies,
-		ProductionCountries: countries,
-		ReleaseDate:         NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
-		Revenue:             &rawGetMovie.Revenue,
-		Runtime:             NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
-		SpokenLanguages:     spokenLanguages,
-		Status:              &rawGetMovie.Status,
-		Tagline:             &rawGetMovie.Tagline,
-		Title:               &rawGetMovie.Title,
-		Video:               &rawGetMovie.Video,
-		VoteAverage:         &rawGetMovie.VoteAverage,
-		VoteCount:           &rawGetMovie.VoteCount,
+		Data: MovieData{
+			Adult:               rawGetMovie.Adult,
+			Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),
+			BelongsToCollection: &rawGetMovie.BelongsToCollection,
+			Budget:              &rawGetMovie.Budget,
+			Genres:              genres,
+			Homepage:            &rawGetMovie.Homepage,
+			ImdbId:              &rawGetMovie.ImdbId,
+			OriginalLanguage:    &rawGetMovie.OriginalLanguage,
+			OriginalTitle:       &rawGetMovie.OriginalTitle,
+			Overview:            &rawGetMovie.Overview,
+			Popularity:          &rawGetMovie.Popularity,
+			Poster:              NewPtr(Image(rawGetMovie.PosterPath)),
+			ProductionCompanies: companies,
+			ProductionCountries: countries,
+			ReleaseDate:         NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
+			Revenue:             &rawGetMovie.Revenue,
+			Runtime:             NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
+			SpokenLanguages:     spokenLanguages,
+			Status:              &rawGetMovie.Status,
+			Tagline:             &rawGetMovie.Tagline,
+			Title:               &rawGetMovie.Title,
+			Video:               &rawGetMovie.Video,
+			VoteAverage:         &rawGetMovie.VoteAverage,
+			VoteCount:           &rawGetMovie.VoteCount,
+		},
 
 		Cast: cast,
 		Crew: crew,
@@ -154,10 +155,10 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	}
 
 	if rawGetMovie.ExternalIds != nil {
-		out.WikidataId = &rawGetMovie.ExternalIds.WikidataId
-		out.FacebookId = &rawGetMovie.ExternalIds.FacebookId
-		out.TwitterId = &rawGetMovie.ExternalIds.TwitterId
-		out.InstagramId = &rawGetMovie.ExternalIds.InstagramId
+		out.Data.WikidataId = &rawGetMovie.ExternalIds.WikidataId
+		out.Data.FacebookId = &rawGetMovie.ExternalIds.FacebookId
+		out.Data.TwitterId = &rawGetMovie.ExternalIds.TwitterId
+		out.Data.InstagramId = &rawGetMovie.ExternalIds.InstagramId
 	}
 	return out, nil
 }
