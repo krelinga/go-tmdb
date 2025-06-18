@@ -26,19 +26,6 @@ type Graph struct {
 	TvShows   views.Dict[ShowId, *Show]
 }
 
-func (g *Graph) init() {
-	g.Companies = views.DictOfMap[CompanyId, *Company]{M: g.companies}
-	g.Credits = views.DictOfMap[CreditId, *Credit]{M: g.credits}
-	g.Episodes = views.DictOfMap[EpisodeKey, *Episode]{M: g.episodes}
-	g.Genres = views.DictOfMap[GenreId, *Genre]{M: g.genres}
-	g.Keywords = views.DictOfMap[KeywordId, *Keyword]{M: g.keywords}
-	g.Movies = views.DictOfMap[MovieId, *Movie]{M: g.movies}
-	g.Networks = views.DictOfMap[NetworkId, *Network]{M: g.networks}
-	g.People = views.DictOfMap[PersonId, *Person]{M: g.people}
-	g.Seasons = views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
-	g.TvShows = views.DictOfMap[ShowId, *Show]{M: g.tvShows}
-}
-
 // I've thought a lot about this and here's how this is going to go:
 // For each type of entity there will be a "data" struct that holds the keys along with a lot of optional fields for random data.
 // - This has all exported fields and no linkage to other types of entities.
