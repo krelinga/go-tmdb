@@ -72,8 +72,10 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		keywords = make([]*Keyword, len(rawGetMovie.Keywords.Keywords))
 		for i, rawKeyword := range rawGetMovie.Keywords.Keywords {
 			keywords[i] = &Keyword{
-				Key:  KeywordId(rawKeyword.Id),
-				Name: &rawKeyword.Name,
+				Key: KeywordId(rawKeyword.Id),
+				Data: KeywordData{
+					Name: &rawKeyword.Name,
+				},
 			}
 		}
 	}
