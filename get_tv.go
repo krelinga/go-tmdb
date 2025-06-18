@@ -27,7 +27,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 		createdBy[i] = &Credit{
 			Key: CreditId(rawCredit.CreditId),
 			Person: &Person{
-				Key: PersonId(rawCredit.Id),
+				Key:     PersonId(rawCredit.Id),
 				Name:    &rawCredit.Name,
 				Profile: NewPtr(Image(rawCredit.ProfilePath)),
 			},
@@ -40,7 +40,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	genres := make([]Genre, len(rawTv.Genres))
 	for i, g := range rawTv.Genres {
 		genres[i] = Genre{
-			Key: GenreId(g.Id),
+			Key:  GenreId(g.Id),
 			Name: &g.Name,
 		}
 	}
@@ -64,7 +64,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	networks := make([]*Network, len(rawTv.Networks))
 	for i, rawNetwork := range rawTv.Networks {
 		networks[i] = &Network{
-			Key: NetworkId(rawNetwork.Id),
+			Key:           NetworkId(rawNetwork.Id),
 			Name:          &rawNetwork.Name,
 			Logo:          NewPtr(Image(rawNetwork.LogoPath)),
 			OriginCountry: &rawNetwork.OriginCountry,
@@ -74,9 +74,11 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	for i, rawCompany := range rawTv.ProductionCompanies {
 		companies[i] = &Company{
 			Key: CompanyId(rawCompany.Id),
-			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
-			Name:          &rawCompany.Name,
-			OriginCountry: &rawCompany.OriginCountry,
+			Data: CompanyData{
+				Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
+				Name:          &rawCompany.Name,
+				OriginCountry: &rawCompany.OriginCountry,
+			},
 		}
 	}
 	countries := make([]*Country, len(rawTv.ProductionCountries))
