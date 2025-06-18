@@ -6,7 +6,17 @@ type TvId int
 
 type Tv struct {
 	Key TvId
+	Data TvData
 
+	LastEpisodeToAir *Episode
+	Networks []*Network
+	ProductionCompanies []*Company
+	ProductionCountries []*Country
+	Seasons []*Season
+	SpokenLanguages []*Language
+}
+
+type TvData struct {
 	Adult *bool
 	Backdrop *Image
 	CreatedBy []*Credit
@@ -17,10 +27,8 @@ type Tv struct {
 	InProduction *bool
 	Languages []string  // TODO: use Language type?
 	LastAirDate *DateYYYYMMDD
-	LastEpisodeToAir *Episode
 	Name *string
 	NextEpisodeToAir *string // TODO: what's up with this?
-	Networks []*Network
 	NumberOfEpisodes *int
 	NumberOfSeasons *int
 	OriginCountry []string
@@ -29,10 +37,6 @@ type Tv struct {
 	Overview *string
 	Popularity *float64
 	Poster *Image
-	ProductionCompanies []*Company
-	ProductionCountries []*Country
-	Seasons []*Season
-	SpokenLanguages []*Language
 	Status *string
 	Tagline *string
 	Type *string
