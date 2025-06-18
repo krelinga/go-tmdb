@@ -2,12 +2,8 @@ package tmdb
 
 type CompanyId int
 
-type CompanyKey struct {
-	Id CompanyId
-}
-
 type Company struct {
-	CompanyKey
+	Key CompanyId
 
 	Logo *Image
 	Name *string

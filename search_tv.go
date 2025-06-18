@@ -43,9 +43,7 @@ func SearchTv(ctx context.Context, client *Client, query string, options ...Opti
 				genres := make([]Genre, len(resultTv.GenreIds))
 				for i, id := range resultTv.GenreIds {
 					genres[i] = Genre{
-						GenreKey: GenreKey{
-							Id: GenreId(id),
-						},
+						Key: GenreId(id),
 					}
 				}
 				out := &SearchTvResult{
@@ -53,9 +51,7 @@ func SearchTv(ctx context.Context, client *Client, query string, options ...Opti
 					TotalResults: result.TotalResults,
 					TotalPages:   result.TotalPages,
 					Tv: &Tv{
-						TvKey: TvKey{
-							Id: TvId(resultTv.Id),
-						},
+						Key: TvId(resultTv.Id),
 						Adult:            resultTv.Adult,
 						Backdrop:         NewPtr(Image(resultTv.BackdropPath)),
 						Genres:           genres,

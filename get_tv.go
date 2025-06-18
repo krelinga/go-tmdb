@@ -25,13 +25,9 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	createdBy := make([]*Credit, len(rawTv.CreatedBy))
 	for i, rawCredit := range rawTv.CreatedBy {
 		createdBy[i] = &Credit{
-			CreditKey: CreditKey{
-				Id: CreditId(rawCredit.CreditId),
-			},
+			Key: CreditId(rawCredit.CreditId),
 			Person: &Person{
-				PersonKey: PersonKey{
-					Id: PersonId(rawCredit.Id),
-				},
+				Key: PersonId(rawCredit.Id),
 				Name:    &rawCredit.Name,
 				Profile: NewPtr(Image(rawCredit.ProfilePath)),
 			},
@@ -44,14 +40,12 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	genres := make([]Genre, len(rawTv.Genres))
 	for i, g := range rawTv.Genres {
 		genres[i] = Genre{
-			GenreKey: GenreKey{
-				Id: GenreId(g.Id),
-			},
+			Key: GenreId(g.Id),
 			Name: &g.Name,
 		}
 	}
 	lastEpisodeToAir := &Episode{
-		EpisodeKey: EpisodeKey{
+		Key: EpisodeKey{
 			SeasonNumber:  rawTv.LastEpisodeToAir.SeasonNumber,
 			EpisodeNumber: rawTv.LastEpisodeToAir.EpisodeNumber,
 			TvId:          TvId(rawTv.Id),
@@ -70,9 +64,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	networks := make([]*Network, len(rawTv.Networks))
 	for i, rawNetwork := range rawTv.Networks {
 		networks[i] = &Network{
-			NetworkKey: NetworkKey{
-				Id: NetworkId(rawNetwork.Id),
-			},
+			Key: NetworkId(rawNetwork.Id),
 			Name:          &rawNetwork.Name,
 			Logo:          NewPtr(Image(rawNetwork.LogoPath)),
 			OriginCountry: &rawNetwork.OriginCountry,
@@ -81,9 +73,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	companies := make([]*Company, len(rawTv.ProductionCompanies))
 	for i, rawCompany := range rawTv.ProductionCompanies {
 		companies[i] = &Company{
-			CompanyKey: CompanyKey{
-				Id: CompanyId(rawCompany.Id),
-			},
+			Key: CompanyId(rawCompany.Id),
 			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
 			Name:          &rawCompany.Name,
 			OriginCountry: &rawCompany.OriginCountry,
@@ -99,7 +89,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 	seasons := make([]*Season, len(rawTv.Seasons))
 	for i, rawSeason := range rawTv.Seasons {
 		seasons[i] = &Season{
-			SeasonKey: SeasonKey{
+			Key: SeasonKey{
 				TvId:         TvId(rawTv.Id),
 				SeasonNumber: rawSeason.SeasonNumber,
 			},
@@ -120,9 +110,7 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 		}
 	}
 	out := &Tv{
-		TvKey: TvKey{
-			Id: id,
-		},
+		Key: id,
 
 		Adult:               rawTv.Adult,
 		Backdrop:            NewPtr(Image(rawTv.BackdropPath)),

@@ -2,11 +2,7 @@ package tmdb
 
 type GenreId int
 
-type GenreKey struct {
-	Id GenreId
-}
-
 type Genre struct {
-	GenreKey
+	Key GenreId
 	Name *string
 }

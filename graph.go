@@ -3,40 +3,40 @@ package tmdb
 import "github.com/krelinga/go-views"
 
 type Graph struct {
-	companies map[CompanyKey]*Company
-	credits map[CreditKey]*Credit
+	companies map[CompanyId]*Company
+	credits map[CreditId]*Credit
 	episodes map[EpisodeKey]*Episode
-	genres map[GenreKey]*Genre
-	keywords map[KeywordKey]*Keyword
-	movies map[MovieKey]*Movie
-	networks map[NetworkKey]*Network
-	people map[PersonKey]*Person
+	genres map[GenreId]*Genre
+	keywords map[KeywordId]*Keyword
+	movies map[MovieId]*Movie
+	networks map[NetworkId]*Network
+	people map[PersonId]*Person
 	seasons map[SeasonKey]*Season
-	tvShows map[TvKey]*Tv
+	tvShows map[TvId]*Tv
 
-	Companies views.Dict[CompanyKey, *Company]
-	Credits views.Dict[CreditKey, *Credit]
+	Companies views.Dict[CompanyId, *Company]
+	Credits views.Dict[CreditId, *Credit]
 	Episodes views.Dict[EpisodeKey, *Episode]
-	Genres views.Dict[GenreKey, *Genre]
-	Keywords views.Dict[KeywordKey, *Keyword]
-	Movies views.Dict[MovieKey, *Movie]
-	Networks views.Dict[NetworkKey, *Network]
-	People views.Dict[PersonKey, *Person]
+	Genres views.Dict[GenreId, *Genre]
+	Keywords views.Dict[KeywordId, *Keyword]
+	Movies views.Dict[MovieId, *Movie]
+	Networks views.Dict[NetworkId, *Network]
+	People views.Dict[PersonId, *Person]
 	Seasons views.Dict[SeasonKey, *Season]
-	TvShows views.Dict[TvKey, *Tv]
+	TvShows views.Dict[TvId, *Tv]
 }
 
 func (g *Graph) init() {
-	g.Companies = views.DictOfMap[CompanyKey, *Company]{M: g.companies}
-	g.Credits = views.DictOfMap[CreditKey, *Credit]{M: g.credits}
+	g.Companies = views.DictOfMap[CompanyId, *Company]{M: g.companies}
+	g.Credits = views.DictOfMap[CreditId, *Credit]{M: g.credits}
 	g.Episodes = views.DictOfMap[EpisodeKey, *Episode]{M: g.episodes}
-	g.Genres = views.DictOfMap[GenreKey, *Genre]{M: g.genres}
-	g.Keywords = views.DictOfMap[KeywordKey, *Keyword]{M: g.keywords}
-	g.Movies = views.DictOfMap[MovieKey, *Movie]{M: g.movies}
-	g.Networks = views.DictOfMap[NetworkKey, *Network]{M: g.networks}
-	g.People = views.DictOfMap[PersonKey, *Person]{M: g.people}
+	g.Genres = views.DictOfMap[GenreId, *Genre]{M: g.genres}
+	g.Keywords = views.DictOfMap[KeywordId, *Keyword]{M: g.keywords}
+	g.Movies = views.DictOfMap[MovieId, *Movie]{M: g.movies}
+	g.Networks = views.DictOfMap[NetworkId, *Network]{M: g.networks}
+	g.People = views.DictOfMap[PersonId, *Person]{M: g.people}
 	g.Seasons = views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
-	g.TvShows = views.DictOfMap[TvKey, *Tv]{M: g.tvShows}
+	g.TvShows = views.DictOfMap[TvId, *Tv]{M: g.tvShows}
 }
 
 // I've thought a lot about this and here's how this is going to go:

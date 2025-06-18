@@ -11,7 +11,7 @@ type EpisodeKey struct {
 }
 
 type Episode struct {
-	EpisodeKey
+	Key EpisodeKey
 	Id             *EpisodeId
 	Name           *string
 	Overview       *string

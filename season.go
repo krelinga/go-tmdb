@@ -8,7 +8,7 @@ type SeasonKey struct {
 }
 
 type Season struct {
-	SeasonKey
+	Key SeasonKey
 
 	Id *SeasonId
 	AirDate *DateYYYYMMDD

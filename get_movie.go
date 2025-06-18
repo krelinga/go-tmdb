@@ -35,18 +35,14 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	genres := make([]Genre, len(rawGetMovie.Genres))
 	for i, g := range rawGetMovie.Genres {
 		genres[i] = Genre{
-			GenreKey: GenreKey{
-				Id: GenreId(g.Id),
-			},
+			Key:  GenreId(g.Id),
 			Name: &g.Name,
 		}
 	}
 	companies := make([]*Company, len(rawGetMovie.ProductionCompanies))
 	for i, rawCompany := range rawGetMovie.ProductionCompanies {
 		companies[i] = &Company{
-			CompanyKey: CompanyKey{
-				Id: CompanyId(rawCompany.Id),
-			},
+			Key:           CompanyId(rawCompany.Id),
 			Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
 			Name:          &rawCompany.Name,
 			OriginCountry: &rawCompany.OriginCountry,
@@ -72,9 +68,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		keywords = make([]*Keyword, len(rawGetMovie.Keywords.Keywords))
 		for i, rawKeyword := range rawGetMovie.Keywords.Keywords {
 			keywords[i] = &Keyword{
-				KeywordKey: KeywordKey{
-					Id: KeywordId(rawKeyword.Id),
-				},
+				Key:  KeywordId(rawKeyword.Id),
 				Name: &rawKeyword.Name,
 			}
 		}
@@ -83,9 +77,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 	if rawGetMovie.Credits != nil {
 		toPerson := func(rawPerson *raw.GetMovieCreditsPerson) *Person {
 			return &Person{
-				PersonKey: PersonKey{
-					Id: PersonId(rawPerson.Id),
-				},
+				Key: PersonId(rawPerson.Id),
 
 				Adult:              &rawPerson.Adult,
 				Gender:             NewPtr(Gender(rawPerson.Gender)),
@@ -98,9 +90,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		cast = make([]*Credit, len(rawGetMovie.Credits.Cast))
 		for i, rawCast := range rawGetMovie.Credits.Cast {
 			cast[i] = &Credit{
-				CreditKey: CreditKey{
-					Id: CreditId(rawCast.CreditId),
-				},
+				Key:          CreditId(rawCast.CreditId),
 				Person:       toPerson(&rawCast.GetMovieCreditsPerson),
 				OriginalName: &rawCast.OriginalName,
 				CastId:       NewPtr(CastId(rawCast.CastId)),
@@ -111,9 +101,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		crew = make([]*Credit, len(rawGetMovie.Credits.Crew))
 		for i, rawCrew := range rawGetMovie.Credits.Crew {
 			crew[i] = &Credit{
-				CreditKey: CreditKey{
-					Id: CreditId(rawCrew.CreditId),
-				},
+				Key:          CreditId(rawCrew.CreditId),
 				Person:       toPerson(&rawCrew.GetMovieCreditsPerson),
 				OriginalName: &rawCrew.OriginalName,
 				Department:   &rawCrew.Department,
@@ -122,9 +110,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		}
 	}
 	out := &Movie{
-		MovieKey: MovieKey{
-			Id: MovieId(rawGetMovie.Id),
-		},
+		Key: MovieId(rawGetMovie.Id),
 
 		Adult:               rawGetMovie.Adult,
 		Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),

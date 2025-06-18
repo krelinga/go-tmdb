@@ -2,12 +2,8 @@ package tmdb
 
 type NetworkId int
 
-type NetworkKey struct {
-	Id NetworkId
-}
-
 type Network struct {
-	NetworkKey
+	Key NetworkId
 
 	Logo *Image
 	Name *string

@@ -49,12 +49,8 @@ func (d MovieDataColumn) Endpoint() string {
 	}
 }
 
-type MovieKey struct {
-	Id MovieId
-}
-
 type Movie struct {
-	MovieKey
+	Key MovieId
 
 	Adult *bool
 	Backdrop *Image

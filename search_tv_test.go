@@ -25,6 +25,6 @@ func TestSearchTv(t *testing.T) {
 			t.Error("SearchTv returned result with nil Movie")
 			return
 		}
-		t.Logf("Found Tv: %d", result.Tv.Id)
+		t.Logf("Found Tv: %d", result.Tv.Key)
 	}
 }
