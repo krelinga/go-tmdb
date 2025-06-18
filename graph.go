@@ -13,17 +13,98 @@ type Graph struct {
 	people    map[PersonId]*Person
 	seasons   map[SeasonKey]*Season
 	tvShows   map[ShowId]*Show
+}
 
-	Companies views.Dict[CompanyId, *Company]
-	Credits   views.Dict[CreditId, *Credit]
-	Episodes  views.Dict[EpisodeKey, *Episode]
-	Genres    views.Dict[GenreId, *Genre]
-	Keywords  views.Dict[KeywordId, *Keyword]
-	Movies    views.Dict[MovieId, *Movie]
-	Networks  views.Dict[NetworkId, *Network]
-	People    views.Dict[PersonId, *Person]
-	Seasons   views.Dict[SeasonKey, *Season]
-	TvShows   views.Dict[ShowId, *Show]
+func ensureHelper[K comparable, V any](m *map[K]*V, key K, newfn func() *V) *V {
+	if *m == nil {
+		*m = make(map[K]*V)
+	}
+	if value, ok := (*m)[key]; ok {
+		return value
+	}
+	value := newfn()
+	(*m)[key] = value
+	return value
+}
+
+func (g *Graph) EnsureCompany(id CompanyId) *Company {
+	return ensureHelper(&g.companies, id, func() *Company { return &Company{Key: id} })
+}
+
+func (g *Graph) Companies() views.Dict[CompanyId, *Company] {
+	return views.DictOfMap[CompanyId, *Company]{M: g.companies}
+}
+
+func (g *Graph) EnsureCredit(id CreditId) *Credit {
+ return ensureHelper(&g.credits, id, func() *Credit { return &Credit{Key: id} })
+}
+
+func (g *Graph) Credits() views.Dict[CreditId, *Credit] {
+ return views.DictOfMap[CreditId, *Credit]{M: g.credits}
+}
+
+func (g *Graph) EnsureEpisode(key EpisodeKey) *Episode {
+ return ensureHelper(&g.episodes, key, func() *Episode { return &Episode{Key: key} })
+}
+
+func (g *Graph) Episodes() views.Dict[EpisodeKey, *Episode] {
+ return views.DictOfMap[EpisodeKey, *Episode]{M: g.episodes}
+}
+
+func (g *Graph) EnsureGenre(id GenreId) *Genre {
+ return ensureHelper(&g.genres, id, func() *Genre { return &Genre{Key: id} })
+}
+
+func (g *Graph) Genres() views.Dict[GenreId, *Genre] {
+ return views.DictOfMap[GenreId, *Genre]{M: g.genres}
+}
+
+func (g *Graph) EnsureKeyword(id KeywordId) *Keyword {
+ return ensureHelper(&g.keywords, id, func() *Keyword { return &Keyword{Key: id} })
+}
+
+func (g *Graph) Keywords() views.Dict[KeywordId, *Keyword] {
+ return views.DictOfMap[KeywordId, *Keyword]{M: g.keywords}
+}
+
+func (g *Graph) EnsureMovie(id MovieId) *Movie {
+ return ensureHelper(&g.movies, id, func() *Movie { return &Movie{Key: id} })
+}
+
+func (g *Graph) Movies() views.Dict[MovieId, *Movie] {
+ return views.DictOfMap[MovieId, *Movie]{M: g.movies}
+}
+
+func (g *Graph) EnsureNetwork(id NetworkId) *Network {
+ return ensureHelper(&g.networks, id, func() *Network { return &Network{Key: id} })
+}
+
+func (g *Graph) Networks() views.Dict[NetworkId, *Network] {
+ return views.DictOfMap[NetworkId, *Network]{M: g.networks}
+}
+
+func (g *Graph) EnsurePerson(id PersonId) *Person {
+ return ensureHelper(&g.people, id, func() *Person { return &Person{Key: id} })
+}
+
+func (g *Graph) People() views.Dict[PersonId, *Person] {
+ return views.DictOfMap[PersonId, *Person]{M: g.people}
+}
+
+func (g *Graph) EnsureSeason(key SeasonKey) *Season {
+ return ensureHelper(&g.seasons, key, func() *Season { return &Season{Key: key} })
+}
+
+func (g *Graph) Seasons() views.Dict[SeasonKey, *Season] {
+ return views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
+}
+
+func (g *Graph) EnsureShow(id ShowId) *Show {
+ return ensureHelper(&g.tvShows, id, func() *Show { return &Show{Key: id} })
+}
+
+func (g *Graph) Shows() views.Dict[ShowId, *Show] {
+ return views.DictOfMap[ShowId, *Show]{M: g.tvShows}
 }
 
 // I've thought a lot about this and here's how this is going to go:
