@@ -22,22 +22,29 @@ var replayFlag = flag.String("replay", "read", "Which mode to run the replay cli
 func getClient(t *testing.T) *tmdb.Client {
 	t.Helper()
 	var mode recorder.Mode
+	var envString, envToken string
 	switch *replayFlag {
 	case "direct":
 		mode = recorder.ModePassthrough
+		envString = os.Getenv("TMDB_API_KEY")
+		envToken = os.Getenv("TMDB_BEARER_TOKEN")
 	case "read":
 		mode = recorder.ModeReplayOnly
+		envString = "will_be_ignored"
+		envToken = "will_be_ignored"
 	case "write":
 		mode = recorder.ModeReplayWithNewEpisodes
+		envString = os.Getenv("TMDB_API_KEY")
+		envToken = os.Getenv("TMDB_BEARER_TOKEN")
 	case "replace":
 		mode = recorder.ModeRecordOnly
+		envString = os.Getenv("TMDB_API_KEY")
+		envToken = os.Getenv("TMDB_BEARER_TOKEN")
 	default:
 		t.Fatal("Invalid replay mode. Options are: 'direct', 'read', 'write', or 'replace'")
 		return nil
 	}
 
-	envString := os.Getenv("TMDB_API_KEY")
-	envToken := os.Getenv("TMDB_BEARER_TOKEN")
 	if envString == "" && envToken == "" && mode != recorder.ModeReplayOnly {
 		t.Fatal("TMDB_API_KEY or TMDB_BEARER_TOKEN environment variable must be set for non-replay modes")
 		return nil
