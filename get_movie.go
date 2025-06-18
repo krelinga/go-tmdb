@@ -84,13 +84,14 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		toPerson := func(rawPerson *raw.GetMovieCreditsPerson) *Person {
 			return &Person{
 				Key: PersonId(rawPerson.Id),
-
-				Adult:              &rawPerson.Adult,
-				Gender:             NewPtr(Gender(rawPerson.Gender)),
-				KnownForDepartment: &rawPerson.KnownForDepartment,
-				Name:               &rawPerson.Name,
-				Popularity:         &rawPerson.Popularity,
-				Profile:            NewPtr(Image(rawPerson.ProfilePath)),
+				Data: PersonData{
+					Adult:              &rawPerson.Adult,
+					Gender:             NewPtr(Gender(rawPerson.Gender)),
+					KnownForDepartment: &rawPerson.KnownForDepartment,
+					Name:               &rawPerson.Name,
+					Popularity:         &rawPerson.Popularity,
+					Profile:            NewPtr(Image(rawPerson.ProfilePath)),
+				},
 			}
 		}
 		cast = make([]*Credit, len(rawGetMovie.Credits.Cast))

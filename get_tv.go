@@ -27,9 +27,11 @@ func GetTv(ctx context.Context, client *Client, id TvId, options ...Option) (*Tv
 		createdBy[i] = &Credit{
 			Key: CreditId(rawCredit.CreditId),
 			Person: &Person{
-				Key:     PersonId(rawCredit.Id),
-				Name:    &rawCredit.Name,
-				Profile: NewPtr(Image(rawCredit.ProfilePath)),
+				Key: PersonId(rawCredit.Id),
+				Data: PersonData{
+					Name:    &rawCredit.Name,
+					Profile: NewPtr(Image(rawCredit.ProfilePath)),
+				},
 			},
 		}
 	}

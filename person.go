@@ -12,12 +12,15 @@ const (
 )
 
 type Person struct {
-	Key PersonId
-	
-	Adult *bool
-	Gender *Gender
+	Key  PersonId
+	Data PersonData
+}
+
+type PersonData struct {
+	Adult              *bool
+	Gender             *Gender
 	KnownForDepartment *string
-	Name *string
-	Popularity *float64
-	Profile *Image
+	Name               *string
+	Popularity         *float64
+	Profile            *Image
 }
