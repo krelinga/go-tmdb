@@ -18,8 +18,8 @@ func TestGraph(t *testing.T) {
 			t.Errorf("Expected show key 1, got %d", s1.Key)
 		}
 
-		s1_again := g.EnsureShow(ShowId(1))
-		if s1_again != s1 {
+		s1Again := g.EnsureShow(ShowId(1))
+		if s1Again != s1 {
 			t.Fatal("Expected to retrieve the same show instance")
 		}
 
