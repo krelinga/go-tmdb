@@ -328,4 +328,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Company", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []CompanyId
+		}{
+			{
+				name: "no companies",
+				ids:  []CompanyId{},
+			},
+			{
+				name: "one company",
+				ids:  []CompanyId{CompanyId(1)},
+			},
+			{
+				name: "two different companies",
+				ids:  []CompanyId{CompanyId(1), CompanyId(2)},
+			},
+			{
+				name: "two same companies",
+				ids:  []CompanyId{CompanyId(1), CompanyId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Companies().Len() != 0 {
+					t.Error("Expected empty companies list")
+				}
+
+				uniqueIds := sets.New[CompanyId]()
+				uniquePtrs := sets.New[*Company]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					company := g.EnsureCompany(id)
+					uniquePtrs.Add(company)
+					if company == nil {
+						t.Fatalf("Expected to get a non-nil company for ID %d", id)
+					}
+					if company.Key != id {
+						t.Errorf("Expected company key %d, got %d", id, company.Key)
+					}
+					if found, has := g.Companies().Get(id); !has {
+						t.Errorf("Expected to find company with key %d, but it was not found", id)
+					} else if found != company {
+						t.Errorf("Expected found company to be the same as created company, but they are different: %v != %v", found, company)
+					}
+					if g.Companies().Len() != uniqueIds.Len() {
+						t.Errorf("Expected companies length to be %d, got %d", uniqueIds.Len(), g.Companies().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Companies(), "companies")
+			})
+		}
+	})
 }
