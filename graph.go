@@ -44,7 +44,13 @@ func (g *Graph) Credits() views.Dict[CreditId, *Credit] {
 }
 
 func (g *Graph) EnsureEpisode(key EpisodeKey) *Episode {
-	return ensureHelper(&g.episodes, key, func() *Episode { return &Episode{Key: key} })
+	season := g.EnsureSeason(SeasonKey{ShowId: key.ShowId, SeasonNumber: key.SeasonNumber})
+	episode := ensureHelper(&g.episodes, key, func() *Episode { return &Episode{Key: key} })
+	episode.season = season
+	if !season.Episodes().Has(episode) {
+		season.episodes = append(season.episodes, episode)
+	}
+	return episode
 }
 
 func (g *Graph) Episodes() views.Dict[EpisodeKey, *Episode] {
@@ -92,7 +98,13 @@ func (g *Graph) People() views.Dict[PersonId, *Person] {
 }
 
 func (g *Graph) EnsureSeason(key SeasonKey) *Season {
-	return ensureHelper(&g.seasons, key, func() *Season { return &Season{Key: key} })
+	show := g.EnsureShow(key.ShowId)
+	season := ensureHelper(&g.seasons, key, func() *Season { return &Season{Key: key} })
+	season.show = show
+	if !show.Seasons().Has(season) {
+		show.seasons = append(show.seasons, season)
+	}
+	return season
 }
 
 func (g *Graph) Seasons() views.Dict[SeasonKey, *Season] {

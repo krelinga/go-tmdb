@@ -14,20 +14,24 @@ type Episode struct {
 	Key  EpisodeKey
 	Data EpisodeData
 
-	show      *Show
+	season    *Season
 	lastToAir bool
 }
 
 func (e *Episode) Show() *Show {
-	return e.show
+	return e.season.Show()
 }
 
 func (e *Episode) SetLastToAir() {
-	e.show.SetLastEpisodeToAir(e)
+	e.Show().SetLastEpisodeToAir(e)
 }
 
 func (e *Episode) LastToAir() bool {
 	return e.lastToAir
+}
+
+func (e *Episode) Season() *Season {
+	return e.season
 }
 
 type EpisodeData struct {
