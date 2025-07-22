@@ -36,75 +36,75 @@ func (g *Graph) Companies() views.Dict[CompanyId, *Company] {
 }
 
 func (g *Graph) EnsureCredit(id CreditId) *Credit {
- return ensureHelper(&g.credits, id, func() *Credit { return &Credit{Key: id} })
+	return ensureHelper(&g.credits, id, func() *Credit { return &Credit{Key: id} })
 }
 
 func (g *Graph) Credits() views.Dict[CreditId, *Credit] {
- return views.DictOfMap[CreditId, *Credit]{M: g.credits}
+	return views.DictOfMap[CreditId, *Credit]{M: g.credits}
 }
 
 func (g *Graph) EnsureEpisode(key EpisodeKey) *Episode {
- return ensureHelper(&g.episodes, key, func() *Episode { return &Episode{Key: key} })
+	return ensureHelper(&g.episodes, key, func() *Episode { return &Episode{Key: key} })
 }
 
 func (g *Graph) Episodes() views.Dict[EpisodeKey, *Episode] {
- return views.DictOfMap[EpisodeKey, *Episode]{M: g.episodes}
+	return views.DictOfMap[EpisodeKey, *Episode]{M: g.episodes}
 }
 
 func (g *Graph) EnsureGenre(id GenreId) *Genre {
- return ensureHelper(&g.genres, id, func() *Genre { return &Genre{Key: id} })
+	return ensureHelper(&g.genres, id, func() *Genre { return &Genre{Key: id} })
 }
 
 func (g *Graph) Genres() views.Dict[GenreId, *Genre] {
- return views.DictOfMap[GenreId, *Genre]{M: g.genres}
+	return views.DictOfMap[GenreId, *Genre]{M: g.genres}
 }
 
 func (g *Graph) EnsureKeyword(id KeywordId) *Keyword {
- return ensureHelper(&g.keywords, id, func() *Keyword { return &Keyword{Key: id} })
+	return ensureHelper(&g.keywords, id, func() *Keyword { return &Keyword{Key: id} })
 }
 
 func (g *Graph) Keywords() views.Dict[KeywordId, *Keyword] {
- return views.DictOfMap[KeywordId, *Keyword]{M: g.keywords}
+	return views.DictOfMap[KeywordId, *Keyword]{M: g.keywords}
 }
 
 func (g *Graph) EnsureMovie(id MovieId) *Movie {
- return ensureHelper(&g.movies, id, func() *Movie { return &Movie{Key: id} })
+	return ensureHelper(&g.movies, id, func() *Movie { return &Movie{Key: id} })
 }
 
 func (g *Graph) Movies() views.Dict[MovieId, *Movie] {
- return views.DictOfMap[MovieId, *Movie]{M: g.movies}
+	return views.DictOfMap[MovieId, *Movie]{M: g.movies}
 }
 
 func (g *Graph) EnsureNetwork(id NetworkId) *Network {
- return ensureHelper(&g.networks, id, func() *Network { return &Network{Key: id} })
+	return ensureHelper(&g.networks, id, func() *Network { return &Network{Key: id} })
 }
 
 func (g *Graph) Networks() views.Dict[NetworkId, *Network] {
- return views.DictOfMap[NetworkId, *Network]{M: g.networks}
+	return views.DictOfMap[NetworkId, *Network]{M: g.networks}
 }
 
 func (g *Graph) EnsurePerson(id PersonId) *Person {
- return ensureHelper(&g.people, id, func() *Person { return &Person{Key: id} })
+	return ensureHelper(&g.people, id, func() *Person { return &Person{Key: id} })
 }
 
 func (g *Graph) People() views.Dict[PersonId, *Person] {
- return views.DictOfMap[PersonId, *Person]{M: g.people}
+	return views.DictOfMap[PersonId, *Person]{M: g.people}
 }
 
 func (g *Graph) EnsureSeason(key SeasonKey) *Season {
- return ensureHelper(&g.seasons, key, func() *Season { return &Season{Key: key} })
+	return ensureHelper(&g.seasons, key, func() *Season { return &Season{Key: key} })
 }
 
 func (g *Graph) Seasons() views.Dict[SeasonKey, *Season] {
- return views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
+	return views.DictOfMap[SeasonKey, *Season]{M: g.seasons}
 }
 
 func (g *Graph) EnsureShow(id ShowId) *Show {
- return ensureHelper(&g.tvShows, id, func() *Show { return &Show{Key: id} })
+	return ensureHelper(&g.tvShows, id, func() *Show { return &Show{Key: id} })
 }
 
 func (g *Graph) Shows() views.Dict[ShowId, *Show] {
- return views.DictOfMap[ShowId, *Show]{M: g.tvShows}
+	return views.DictOfMap[ShowId, *Show]{M: g.tvShows}
 }
 
 // I've thought a lot about this and here's how this is going to go:
