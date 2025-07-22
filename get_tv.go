@@ -151,11 +151,11 @@ func GetTv(ctx context.Context, client *Client, id ShowId, options ...Option) (*
 			VoteCount:        &rawTv.VoteCount,
 		},
 
-		LastEpisodeToAir:    lastEpisodeToAir,
-		Networks:            networks,
-		ProductionCompanies: companies,
+		lastEpisodeToAir:    lastEpisodeToAir,
+		networks:            networks,
+		productionCompanies: companies,
 		ProductionCountries: countries,
-		Seasons:             seasons,
+		seasons:             seasons,
 		SpokenLanguages:     spokenLanguages,
 	}
 	return out, nil

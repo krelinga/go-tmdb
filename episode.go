@@ -13,6 +13,21 @@ type EpisodeKey struct {
 type Episode struct {
 	Key  EpisodeKey
 	Data EpisodeData
+
+	show      *Show
+	lastToAir bool
+}
+
+func (e *Episode) Show() *Show {
+	return e.show
+}
+
+func (e *Episode) SetLastToAir() {
+	e.show.SetLastEpisodeToAir(e)
+}
+
+func (e *Episode) LastToAir() bool {
+	return e.lastToAir
 }
 
 type EpisodeData struct {

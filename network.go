@@ -5,6 +5,12 @@ type NetworkId int
 type Network struct {
 	Key  NetworkId
 	Data NetworkData
+
+	shows []*Show
+}
+
+func (n *Network) AddShow(s *Show) {
+	s.AddNetwork(n)
 }
 
 type NetworkData struct {
