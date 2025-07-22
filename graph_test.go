@@ -440,4 +440,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Genre", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []GenreId
+		}{
+			{
+				name: "no genres",
+				ids:  []GenreId{},
+			},
+			{
+				name: "one genre",
+				ids:  []GenreId{GenreId(1)},
+			},
+			{
+				name: "two different genres",
+				ids:  []GenreId{GenreId(1), GenreId(2)},
+			},
+			{
+				name: "two same genres",
+				ids:  []GenreId{GenreId(1), GenreId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Genres().Len() != 0 {
+					t.Error("Expected empty genres list")
+				}
+
+				uniqueIds := sets.New[GenreId]()
+				uniquePtrs := sets.New[*Genre]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					genre := g.EnsureGenre(id)
+					uniquePtrs.Add(genre)
+					if genre == nil {
+						t.Fatalf("Expected to get a non-nil genre for ID %d", id)
+					}
+					if genre.Key != id {
+						t.Errorf("Expected genre key %d, got %d", id, genre.Key)
+					}
+					if found, has := g.Genres().Get(id); !has {
+						t.Errorf("Expected to find genre with key %d, but it was not found", id)
+					} else if found != genre {
+						t.Errorf("Expected found genre to be the same as created genre, but they are different: %v != %v", found, genre)
+					}
+					if g.Genres().Len() != uniqueIds.Len() {
+						t.Errorf("Expected genres length to be %d, got %d", uniqueIds.Len(), g.Genres().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Genres(), "genres")
+			})
+		}
+	})
 }
