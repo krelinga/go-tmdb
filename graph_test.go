@@ -185,4 +185,138 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Episode", func(t *testing.T) {
+		cases := []struct {
+			name       string
+			preShowIds []ShowId
+			preSeason  []SeasonKey
+			episodes   []EpisodeKey
+		}{
+			{
+				name:       "no episodes, no shows, no seasons",
+				preShowIds: []ShowId{},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{},
+			},
+			{
+				name:       "one episode, novel show, novel season",
+				preShowIds: []ShowId{},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+			{
+				name:       "two different episodes, novel show, novel season",
+				preShowIds: []ShowId{},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 2}},
+			},
+			{
+				name:       "two same episodes, novel show, novel season",
+				preShowIds: []ShowId{},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+			{
+				name:       "no episodes, existing show, no seasons",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{},
+			},
+			{
+				name:       "one episode, existing show, novel season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+			{
+				name:       "two different episodes, existing show, novel season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 2}},
+			},
+			{
+				name:       "two same episodes, existing show, novel season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+			{
+				name:       "no episodes, existing show, existing season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+				episodes:   []EpisodeKey{},
+			},
+			{
+				name:       "one episode, existing show, existing season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+			{
+				name:       "two different episodes, existing show, existing season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 2}},
+			},
+			{
+				name:       "two same episodes, existing show, existing season",
+				preShowIds: []ShowId{ShowId(1)},
+				preSeason:  []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+				episodes:   []EpisodeKey{{ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1, EpisodeNumber: 1}},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Episodes().Len() != 0 {
+					t.Error("Expected empty episodes list")
+				}
+
+				uniqueShowKeys := sets.New[ShowId]()
+				uniqueShowPtrs := sets.New[*Show]()
+				for _, id := range c.preShowIds {
+					uniqueShowPtrs.Add(g.EnsureShow(id))
+					uniqueShowKeys.Add(id)
+				}
+
+				uniqueSeasonKeys := sets.New[SeasonKey]()
+				uniqueSeasonPtrs := sets.New[*Season]()
+				for _, key := range c.preSeason {
+					season := g.EnsureSeason(key)
+					uniqueSeasonPtrs.Add(season)
+					uniqueSeasonKeys.Add(key)
+					uniqueShowPtrs.Add(season.Show())
+				}
+
+				uniqueKeys := sets.New[EpisodeKey]()
+				uniquePtrs := sets.New[*Episode]()
+				for _, key := range c.episodes {
+					uniqueKeys.Add(key)
+					episode := g.EnsureEpisode(key)
+					uniquePtrs.Add(episode)
+					uniqueSeasonPtrs.Add(episode.Season())
+					uniqueShowPtrs.Add(episode.Show())
+					if episode == nil {
+						t.Fatalf("Expected to get a non-nil episode for key %v", key)
+					}
+					if episode.Key != key {
+						t.Errorf("Expected episode key %v, got %v", key, episode.Key)
+					}
+					if found, has := g.Episodes().Get(key); !has {
+						t.Errorf("Expected to find episode with key %v, but it was not found", key)
+					} else if found != episode {
+						t.Errorf("Expected found episode to be the same as created episode, but they are different: %v != %v", found, episode)
+					}
+					if g.Episodes().Len() != uniqueKeys.Len() {
+						t.Errorf("Expected episodes length to be %d, got %d", uniqueKeys.Len(), g.Episodes().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Episodes(), "episodes")
+				compareValues(t, uniqueSeasonPtrs, g.Seasons(), "seasons")
+				compareValues(t, uniqueShowPtrs, g.Shows(), "shows")
+			})
+		}
+	})
 }
