@@ -1,37 +1,68 @@
 package tmdb
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/krelinga/go-sets"
+)
 
 func TestGraph(t *testing.T) {
 	t.Run("Show", func(t *testing.T) {
-		g := &Graph{}
-
-		if g.Shows().Len() != 0 {
-			t.Error("Expected empty shows list")
+		cases := []struct {
+			name string
+			ids  []ShowId
+		}{
+			{
+				name: "no shows",
+				ids:  []ShowId{},
+			},
+			{
+				name: "one show",
+				ids:  []ShowId{ShowId(1)},
+			},
+			{
+				name: "two different shows",
+				ids:  []ShowId{ShowId(1), ShowId(2)},
+			},
+			{
+				name: "two same shows",
+				ids:  []ShowId{ShowId(1), ShowId(1)},
+			},
 		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
 
-		s1 := g.EnsureShow(ShowId(1))
-		if s1 == nil {
-			t.Fatal("Expected to create a new show")
-		}
-		if s1.Key != ShowId(1) {
-			t.Errorf("Expected show key 1, got %d", s1.Key)
-		}
+				if g.Shows().Len() != 0 {
+					t.Error("Expected empty shows list")
+				}
 
-		s1Again := g.EnsureShow(ShowId(1))
-		if s1Again != s1 {
-			t.Fatal("Expected to retrieve the same show instance")
-		}
-
-		s2 := g.EnsureShow(ShowId(2))
-		if s2 == s1 {
-			t.Fatal("Expected different show instances for different keys")
+				uniqueIds := sets.New[ShowId]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					show := g.EnsureShow(id)
+					if show == nil {
+						t.Fatalf("Expected to get a non-nil show for ID %d", id)
+					}
+					if show.Key != id {
+						t.Errorf("Expected show key %d, got %d", id, show.Key)
+					}
+					if found, has := g.Shows().Get(id); !has {
+						t.Errorf("Expected to find show with key %d, but it was not found", id)
+					} else if found != show {
+						t.Errorf("Expected found show to be the same as created show, but they are different: %v != %v", found, show)
+					}
+					if g.Shows().Len() != uniqueIds.Len() {
+						t.Errorf("Expected shows length to be %d, got %d", uniqueIds.Len(), g.Shows().Len())
+					}
+				}
+			})
 		}
 	})
 
 	t.Run("Season", func(t *testing.T) {
 		g := &Graph{}
-		
+
 		if g.Seasons().Len() != 0 {
 			t.Error("Expected empty seasons list")
 		}
