@@ -552,4 +552,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Movie", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []MovieId
+		}{
+			{
+				name: "no movies",
+				ids:  []MovieId{},
+			},
+			{
+				name: "one movie",
+				ids:  []MovieId{MovieId(1)},
+			},
+			{
+				name: "two different movies",
+				ids:  []MovieId{MovieId(1), MovieId(2)},
+			},
+			{
+				name: "two same movies",
+				ids:  []MovieId{MovieId(1), MovieId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Movies().Len() != 0 {
+					t.Error("Expected empty movies list")
+				}
+
+				uniqueIds := sets.New[MovieId]()
+				uniquePtrs := sets.New[*Movie]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					movie := g.EnsureMovie(id)
+					uniquePtrs.Add(movie)
+					if movie == nil {
+						t.Fatalf("Expected to get a non-nil movie for ID %d", id)
+					}
+					if movie.Key != id {
+						t.Errorf("Expected movie key %d, got %d", id, movie.Key)
+					}
+					if found, has := g.Movies().Get(id); !has {
+						t.Errorf("Expected to find movie with key %d, but it was not found", id)
+					} else if found != movie {
+						t.Errorf("Expected found movie to be the same as created movie, but they are different: %v != %v", found, movie)
+					}
+					if g.Movies().Len() != uniqueIds.Len() {
+						t.Errorf("Expected movies length to be %d, got %d", uniqueIds.Len(), g.Movies().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Movies(), "movies")
+			})
+		}
+	})
 }
