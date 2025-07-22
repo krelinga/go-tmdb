@@ -608,4 +608,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Network", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []NetworkId
+		}{
+			{
+				name: "no networks",
+				ids:  []NetworkId{},
+			},
+			{
+				name: "one network",
+				ids:  []NetworkId{NetworkId(1)},
+			},
+			{
+				name: "two different networks",
+				ids:  []NetworkId{NetworkId(1), NetworkId(2)},
+			},
+			{
+				name: "two same networks",
+				ids:  []NetworkId{NetworkId(1), NetworkId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Networks().Len() != 0 {
+					t.Error("Expected empty networks list")
+				}
+
+				uniqueIds := sets.New[NetworkId]()
+				uniquePtrs := sets.New[*Network]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					network := g.EnsureNetwork(id)
+					uniquePtrs.Add(network)
+					if network == nil {
+						t.Fatalf("Expected to get a non-nil network for ID %d", id)
+					}
+					if network.Key != id {
+						t.Errorf("Expected network key %d, got %d", id, network.Key)
+					}
+					if found, has := g.Networks().Get(id); !has {
+						t.Errorf("Expected to find network with key %d, but it was not found", id)
+					} else if found != network {
+						t.Errorf("Expected found network to be the same as created network, but they are different: %v != %v", found, network)
+					}
+					if g.Networks().Len() != uniqueIds.Len() {
+						t.Errorf("Expected networks length to be %d, got %d", uniqueIds.Len(), g.Networks().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Networks(), "networks")
+			})
+		}
+	})
 }
