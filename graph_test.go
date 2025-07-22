@@ -61,40 +61,87 @@ func TestGraph(t *testing.T) {
 	})
 
 	t.Run("Season", func(t *testing.T) {
-		g := &Graph{}
+		cases := []struct {
+			name       string
+			preShowIds []ShowId
+			keys       []SeasonKey
+		}{
+			{
+				name: "no seasons, no shows",
+				keys: []SeasonKey{},
+			},
+			{
+				name: "one season, novel show",
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+			},
+			{
+				name: "two different seasons, novel show",
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 2}},
+			},
+			{
+				name: "two same seasons, novel show",
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1}},
+			},
+			{
+				name: "no seasons, existing show",
+				preShowIds: []ShowId{ShowId(1)},
+				keys: []SeasonKey{},
+			},
+			{
+				name: "one season, existing show",
+				preShowIds: []ShowId{ShowId(1)},
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+			},
+			{
+				name: "two different seasons, existing show",
+				preShowIds: []ShowId{ShowId(1)},
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 2}},
+			},
+			{
+				name: "two same seasons, existing show",
+				preShowIds: []ShowId{ShowId(1)},
+				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1}},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
 
-		if g.Seasons().Len() != 0 {
-			t.Error("Expected empty seasons list")
-		}
+				if g.Seasons().Len() != 0 {
+					t.Error("Expected empty seasons list")
+				}
 
-		season1Key := SeasonKey{ShowId: ShowId(1), SeasonNumber: 1}
-		season1 := g.EnsureSeason(season1Key)
-		if season1 == nil {
-			t.Fatal("Expected to create a new season")
-		}
-		if season1.Key.ShowId != ShowId(1) || season1.Key.SeasonNumber != 1 {
-			t.Errorf("Expected season key {ShowId: 1, SeasonNumber: 1}, got {%d, %d}", season1.Key.ShowId, season1.Key.SeasonNumber)
-		}
-		if found, has := g.Seasons().Get(season1Key); !has {
-			t.Errorf("Expected to find season with key %v, but it was not found", season1Key)
-		} else if found != season1 {
-			t.Errorf("Expected found season to be the same as created season, but they are different")
-		}
+				uniqueShowKeys := sets.New[ShowId]()
+				for _, id := range c.preShowIds {
+					g.EnsureShow(id)
+					uniqueShowKeys.Add(id)
+				}
 
-		season1Again := g.EnsureSeason(season1Key)
-		if season1Again != season1 {
-			t.Fatal("Expected to retrieve the same season instance")
-		}
+				uniqueKeys := sets.New[SeasonKey]()
+				for _, key := range c.keys {
+					uniqueKeys.Add(key)
+					uniqueShowKeys.Add(key.ShowId)
 
-		season2Key := SeasonKey{ShowId: ShowId(2), SeasonNumber: 1}
-		season2 := g.EnsureSeason(season2Key)
-		if season2 == season1 {
-			t.Fatal("Expected different season instances for different keys")
-		}
-		if found, has := g.Seasons().Get(season2Key); !has {
-			t.Errorf("Expected to find season with key %v, but it was not found", season2Key)
-		} else if found != season2 {
-			t.Errorf("Expected found season to be the same as created season, but they are different")
+					season := g.EnsureSeason(key)
+					if season == nil {
+						t.Fatalf("Expected to get a non-nil season for key %v", key)
+					}
+					if season.Key != key {
+						t.Errorf("Expected season key %v, got %v", key, season.Key)
+					}
+					if found, has := g.Seasons().Get(key); !has {
+						t.Errorf("Expected to find season with key %v, but it was not found", key)
+					} else if found != season {
+						t.Errorf("Expected found season to be the same as created season, but they are different: %v != %v", found, season)
+					}
+					if g.Seasons().Len() != uniqueKeys.Len() {
+						t.Errorf("Expected seasons length to be %d, got %d", uniqueKeys.Len(), g.Seasons().Len())
+					}
+					if g.Shows().Len() != uniqueShowKeys.Len() {
+						t.Errorf("Expected shows length to be %d, got %d", uniqueShowKeys.Len(), g.Shows().Len())
+					}
+				}
+			})
 		}
 	})
 }
