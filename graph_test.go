@@ -167,6 +167,9 @@ func TestGraph(t *testing.T) {
 					if season.Key != key {
 						t.Errorf("Expected season key %v, got %v", key, season.Key)
 					}
+					if season.Show() != g.EnsureShow(key.ShowId) {
+						t.Errorf("Expected season to have show with ID %d, but it has %d", key.ShowId, season.Show().Key)
+					}
 					if found, has := g.Seasons().Get(key); !has {
 						t.Errorf("Expected to find season with key %v, but it was not found", key)
 					} else if found != season {
@@ -303,6 +306,12 @@ func TestGraph(t *testing.T) {
 					}
 					if episode.Key != key {
 						t.Errorf("Expected episode key %v, got %v", key, episode.Key)
+					}
+					if episode.Season() != g.EnsureSeason(SeasonKey{ShowId: key.ShowId, SeasonNumber: key.SeasonNumber}) {
+						t.Errorf("Expected episode to have season with key %v, but it has %v", SeasonKey{ShowId: key.ShowId, SeasonNumber: key.SeasonNumber}, episode.Season().Key)
+					}
+					if episode.Show() != g.EnsureShow(key.ShowId) {
+						t.Errorf("Expected episode to have show with ID %d, but it has %d", key.ShowId, episode.Show().Key)
 					}
 					if found, has := g.Episodes().Get(key); !has {
 						t.Errorf("Expected to find episode with key %v, but it was not found", key)
