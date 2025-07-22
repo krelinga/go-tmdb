@@ -3,6 +3,8 @@ package tmdb
 import (
 	"fmt"
 	"time"
+
+	"github.com/krelinga/go-views"
 )
 
 type MovieId int
@@ -59,6 +61,27 @@ type Movie struct {
 
 	// MovieDataKeywords
 	Keywords []*Keyword
+
+	genres []*Genre
+}
+
+func (m *Movie) AddGenre(g *Genre) {
+	if m.Genres().Has(g) {
+		return // already added
+	}
+	if m.genres == nil {
+		m.genres = make([]*Genre, 0, 1)
+	}
+	m.genres = append(m.genres, g)
+
+	if g.movies == nil {
+		g.movies = make([]*Movie, 0, 1)
+	}
+	g.movies = append(g.movies, m)
+}
+
+func (m *Movie) Genres() views.Bag[*Genre] {
+	return views.BagOfSlice[*Genre]{S: m.genres}
 }
 
 type MovieData struct {
@@ -66,7 +89,6 @@ type MovieData struct {
 	Backdrop            *Image
 	BelongsToCollection *string
 	Budget              *int
-	Genres              []Genre
 	Homepage            *string
 	ImdbId              *string
 	OriginalLanguage    *string

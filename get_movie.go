@@ -14,7 +14,7 @@ import (
 //   - Logo()
 //   - Name()
 //   - OriginCountry()
-func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*Movie, error) {
+func GetMovie(ctx context.Context, c *Client, id MovieId, g *Graph, options ...Option) (*Movie, error) {
 	callOpts := c.globalOpts
 	callOpts.apply(options)
 
@@ -27,15 +27,6 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 		return nil, fmt.Errorf("getting movie %d: %w", id, err)
 	}
 
-	genres := make([]Genre, len(rawGetMovie.Genres))
-	for i, g := range rawGetMovie.Genres {
-		genres[i] = Genre{
-			Key: GenreId(g.Id),
-			Data: GenreData{
-				Name: &g.Name,
-			},
-		}
-	}
 	companies := make([]*Company, len(rawGetMovie.ProductionCompanies))
 	for i, rawCompany := range rawGetMovie.ProductionCompanies {
 		companies[i] = &Company{
@@ -115,40 +106,43 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, options ...Option) (*M
 			}
 		}
 	}
-	out := &Movie{
-		Key: MovieId(rawGetMovie.Id),
-		Data: MovieData{
-			Adult:               rawGetMovie.Adult,
-			Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),
-			BelongsToCollection: &rawGetMovie.BelongsToCollection,
-			Budget:              &rawGetMovie.Budget,
-			Genres:              genres,
-			Homepage:            &rawGetMovie.Homepage,
-			ImdbId:              &rawGetMovie.ImdbId,
-			OriginalLanguage:    &rawGetMovie.OriginalLanguage,
-			OriginalTitle:       &rawGetMovie.OriginalTitle,
-			Overview:            &rawGetMovie.Overview,
-			Popularity:          &rawGetMovie.Popularity,
-			Poster:              NewPtr(Image(rawGetMovie.PosterPath)),
-			ProductionCompanies: companies,
-			ProductionCountries: countries,
-			ReleaseDate:         NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
-			Revenue:             &rawGetMovie.Revenue,
-			Runtime:             NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
-			SpokenLanguages:     spokenLanguages,
-			Status:              &rawGetMovie.Status,
-			Tagline:             &rawGetMovie.Tagline,
-			Title:               &rawGetMovie.Title,
-			Video:               &rawGetMovie.Video,
-			VoteAverage:         &rawGetMovie.VoteAverage,
-			VoteCount:           &rawGetMovie.VoteCount,
-		},
-
-		Cast: cast,
-		Crew: crew,
-
-		Keywords: keywords,
+	out := g.EnsureMovie(id)
+	for _, rawGenre := range rawGetMovie.Genres {
+		genre := g.EnsureGenre(GenreId(rawGenre.Id))
+		genre.Data = GenreData{
+			Name: &rawGenre.Name,
+		}
+		out.AddGenre(genre)
 	}
+	out.Data = MovieData{
+		Adult:               rawGetMovie.Adult,
+		Backdrop:            NewPtr(Image(rawGetMovie.BackdropPath)),
+		BelongsToCollection: &rawGetMovie.BelongsToCollection,
+		Budget:              &rawGetMovie.Budget,
+		Homepage:            &rawGetMovie.Homepage,
+		ImdbId:              &rawGetMovie.ImdbId,
+		OriginalLanguage:    &rawGetMovie.OriginalLanguage,
+		OriginalTitle:       &rawGetMovie.OriginalTitle,
+		Overview:            &rawGetMovie.Overview,
+		Popularity:          &rawGetMovie.Popularity,
+		Poster:              NewPtr(Image(rawGetMovie.PosterPath)),
+		ProductionCompanies: companies,
+		ProductionCountries: countries,
+		ReleaseDate:         NewPtr(DateYYYYMMDD(rawGetMovie.ReleaseDate)),
+		Revenue:             &rawGetMovie.Revenue,
+		Runtime:             NewPtr(time.Duration(rawGetMovie.Runtime) * time.Minute),
+		SpokenLanguages:     spokenLanguages,
+		Status:              &rawGetMovie.Status,
+		Tagline:             &rawGetMovie.Tagline,
+		Title:               &rawGetMovie.Title,
+		Video:               &rawGetMovie.Video,
+		VoteAverage:         &rawGetMovie.VoteAverage,
+		VoteCount:           &rawGetMovie.VoteCount,
+	}
+
+	out.Cast = cast
+	out.Crew = crew
+	out.Keywords = keywords
 
 	if rawGetMovie.ExternalIds != nil {
 		out.Data.WikidataId = &rawGetMovie.ExternalIds.WikidataId

@@ -10,10 +10,34 @@ import (
 )
 
 type SearchMovieResult struct {
-	Movie        *Movie
+	rawResult    *raw.SearchMovieResult
 	Page         int
 	TotalPages   int
 	TotalResults int
+}
+
+func (smr *SearchMovieResult) Upsert(g *Graph) *Movie {
+	movie := g.EnsureMovie(MovieId(smr.rawResult.Id))
+	movie.Data = MovieData{
+		Adult:            smr.rawResult.Adult,
+		Backdrop:         NewPtr(Image(smr.rawResult.BackdropPath)),
+		OriginalLanguage: &smr.rawResult.OriginalLanguage,
+		OriginalTitle:    &smr.rawResult.OriginalTitle,
+		Overview:         &smr.rawResult.Overview,
+		Popularity:       &smr.rawResult.Popularity,
+		Poster:           NewPtr(Image(smr.rawResult.PosterPath)),
+		ReleaseDate:      NewPtr(DateYYYYMMDD(smr.rawResult.ReleaseDate)),
+		Title:            &smr.rawResult.Title,
+		VoteAverage:      &smr.rawResult.VoteAverage,
+		VoteCount:        &smr.rawResult.VoteCount,
+	}
+
+	for _, id := range smr.rawResult.GenreIds {
+		genre := g.EnsureGenre(GenreId(id))
+		movie.AddGenre(genre)
+	}
+
+	return movie
 }
 
 // The resulting Movie instances will have the following fields set:
@@ -61,26 +85,10 @@ func SearchMovie(ctx context.Context, c *Client, query string, options ...Option
 					}
 				}
 				out := &SearchMovieResult{
+					rawResult:    smrMovie,
 					Page:         page,
 					TotalPages:   result.TotalPages,
 					TotalResults: result.TotalResults,
-					Movie: &Movie{
-						Key: MovieId(smrMovie.Id),
-						Data: MovieData{
-							Adult:            smrMovie.Adult,
-							Backdrop:         NewPtr(Image(smrMovie.BackdropPath)),
-							Genres:           genres,
-							OriginalLanguage: &smrMovie.OriginalLanguage,
-							OriginalTitle:    &smrMovie.OriginalTitle,
-							Overview:         &smrMovie.Overview,
-							Popularity:       &smrMovie.Popularity,
-							Poster:           NewPtr(Image(smrMovie.PosterPath)),
-							ReleaseDate:      NewPtr(DateYYYYMMDD(smrMovie.ReleaseDate)),
-							Title:            &smrMovie.Title,
-							VoteAverage:      &smrMovie.VoteAverage,
-							VoteCount:        &smrMovie.VoteCount,
-						},
-					},
 				}
 				if !yield(out, nil) {
 					return

@@ -21,10 +21,12 @@ func TestSearchMovie(t *testing.T) {
 			t.Error("SearchMovie returned nil result")
 			return
 		}
-		if result.Movie == nil {
-			t.Error("SearchMovie returned result with nil Movie")
+		g := &tmdb.Graph{}
+		movie := result.Upsert(g)
+		if movie == nil {
+			t.Error("SearchMovie returned result that did not upsert a Movie")
 			return
 		}
-		t.Logf("Found movie: %d", result.Movie.Key)
+		t.Logf("Found movie: %d", movie.Key)
 	}
 }
