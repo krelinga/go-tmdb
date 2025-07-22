@@ -4,7 +4,38 @@ import (
 	"testing"
 
 	"github.com/krelinga/go-sets"
+	"github.com/krelinga/go-views"
 )
+
+func getUniqueValues[K, V comparable](t *testing.T, dict views.Dict[K, V]) *sets.Set[V] {
+	t.Helper()
+	uniqueValues := sets.New[V]()
+	for v := range dict.Values() {
+		if !uniqueValues.Add(v) {
+			t.Fatalf("Expected unique value for %v, but it was not unique", v)
+		}
+	}
+	return uniqueValues
+}
+
+func compareValues[T comparable, K comparable](t *testing.T, expected *sets.Set[T], actual views.Dict[K, T], name string) {
+	t.Helper()
+	uniqueActual := getUniqueValues(t, actual)
+	if expected.Len() != uniqueActual.Len() {
+		t.Errorf("Expected %s length %d, got %d", name, expected.Len(), uniqueActual.Len())
+		return
+	}
+	for v := range expected.Values() {
+		if !uniqueActual.Has(v) {
+			t.Errorf("Expected %s to contain item %v, but it was not found", name, v)
+		}
+	}
+	for v := range uniqueActual.Values() {
+		if !expected.Has(v) {
+			t.Errorf("Expected %s to not contain item %v, but it was found", name, v)
+		}
+	}
+}
 
 func TestGraph(t *testing.T) {
 	t.Run("Show", func(t *testing.T) {
@@ -38,9 +69,11 @@ func TestGraph(t *testing.T) {
 				}
 
 				uniqueIds := sets.New[ShowId]()
+				uniquePtrs := sets.New[*Show]()
 				for _, id := range c.ids {
 					uniqueIds.Add(id)
 					show := g.EnsureShow(id)
+					uniquePtrs.Add(show)
 					if show == nil {
 						t.Fatalf("Expected to get a non-nil show for ID %d", id)
 					}
@@ -56,6 +89,7 @@ func TestGraph(t *testing.T) {
 						t.Errorf("Expected shows length to be %d, got %d", uniqueIds.Len(), g.Shows().Len())
 					}
 				}
+				compareValues(t, uniquePtrs, g.Shows(), "shows")
 			})
 		}
 	})
@@ -83,24 +117,24 @@ func TestGraph(t *testing.T) {
 				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1}},
 			},
 			{
-				name: "no seasons, existing show",
+				name:       "no seasons, existing show",
 				preShowIds: []ShowId{ShowId(1)},
-				keys: []SeasonKey{},
+				keys:       []SeasonKey{},
 			},
 			{
-				name: "one season, existing show",
+				name:       "one season, existing show",
 				preShowIds: []ShowId{ShowId(1)},
-				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
+				keys:       []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}},
 			},
 			{
-				name: "two different seasons, existing show",
+				name:       "two different seasons, existing show",
 				preShowIds: []ShowId{ShowId(1)},
-				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 2}},
+				keys:       []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 2}},
 			},
 			{
-				name: "two same seasons, existing show",
+				name:       "two same seasons, existing show",
 				preShowIds: []ShowId{ShowId(1)},
-				keys: []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1}},
+				keys:       []SeasonKey{{ShowId: ShowId(1), SeasonNumber: 1}, {ShowId: ShowId(1), SeasonNumber: 1}},
 			},
 		}
 		for _, c := range cases {
@@ -112,17 +146,21 @@ func TestGraph(t *testing.T) {
 				}
 
 				uniqueShowKeys := sets.New[ShowId]()
+				uniqueShowPtrs := sets.New[*Show]()
 				for _, id := range c.preShowIds {
-					g.EnsureShow(id)
+					uniqueShowPtrs.Add(g.EnsureShow(id))
 					uniqueShowKeys.Add(id)
 				}
 
 				uniqueKeys := sets.New[SeasonKey]()
+				uniquePtrs := sets.New[*Season]()
 				for _, key := range c.keys {
 					uniqueKeys.Add(key)
 					uniqueShowKeys.Add(key.ShowId)
 
 					season := g.EnsureSeason(key)
+					uniquePtrs.Add(season)
+					uniqueShowPtrs.Add(season.Show())
 					if season == nil {
 						t.Fatalf("Expected to get a non-nil season for key %v", key)
 					}
@@ -141,6 +179,9 @@ func TestGraph(t *testing.T) {
 						t.Errorf("Expected shows length to be %d, got %d", uniqueShowKeys.Len(), g.Shows().Len())
 					}
 				}
+
+				compareValues(t, uniquePtrs, g.Seasons(), "seasons")
+				compareValues(t, uniqueShowPtrs, g.Shows(), "shows")
 			})
 		}
 	})
