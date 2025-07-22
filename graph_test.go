@@ -384,4 +384,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Credit", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []CreditId
+		}{
+			{
+				name: "no credits",
+				ids:  []CreditId{},
+			},
+			{
+				name: "one credit",
+				ids:  []CreditId{CreditId('a')},
+			},
+			{
+				name: "two different credits",
+				ids:  []CreditId{CreditId('a'), CreditId('b')},
+			},
+			{
+				name: "two same credits",
+				ids:  []CreditId{CreditId('a'), CreditId('a')},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Credits().Len() != 0 {
+					t.Error("Expected empty credits list")
+				}
+
+				uniqueIds := sets.New[CreditId]()
+				uniquePtrs := sets.New[*Credit]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					credit := g.EnsureCredit(id)
+					uniquePtrs.Add(credit)
+					if credit == nil {
+						t.Fatalf("Expected to get a non-nil credit for ID %s", id)
+					}
+					if credit.Key != id {
+						t.Errorf("Expected credit key %s, got %s", id, credit.Key)
+					}
+					if found, has := g.Credits().Get(id); !has {
+						t.Errorf("Expected to find credit with key %s, but it was not found", id)
+					} else if found != credit {
+						t.Errorf("Expected found credit to be the same as created credit, but they are different: %v != %v", found, credit)
+					}
+					if g.Credits().Len() != uniqueIds.Len() {
+						t.Errorf("Expected credits length to be %d, got %d", uniqueIds.Len(), g.Credits().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Credits(), "credits")
+			})
+		}
+	})
 }
