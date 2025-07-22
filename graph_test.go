@@ -664,4 +664,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("People", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []PersonId
+		}{
+			{
+				name: "no people",
+				ids:  []PersonId{},
+			},
+			{
+				name: "one person",
+				ids:  []PersonId{PersonId(1)},
+			},
+			{
+				name: "two different people",
+				ids:  []PersonId{PersonId(1), PersonId(2)},
+			},
+			{
+				name: "two same people",
+				ids:  []PersonId{PersonId(1), PersonId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.People().Len() != 0 {
+					t.Error("Expected empty people list")
+				}
+
+				uniqueIds := sets.New[PersonId]()
+				uniquePtrs := sets.New[*Person]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					person := g.EnsurePerson(id)
+					uniquePtrs.Add(person)
+					if person == nil {
+						t.Fatalf("Expected to get a non-nil person for ID %d", id)
+					}
+					if person.Key != id {
+						t.Errorf("Expected person key %d, got %d", id, person.Key)
+					}
+					if found, has := g.People().Get(id); !has {
+						t.Errorf("Expected to find person with key %d, but it was not found", id)
+					} else if found != person {
+						t.Errorf("Expected found person to be the same as created person, but they are different: %v != %v", found, person)
+					}
+					if g.People().Len() != uniqueIds.Len() {
+						t.Errorf("Expected people length to be %d, got %d", uniqueIds.Len(), g.People().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.People(), "people")
+			})
+		}
+	})
 }
