@@ -32,7 +32,7 @@ func GetMovie(ctx context.Context, c *Client, id MovieId, g *Graph, options ...O
 		companies[i] = &Company{
 			Key: CompanyId(rawCompany.Id),
 			Data: CompanyData{
-				Logo:          NewPtr[Image](Image(rawCompany.LogoPath)),
+				Logo:          NewPtr(Image(rawCompany.LogoPath)),
 				Name:          &rawCompany.Name,
 				OriginCountry: &rawCompany.OriginCountry,
 			},
