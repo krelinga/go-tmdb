@@ -496,4 +496,60 @@ func TestGraph(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("Keyword", func(t *testing.T) {
+		cases := []struct {
+			name string
+			ids  []KeywordId
+		}{
+			{
+				name: "no keywords",
+				ids:  []KeywordId{},
+			},
+			{
+				name: "one keyword",
+				ids:  []KeywordId{KeywordId(1)},
+			},
+			{
+				name: "two different keywords",
+				ids:  []KeywordId{KeywordId(1), KeywordId(2)},
+			},
+			{
+				name: "two same keywords",
+				ids:  []KeywordId{KeywordId(1), KeywordId(1)},
+			},
+		}
+		for _, c := range cases {
+			t.Run(c.name, func(t *testing.T) {
+				g := &Graph{}
+
+				if g.Keywords().Len() != 0 {
+					t.Error("Expected empty keywords list")
+				}
+
+				uniqueIds := sets.New[KeywordId]()
+				uniquePtrs := sets.New[*Keyword]()
+				for _, id := range c.ids {
+					uniqueIds.Add(id)
+					keyword := g.EnsureKeyword(id)
+					uniquePtrs.Add(keyword)
+					if keyword == nil {
+						t.Fatalf("Expected to get a non-nil keyword for ID %d", id)
+					}
+					if keyword.Key != id {
+						t.Errorf("Expected keyword key %d, got %d", id, keyword.Key)
+					}
+					if found, has := g.Keywords().Get(id); !has {
+						t.Errorf("Expected to find keyword with key %d, but it was not found", id)
+					} else if found != keyword {
+						t.Errorf("Expected found keyword to be the same as created keyword, but they are different: %v != %v", found, keyword)
+					}
+					if g.Keywords().Len() != uniqueIds.Len() {
+						t.Errorf("Expected keywords length to be %d, got %d", uniqueIds.Len(), g.Keywords().Len())
+					}
+				}
+				compareValues(t, uniquePtrs, g.Keywords(), "keywords")
+			})
+		}
+	})
 }
