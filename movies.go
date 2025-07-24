@@ -34,3 +34,10 @@ type GetMovieExternalIDsReply = movies.GetExternalIDsReply
 func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*GetMovieExternalIDsReply, error) {
 	return movies.GetExternalIDs(ctx, client, id, options)
 }
+
+type GetMovieReleaseDatesOptions = movies.GetReleaseDatesOptions
+type GetMovieReleaseDatesReply = movies.GetReleaseDatesReply
+
+func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*GetMovieReleaseDatesReply, error) {
+	return movies.GetReleaseDates(ctx, client, id, options)
+}

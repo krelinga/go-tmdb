@@ -13,10 +13,11 @@ func TestGetMulti(t *testing.T) {
 	ctx := context.Background()
 
 	options := movies.GetMultiOptions{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		WantDetails:     true,
-		WantCredits:     true,
-		WantExternalIDs: true,
+		ReadAccessToken:  os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		WantDetails:      true,
+		WantCredits:      true,
+		WantExternalIDs:  true,
+		WantReleaseDates: true,
 	}
 
 	reply, err := movies.GetMulti(ctx, http.DefaultClient, 11, options)

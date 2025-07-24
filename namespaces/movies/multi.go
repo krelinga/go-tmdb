@@ -16,9 +16,10 @@ type GetMultiOptions struct {
 	ReadAccessToken string
 	Language        string
 
-	WantDetails     bool
-	WantCredits     bool
-	WantExternalIDs bool
+	WantDetails      bool
+	WantCredits      bool
+	WantExternalIDs  bool
+	WantReleaseDates bool
 }
 
 func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMultiOptions) (*GetMultiReply, error) {
@@ -28,6 +29,9 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 	}
 	if options.WantExternalIDs {
 		appends = append(appends, "external_ids")
+	}
+	if options.WantReleaseDates {
+		appends = append(appends, "release_dates")
 	}
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
@@ -61,6 +65,7 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 		*Details
 		Credits     *Credits     `json:"credits"`
 		ExternalIDs *ExternalIDs `json:"external_ids"`
+		ReleaseDates *GetReleaseDatesReply `json:"release_dates"`
 	}{}
 	if err := json.NewDecoder(httpReply.Body).Decode(rawReply); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
@@ -76,6 +81,12 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 		}(),
 		Credits:     rawReply.Credits,
 		ExternalIDs: rawReply.ExternalIDs,
+		CountryReleaseDates: func() []*CountryReleaseDate {
+			if rawReply.ReleaseDates == nil {
+				return nil
+			}
+			return rawReply.ReleaseDates.CountryReleaseDates
+		}(),
 	}
 
 	return reply, nil
@@ -87,6 +98,7 @@ type GetMultiReply struct {
 	Details     *Details
 	Credits     *Credits
 	ExternalIDs *ExternalIDs
+	CountryReleaseDates []*CountryReleaseDate
 }
 
 func (gmr *GetMultiReply) SetDefaults() {
@@ -97,6 +109,9 @@ func (gmr *GetMultiReply) SetDefaults() {
 	gmr.Details.SetDefaults()
 	gmr.Credits.SetDefaults()
 	gmr.ExternalIDs.SetDefaults()
+	for _, crd := range gmr.CountryReleaseDates {
+		crd.SetDefaults()
+	}
 }
 
 func (gmr *GetMultiReply) String() string {
@@ -110,6 +125,7 @@ func (gmr *GetMultiReply) String() string {
 	fmt.Fprintf(&builder, " Details: %v", gmr.Details)
 	fmt.Fprintf(&builder, " Credits: %v", gmr.Credits)
 	fmt.Fprintf(&builder, " ExternalIDs: %v", gmr.ExternalIDs)
+	fmt.Fprintf(&builder, " CountryReleaseDates: %v", gmr.CountryReleaseDates)
 	builder.WriteString("}")
 	return builder.String()
 }
