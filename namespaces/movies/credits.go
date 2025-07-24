@@ -63,6 +63,14 @@ type GetCreditsReply struct {
 	Credits *Credits
 }
 
+func (gcr *GetCreditsReply) SetDefaults() {
+	if gcr == nil {
+		return
+	}
+	util.SetIfNil(&gcr.ID, 0)
+	gcr.Credits.SetDefaults()
+}
+
 func (gcr *GetCreditsReply) String() string {
 	if gcr == nil {
 		return "<nil>"
@@ -73,6 +81,18 @@ func (gcr *GetCreditsReply) String() string {
 type Credits struct {
 	Cast []*Cast `json:"cast"`
 	Crew []*Crew `json:"crew"`
+}
+
+func (c *Credits) SetDefaults() {
+	if c == nil {
+		return
+	}
+	for _, cast := range c.Cast {
+		cast.SetDefaults()
+	}
+	for _, crew := range c.Crew {
+		crew.SetDefaults()
+	}
 }
 
 func (c *Credits) String() string {
@@ -95,6 +115,18 @@ type Cast struct {
 	Character          *string  `json:"character"`
 	CreditId           *string  `json:"credit_id"`
 	Order              *int32   `json:"order"`
+}
+
+func (c *Cast) SetDefaults() {
+	if c == nil {
+		return
+	}
+	util.SetIfNil(&c.Adult, true)
+	util.SetIfNil(&c.Gender, 0)
+	util.SetIfNil(&c.ID, 0)
+	util.SetIfNil(&c.Popularity, 0.0)
+	util.SetIfNil(&c.CastId, 0)
+	util.SetIfNil(&c.Order, 0)
 }
 
 func (c *Cast) String() string {
@@ -131,6 +163,16 @@ type Crew struct {
 	CreditId           *string  `json:"credit_id"`
 	Department         *string  `json:"department"`
 	Job                *string  `json:"job"`
+}
+
+func (c *Crew) SetDefaults() {
+	if c == nil {
+		return
+	}
+	util.SetIfNil(&c.Adult, true)
+	util.SetIfNil(&c.Gender, 0)
+	util.SetIfNil(&c.ID, 0)
+	util.SetIfNil(&c.Popularity, 0.0)
 }
 
 func (c *Crew) String() string {

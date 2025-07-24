@@ -63,6 +63,14 @@ type GetDetailsReply struct {
 	Details *Details
 }
 
+func (gdr *GetDetailsReply) SetDefaults() {
+	if gdr == nil {
+		return
+	}
+	util.SetIfNil(&gdr.ID, 0)
+	gdr.Details.SetDefaults()
+}
+
 func (ge *GetDetailsReply) String() string {
 	if ge == nil {
 		return "<nil>"
@@ -96,6 +104,32 @@ type Details struct {
 	Video               *bool                `json:"video"`
 	VoteAverage         *float32             `json:"vote_average"`
 	VoteCount           *int32               `json:"vote_count"`
+}
+
+func (d *Details) SetDefaults() {
+	if d == nil {
+		return
+	}
+	util.SetIfNil(&d.Adult, true)
+	util.SetIfNil(&d.Budget, 0)
+	for _, genre := range d.Genres {
+		genre.SetDefaults()
+	}
+	util.SetIfNil(&d.Popularity, 0.0)
+	for _, company := range d.ProductionCompanies {
+		company.SetDefaults()
+	}
+	for _, country := range d.ProductionCountries {
+		country.SetDefaults()
+	}
+	util.SetIfNil(&d.Revenue, 0)
+	util.SetIfNil(&d.Runtime, 0)
+	for _, lang := range d.SpokenLanguages {
+		lang.SetDefaults()
+	}
+	util.SetIfNil(&d.Video, false)
+	util.SetIfNil(&d.VoteAverage, 0.0)
+	util.SetIfNil(&d.VoteCount, 0)
 }
 
 func (d *Details) String() string {
@@ -138,6 +172,13 @@ type Genre struct {
 	Name *string `json:"name"`
 }
 
+func (g *Genre) SetDefaults() {
+	if g == nil {
+		return
+	}
+	util.SetIfNil(&g.ID, 0)
+}
+
 func (g *Genre) String() string {
 	if g == nil {
 		return "<nil>"
@@ -152,6 +193,13 @@ type ProductionCompany struct {
 	OriginCountry *string `json:"origin_country"`
 }
 
+func (pc *ProductionCompany) SetDefaults() {
+	if pc == nil {
+		return
+	}
+	util.SetIfNil(&pc.ID, 0)
+}
+
 func (pc *ProductionCompany) String() string {
 	if pc == nil {
 		return "<nil>"
@@ -162,6 +210,10 @@ func (pc *ProductionCompany) String() string {
 type ProductionCountry struct {
 	ISO3166_1 *string `json:"iso_3166_1"`
 	Name      *string `json:"name"`
+}
+
+func (pc *ProductionCountry) SetDefaults() {
+	// Nothing to do here for now, we have this function for consistency with other types.
 }
 
 func (pc *ProductionCountry) String() string {
@@ -175,6 +227,10 @@ type SpokenLanguage struct {
 	EnglishName *string `json:"english_name"`
 	ISO639_1    *string `json:"iso_639_1"`
 	Name        *string `json:"name"`
+}
+
+func (sl *SpokenLanguage) SetDefaults() {
+	// Nothing to do here for now, we have this function for consistency with other types.
 }
 
 func (sl *SpokenLanguage) String() string {

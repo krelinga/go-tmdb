@@ -39,3 +39,9 @@ func FmtOrNil[T any](v *T) string {
 		return fmt.Sprint(*v)
 	}
 }
+
+func SetIfNil[T any](target **T, value T) {
+	if *target == nil {
+		*target = &value
+	}
+}

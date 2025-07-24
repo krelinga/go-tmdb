@@ -82,6 +82,15 @@ type GetMultiReply struct {
 	Credits *Credits
 }
 
+func (gmr *GetMultiReply) SetDefaults() {
+	if gmr == nil {
+		return
+	}
+	util.SetIfNil(&gmr.ID, 0)
+	gmr.Details.SetDefaults()
+	gmr.Credits.SetDefaults()
+}
+
 func (gmr *GetMultiReply) String() string {
 	if gmr == nil {
 		return "<nil>"
