@@ -86,11 +86,12 @@ func (gmr *GetMultiReply) String() string {
 	if gmr == nil {
 		return "<nil>"
 	}
-	
+
 	builder := strings.Builder{}
 	builder.WriteString("{")
 	fmt.Fprintf(&builder, "ID: %s", util.FmtOrNil(gmr.ID))
 	fmt.Fprintf(&builder, " Details: %v", gmr.Details)
 	fmt.Fprintf(&builder, " Credits: %v", gmr.Credits)
+	builder.WriteString("}")
 	return builder.String()
 }
