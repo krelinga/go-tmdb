@@ -16,14 +16,18 @@ type GetMultiOptions struct {
 	ReadAccessToken string
 	Language        string
 
-	WantDetails bool
-	WantCredits bool
+	WantDetails     bool
+	WantCredits     bool
+	WantExternalIDs bool
 }
 
 func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMultiOptions) (*GetMultiReply, error) {
 	var appends []string
 	if options.WantCredits {
 		appends = append(appends, "credits")
+	}
+	if options.WantExternalIDs {
+		appends = append(appends, "external_ids")
 	}
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
@@ -55,7 +59,8 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 	rawReply := &struct {
 		ID *int32 `json:"id"`
 		*Details
-		Credits *Credits `json:"credits"`
+		Credits     *Credits     `json:"credits"`
+		ExternalIDs *ExternalIDs `json:"external_ids"`
 	}{}
 	if err := json.NewDecoder(httpReply.Body).Decode(rawReply); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
@@ -69,7 +74,8 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 			}
 			return nil
 		}(),
-		Credits: rawReply.Credits,
+		Credits:     rawReply.Credits,
+		ExternalIDs: rawReply.ExternalIDs,
 	}
 
 	return reply, nil
@@ -78,8 +84,9 @@ func GetMulti(ctx context.Context, client *http.Client, id int32, options GetMul
 type GetMultiReply struct {
 	ID *int32
 
-	Details *Details
-	Credits *Credits
+	Details     *Details
+	Credits     *Credits
+	ExternalIDs *ExternalIDs
 }
 
 func (gmr *GetMultiReply) SetDefaults() {
@@ -89,6 +96,7 @@ func (gmr *GetMultiReply) SetDefaults() {
 	util.SetIfNil(&gmr.ID, 0)
 	gmr.Details.SetDefaults()
 	gmr.Credits.SetDefaults()
+	gmr.ExternalIDs.SetDefaults()
 }
 
 func (gmr *GetMultiReply) String() string {
@@ -101,6 +109,7 @@ func (gmr *GetMultiReply) String() string {
 	fmt.Fprintf(&builder, "ID: %s", util.FmtOrNil(gmr.ID))
 	fmt.Fprintf(&builder, " Details: %v", gmr.Details)
 	fmt.Fprintf(&builder, " Credits: %v", gmr.Credits)
+	fmt.Fprintf(&builder, " ExternalIDs: %v", gmr.ExternalIDs)
 	builder.WriteString("}")
 	return builder.String()
 }

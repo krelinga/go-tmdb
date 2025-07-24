@@ -9,23 +9,20 @@ import (
 	"github.com/krelinga/go-tmdb/namespaces/movies"
 )
 
-func TestGetMulti(t *testing.T) {
+func TestGetExternalIDs(t *testing.T) {
 	ctx := context.Background()
 
-	options := movies.GetMultiOptions{
+	options := movies.GetExternalIDsOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		WantDetails:     true,
-		WantCredits:     true,
-		WantExternalIDs: true,
 	}
 
-	reply, err := movies.GetMulti(ctx, http.DefaultClient, 11, options)
+	reply, err := movies.GetExternalIDs(ctx, http.DefaultClient, 11, options)
 	if err != nil {
-		t.Fatalf("GetMulti failed: %v", err)
+		t.Fatalf("GetExternalIDs failed: %v", err)
 	}
 
 	if reply.ID == nil || *reply.ID != 11 {
 		t.Errorf("unexpected ID: %v", reply.ID)
 	}
-	t.Log("GetMulti reply:", reply)
+	t.Log("GetExternalIDs reply:", reply)
 }
