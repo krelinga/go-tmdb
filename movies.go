@@ -27,3 +27,10 @@ type GetMovieMultiReply = movies.GetMultiReply
 func GetMovieMulti(ctx context.Context, client *http.Client, id int32, options GetMovieMultiOptions) (*GetMovieMultiReply, error) {
 	return movies.GetMulti(ctx, client, id, options)
 }
+
+type GetMovieExternalIDsOptions = movies.GetExternalIDsOptions
+type GetMovieExternalIDsReply = movies.GetExternalIDsReply
+
+func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*GetMovieExternalIDsReply, error) {
+	return movies.GetExternalIDs(ctx, client, id, options)
+}
