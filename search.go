@@ -7,12 +7,12 @@ import (
 	tmdbsearch "github.com/krelinga/go-tmdb/search"
 )
 
-type SearchMovieOptions = tmdbsearch.MovieOptions
-type SearchMovieReply = tmdbsearch.MovieReply
+type SearchMoviesOptions = tmdbsearch.FindMoviesOptions
+type SearchMoviesReply = tmdbsearch.FindMoviesReply
 
-func SearchMovie(ctx context.Context, client *http.Client, query string, options SearchMovieOptions) (*http.Response, error) {
-	return tmdbsearch.Movie(ctx, client, query, options)
+func SearchMovies(ctx context.Context, client *http.Client, query string, options SearchMoviesOptions) (*http.Response, error) {
+	return tmdbsearch.FindMovies(ctx, client, query, options)
 }
-func ParseSearchMovieReply(httpReply *http.Response) (*tmdbsearch.MovieReply, error) {
-	return tmdbsearch.ParseMovieReply(httpReply)
+func ParseSearchMoviesReply(httpReply *http.Response) (*tmdbsearch.FindMoviesReply, error) {
+	return tmdbsearch.ParseFindMoviesReply(httpReply)
 }

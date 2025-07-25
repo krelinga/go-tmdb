@@ -12,14 +12,14 @@ import (
 func TestMovie(t *testing.T) {
 	ctx := context.Background()
 
-	options := tmdbsearch.MovieOptions{
+	options := tmdbsearch.FindMoviesOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
-	httpReply, err := tmdbsearch.Movie(ctx, http.DefaultClient, "Star Wars", options)
+	httpReply, err := tmdbsearch.FindMovies(ctx, http.DefaultClient, "Star Wars", options)
 	if err != nil {
 		t.Fatalf("Movie search failed: %v", err)
 	}
-	reply, err := tmdbsearch.ParseMovieReply(httpReply)
+	reply, err := tmdbsearch.ParseFindMoviesReply(httpReply)
 	if err != nil {
 		t.Fatalf("ParseMovieReply failed: %v", err)
 	}

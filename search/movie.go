@@ -11,7 +11,7 @@ import (
 	"github.com/krelinga/go-tmdb/internal/util"
 )
 
-type MovieOptions struct {
+type FindMoviesOptions struct {
 	Key                string
 	ReadAccessToken    string
 	IncludeAdult       bool
@@ -22,7 +22,7 @@ type MovieOptions struct {
 	Year               string
 }
 
-func Movie(ctx context.Context, client *http.Client, query string, options MovieOptions) (*http.Response, error) {
+func FindMovies(ctx context.Context, client *http.Client, query string, options FindMoviesOptions) (*http.Response, error) {
 	values := url.Values{
 		"query": []string{query},
 	}
@@ -51,7 +51,7 @@ func Movie(ctx context.Context, client *http.Client, query string, options Movie
 	return httpReply, nil
 }
 
-func ParseMovieReply(httpReply *http.Response) (*MovieReply, error) {
+func ParseFindMoviesReply(httpReply *http.Response) (*FindMoviesReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)
@@ -60,7 +60,7 @@ func ParseMovieReply(httpReply *http.Response) (*MovieReply, error) {
 		return nil, fmt.Errorf("unexpected content type: %s", httpReply.Header.Get("Content-Type"))
 	}
 
-	reply := &MovieReply{}
+	reply := &FindMoviesReply{}
 	if err := json.NewDecoder(httpReply.Body).Decode(reply); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
@@ -68,14 +68,14 @@ func ParseMovieReply(httpReply *http.Response) (*MovieReply, error) {
 	return reply, nil
 }
 
-type MovieReply struct {
+type FindMoviesReply struct {
 	Page         *int32         `json:"page"`
-	MovieResults []*MovieResult `json:"results"`
+	MovieResults []*Movie `json:"results"`
 	TotalPages   *int32         `json:"total_pages"`
 	TotalResults *int32         `json:"total_results"`
 }
 
-func (mr *MovieReply) SetDefaults() {
+func (mr *FindMoviesReply) SetDefaults() {
 	if mr == nil {
 		return
 	}
@@ -87,7 +87,7 @@ func (mr *MovieReply) SetDefaults() {
 	util.SetIfNil(&mr.TotalResults, 0)
 }
 
-func (mr *MovieReply) String() string {
+func (mr *FindMoviesReply) String() string {
 	if mr == nil {
 		return "<nil>"
 	}
@@ -101,7 +101,7 @@ func (mr *MovieReply) String() string {
 	return b.String()
 }
 
-type MovieResult struct {
+type Movie struct {
 	Adult            *bool    `json:"adult"`
 	BackdropPath     *string  `json:"backdrop_path"`
 	GenreIDs         []int32  `json:"genre_ids"`
@@ -118,7 +118,7 @@ type MovieResult struct {
 	VoteCount        *int32   `json:"vote_count"`
 }
 
-func (mr *MovieResult) SetDefaults() {
+func (mr *Movie) SetDefaults() {
 	if mr == nil {
 		return
 	}
@@ -130,7 +130,7 @@ func (mr *MovieResult) SetDefaults() {
 	util.SetIfNil(&mr.VoteCount, 0)
 }
 
-func (mr *MovieResult) String() string {
+func (mr *Movie) String() string {
 	if mr == nil {
 		return "<nil>"
 	}
