@@ -16,9 +16,13 @@ func TestGetCredits(t *testing.T) {
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := tmdbmovie.GetCredits(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetCredits(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetCredits failed: %v", err)
+	}
+	reply, err := tmdbmovie.ParseGetCreditsReply(httpReply)
+	if err != nil {
+		t.Fatalf("ParseGetCreditsReply failed: %v", err)
 	}
 
 	if reply.ID == nil || *reply.ID != 11 {

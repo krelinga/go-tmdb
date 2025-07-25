@@ -17,7 +17,7 @@ type GetCreditsOptions struct {
 	Language        string
 }
 
-func GetCredits(ctx context.Context, client *http.Client, id int32, options GetCreditsOptions) (*GetCreditsReply, error) {
+func GetCredits(ctx context.Context, client *http.Client, id int32, options GetCreditsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
@@ -36,6 +36,10 @@ func GetCredits(ctx context.Context, client *http.Client, id int32, options GetC
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseGetCreditsReply(httpReply *http.Response) (*GetCreditsReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)

@@ -17,8 +17,11 @@ func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options
 type GetMovieCreditsOptions = tmdbmovie.GetCreditsOptions
 type GetMovieCreditsReply = tmdbmovie.GetCreditsReply
 
-func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options GetMovieCreditsOptions) (*GetMovieCreditsReply, error) {
+func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options GetMovieCreditsOptions) (*http.Response, error) {
 	return tmdbmovie.GetCredits(ctx, client, id, options)
+}
+func ParseGetMovieCreditsReply(httpReply *http.Response) (*tmdbmovie.GetCreditsReply, error) {
+	return tmdbmovie.ParseGetCreditsReply(httpReply)
 }
 
 type GetMovieExternalIDsOptions = tmdbmovie.GetExternalIDsOptions
