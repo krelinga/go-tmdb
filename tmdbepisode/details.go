@@ -27,16 +27,7 @@ func GetDetails(ctx context.Context, client *http.Client, seriesID, seasonNumber
 		Path:     fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", seriesID, seasonNumber, episodeNumber),
 		RawQuery: values.Encode(),
 	}
-	request := &http.Request{
-		Method: http.MethodGet,
-		URL:    url,
-	}
-	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request.WithContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-	return httpReply, nil
+	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
 }
 
 func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {

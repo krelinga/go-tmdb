@@ -24,16 +24,7 @@ func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options
 		Path:     "/3/movie/" + fmt.Sprint(id) + "/release_dates",
 		RawQuery: values.Encode(),
 	}
-	request := &http.Request{
-		Method: http.MethodGet,
-		URL:    url,
-	}
-	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request.WithContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-	return httpReply, nil
+	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
 }
 
 func ParseGetReleaseDatesReply(httpReply *http.Response) (*GetReleaseDatesReply, error) {
