@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/krelinga/go-tmdb/internal/util"
@@ -22,26 +21,13 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
-	var appends []string
-	if options.AppendCredits {
-		appends = append(appends, "credits")
-	}
-	if options.AppendExternalIDs {
-		appends = append(appends, "external_ids")
-	}
-	if options.AppendReleaseDates {
-		appends = append(appends, "release_dates")
-	}
-	values := url.Values{}
-	util.SetIfNotZero(&values, "api_key", options.Key)
-	util.SetIfNotZero(&values, "language", options.Language)
-	util.SetIfNotZero(&values, "append_to_response", strings.Join(appends, ","))
-	url := &url.URL{
-		Scheme:   "https",
-		Host:     "api.themoviedb.org",
-		Path:     "/3/movie/" + fmt.Sprint(id),
-		RawQuery: values.Encode(),
-	}
+	url := util.NewURLBuilder("/3/movie/" + fmt.Sprint(id)).
+		SetApiKey(options.Key).
+		SetValue("language", options.Language).
+		AppendToResponse("credits", options.AppendCredits).
+		AppendToResponse("external_ids", options.AppendExternalIDs).
+		AppendToResponse("release_dates", options.AppendReleaseDates).
+		URL()
 	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
 }
 
