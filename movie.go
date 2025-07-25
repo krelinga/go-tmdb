@@ -37,6 +37,9 @@ func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*tmdbmovie.GetExte
 type GetMovieReleaseDatesOptions = tmdbmovie.GetReleaseDatesOptions
 type GetMovieReleaseDatesReply = tmdbmovie.GetReleaseDatesReply
 
-func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*GetMovieReleaseDatesReply, error) {
+func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*http.Response, error) {
 	return tmdbmovie.GetReleaseDates(ctx, client, id, options)
+}
+func ParseGetMovieReleaseDatesReply(httpReply *http.Response) (*tmdbmovie.GetReleaseDatesReply, error) {
+	return tmdbmovie.ParseGetReleaseDatesReply(httpReply)
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/movie"
+	tmdbmovie "github.com/krelinga/go-tmdb/movie"
 )
 
 func TestGetReleaseDates(t *testing.T) {
@@ -16,9 +16,13 @@ func TestGetReleaseDates(t *testing.T) {
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := tmdbmovie.GetReleaseDates(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetReleaseDates(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetReleaseDates failed: %v", err)
+	}
+	reply, err := tmdbmovie.ParseGetReleaseDatesReply(httpReply)
+	if err != nil {
+		t.Fatalf("ParseGetReleaseDatesReply failed: %v", err)
 	}
 
 	if reply.ID == nil || *reply.ID != 11 {

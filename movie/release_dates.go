@@ -15,7 +15,7 @@ type GetReleaseDatesOptions struct {
 	ReadAccessToken string
 }
 
-func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options GetReleaseDatesOptions) (*GetReleaseDatesReply, error) {
+func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options GetReleaseDatesOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	url := &url.URL{
@@ -33,6 +33,10 @@ func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseGetReleaseDatesReply(httpReply *http.Response) (*GetReleaseDatesReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)
