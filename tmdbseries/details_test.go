@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	tmdbseries "github.com/krelinga/go-tmdb/series"
+	"github.com/krelinga/go-tmdb/tmdbseries"
 )
 
 func TestGetDetails(t *testing.T) {

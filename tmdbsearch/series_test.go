@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/search"
+	"github.com/krelinga/go-tmdb/tmdbsearch"
 )
 
 func TestFindSeries(t *testing.T) {

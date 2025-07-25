@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	tmdbmovie "github.com/krelinga/go-tmdb/movie"
+	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 type GetMovieDetailsOptions = tmdbmovie.GetDetailsOptions

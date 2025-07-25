@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/krelinga/go-tmdb/series"
+	"github.com/krelinga/go-tmdb/tmdbseries"
 )
 
 type GetSeriesDetailsOptions = tmdbseries.GetDetailsOptions
