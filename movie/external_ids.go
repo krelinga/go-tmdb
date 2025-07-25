@@ -15,7 +15,7 @@ type GetExternalIDsOptions struct {
 	ReadAccessToken string
 }
 
-func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options GetExternalIDsOptions) (*GetExternalIDsReply, error) {
+func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options GetExternalIDsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	url := &url.URL{
@@ -33,6 +33,10 @@ func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options 
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseGetExternalIDsReply(httpReply *http.Response) (*GetExternalIDsReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)

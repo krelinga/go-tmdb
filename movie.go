@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/krelinga/go-tmdb/movie"
+	tmdbmovie "github.com/krelinga/go-tmdb/movie"
 )
 
 type GetMovieDetailsOptions = tmdbmovie.GetDetailsOptions
@@ -27,8 +27,11 @@ func ParseGetMovieCreditsReply(httpReply *http.Response) (*tmdbmovie.GetCreditsR
 type GetMovieExternalIDsOptions = tmdbmovie.GetExternalIDsOptions
 type GetMovieExternalIDsReply = tmdbmovie.GetExternalIDsReply
 
-func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*GetMovieExternalIDsReply, error) {
+func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*http.Response, error) {
 	return tmdbmovie.GetExternalIDs(ctx, client, id, options)
+}
+func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*tmdbmovie.GetExternalIDsReply, error) {
+	return tmdbmovie.ParseGetExternalIDsReply(httpReply)
 }
 
 type GetMovieReleaseDatesOptions = tmdbmovie.GetReleaseDatesOptions
