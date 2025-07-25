@@ -27,27 +27,26 @@ func GetDetails(ctx context.Context, client *http.Client, id int32, options GetD
 		Path:     "/3/tv/" + fmt.Sprintf("%d", id),
 		RawQuery: values.Encode(),
 	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url.String(), nil)
+	request := &http.Request{
+		Method: http.MethodGet,
+		URL:    url,
+	}
+	util.SetAuthIfNotZero(request, options.ReadAccessToken)
+	httpReply, err := client.Do(request)
 	if err != nil {
 		return nil, err
 	}
+	defer httpReply.Body.Close()
 
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status: %v", resp.Status)
+	if httpReply.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status: %v", httpReply.Status)
 	}
 
 	rawReply := &struct {
 		ID *int32 `json:"id"`
 		*Details
 	}{}
-	if err := json.NewDecoder(resp.Body).Decode(rawReply); err != nil {
+	if err := json.NewDecoder(httpReply.Body).Decode(rawReply); err != nil {
 		return nil, err
 	}
 
