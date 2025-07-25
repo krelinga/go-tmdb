@@ -15,12 +15,27 @@ type GetDetailsOptions struct {
 	Key             string
 	ReadAccessToken string
 	Language        string
+
+	AppendCredits      bool
+	AppendExternalIDs  bool
+	AppendReleaseDates bool
 }
 
 func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*GetDetailsReply, error) {
+	var appends []string
+	if options.AppendCredits {
+		appends = append(appends, "credits")
+	}
+	if options.AppendExternalIDs {
+		appends = append(appends, "external_ids")
+	}
+	if options.AppendReleaseDates {
+		appends = append(appends, "release_dates")
+	}
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
+	util.SetIfNotZero(&values, "append_to_response", strings.Join(appends, ","))
 	url := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
@@ -47,20 +62,35 @@ func GetDetails(ctx context.Context, client *http.Client, id int32, options GetD
 	rawReply := &struct {
 		ID *int32 `json:"id"`
 		*Details
+		Credits      *Credits              `json:"credits"`
+		ExternalIDs  *ExternalIDs          `json:"external_ids"`
+		ReleaseDates *GetReleaseDatesReply `json:"release_dates"`
 	}{}
 	if err := json.NewDecoder(httpReply.Body).Decode(rawReply); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
 	return &GetDetailsReply{
-		ID:      rawReply.ID,
-		Details: rawReply.Details,
+		ID:          rawReply.ID,
+		Details:     rawReply.Details,
+		Credits:     rawReply.Credits,
+		ExternalIDs: rawReply.ExternalIDs,
+		CountryReleaseDates: func() []*CountryReleaseDate {
+			if rawReply.ReleaseDates == nil {
+				return nil
+			}
+			return rawReply.ReleaseDates.CountryReleaseDates
+		}(),
 	}, nil
 }
 
 type GetDetailsReply struct {
 	ID      *int32
 	Details *Details
+
+	Credits             *Credits
+	ExternalIDs         *ExternalIDs
+	CountryReleaseDates []*CountryReleaseDate
 }
 
 func (gdr *GetDetailsReply) SetDefaults() {
@@ -69,13 +99,26 @@ func (gdr *GetDetailsReply) SetDefaults() {
 	}
 	util.SetIfNil(&gdr.ID, 0)
 	gdr.Details.SetDefaults()
+	gdr.Credits.SetDefaults()
+	gdr.ExternalIDs.SetDefaults()
+	for _, countryReleaseDate := range gdr.CountryReleaseDates {
+		countryReleaseDate.SetDefaults()
+	}
 }
 
 func (ge *GetDetailsReply) String() string {
 	if ge == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("{ID: %v Details: %v}", ge.ID, ge.Details.String())
+	builder := strings.Builder{}
+	builder.WriteString("{")
+	fmt.Fprintf(&builder, "ID: %v", util.FmtOrNil(ge.ID))
+	fmt.Fprintf(&builder, " Details: %s", ge.Details.String())
+	fmt.Fprintf(&builder, " Credits: %v", ge.Credits)
+	fmt.Fprintf(&builder, " ExternalIDs: %v", ge.ExternalIDs)
+	fmt.Fprintf(&builder, " CountryReleaseDates: %v", ge.CountryReleaseDates)
+	builder.WriteString("}")
+	return builder.String()
 }
 
 type Details struct {

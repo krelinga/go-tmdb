@@ -13,7 +13,10 @@ func TestGetDetails(t *testing.T) {
 	ctx := context.Background()
 
 	options := movies.GetDetailsOptions{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		ReadAccessToken:    os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		AppendCredits:      true,
+		AppendExternalIDs:  true,
+		AppendReleaseDates: true,
 	}
 
 	reply, err := movies.GetDetails(ctx, http.DefaultClient, 11, options)
