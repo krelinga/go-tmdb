@@ -94,7 +94,7 @@ func (mr *FindMoviesReply) String() string {
 	var b strings.Builder
 	b.WriteString("{")
 	fmt.Fprintf(&b, "Page: %s", util.FmtOrNil(mr.Page))
-	fmt.Fprintf(&b, " MovieResults: %v", mr.Movies)
+	fmt.Fprintf(&b, " Movies: %v", mr.Movies)
 	fmt.Fprintf(&b, " TotalPages: %s", util.FmtOrNil(mr.TotalPages))
 	fmt.Fprintf(&b, " TotalResults: %s", util.FmtOrNil(mr.TotalResults))
 	b.WriteString("}")
