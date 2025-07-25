@@ -32,7 +32,7 @@ func GetDetails(ctx context.Context, client *http.Client, SeriesID int32, option
 		URL:    url,
 	}
 	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request)
+	httpReply, err := client.Do(request.WithContext(ctx))
 	if err != nil {
 		return nil, err
 	}

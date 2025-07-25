@@ -32,7 +32,7 @@ func GetCredits(ctx context.Context, client *http.Client, movieID int32, options
 		URL:    url,
 	}
 	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request)
+	httpReply, err := client.Do(request.WithContext(ctx))
 	if err != nil {
 		return nil, err
 	}
