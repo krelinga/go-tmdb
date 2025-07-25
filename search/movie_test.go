@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/search"
+	tmdbsearch "github.com/krelinga/go-tmdb/search"
 )
 
 func TestMovie(t *testing.T) {
@@ -15,9 +15,13 @@ func TestMovie(t *testing.T) {
 	options := tmdbsearch.MovieOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
-	reply, err := tmdbsearch.Movie(ctx, http.DefaultClient, "Star Wars", options)
+	httpReply, err := tmdbsearch.Movie(ctx, http.DefaultClient, "Star Wars", options)
 	if err != nil {
 		t.Fatalf("Movie search failed: %v", err)
+	}
+	reply, err := tmdbsearch.ParseMovieReply(httpReply)
+	if err != nil {
+		t.Fatalf("ParseMovieReply failed: %v", err)
 	}
 	if reply == nil {
 		t.Fatal("Movie search reply is nil")

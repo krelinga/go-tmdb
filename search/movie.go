@@ -22,7 +22,7 @@ type MovieOptions struct {
 	Year               string
 }
 
-func Movie(ctx context.Context, client *http.Client, query string, options MovieOptions) (*MovieReply, error) {
+func Movie(ctx context.Context, client *http.Client, query string, options MovieOptions) (*http.Response, error) {
 	values := url.Values{
 		"query": []string{query},
 	}
@@ -48,6 +48,10 @@ func Movie(ctx context.Context, client *http.Client, query string, options Movie
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseMovieReply(httpReply *http.Response) (*MovieReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)
