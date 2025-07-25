@@ -13,6 +13,6 @@ type GetSeriesDetailsReply = tmdbseries.GetDetailsReply
 func GetSeriesDetails(ctx context.Context, client *http.Client, id int32, options GetSeriesDetailsOptions) (*http.Response, error) {
 	return tmdbseries.GetDetails(ctx, client, id, options)
 }
-func ParseGetSeriesDetailsReply(httpReply *http.Response) (*tmdbseries.GetDetailsReply, error) {
+func ParseGetSeriesDetailsReply(httpReply *http.Response) (*GetSeriesDetailsReply, error) {
 	return tmdbseries.ParseGetDetailsReply(httpReply)
 }

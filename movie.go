@@ -13,7 +13,7 @@ type GetMovieDetailsReply = tmdbmovie.GetDetailsReply
 func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options GetMovieDetailsOptions) (*http.Response, error) {
 	return tmdbmovie.GetDetails(ctx, client, id, options)
 }
-func ParseGetMovieDetailsReply(httpReply *http.Response) (*tmdbmovie.GetDetailsReply, error) {
+func ParseGetMovieDetailsReply(httpReply *http.Response) (*GetMovieDetailsReply, error) {
 	return tmdbmovie.ParseGetDetailsReply(httpReply)
 }
 
@@ -23,7 +23,7 @@ type GetMovieCreditsReply = tmdbmovie.GetCreditsReply
 func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options GetMovieCreditsOptions) (*http.Response, error) {
 	return tmdbmovie.GetCredits(ctx, client, id, options)
 }
-func ParseGetMovieCreditsReply(httpReply *http.Response) (*tmdbmovie.GetCreditsReply, error) {
+func ParseGetMovieCreditsReply(httpReply *http.Response) (*GetMovieCreditsReply, error) {
 	return tmdbmovie.ParseGetCreditsReply(httpReply)
 }
 
@@ -33,7 +33,7 @@ type GetMovieExternalIDsReply = tmdbmovie.GetExternalIDsReply
 func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*http.Response, error) {
 	return tmdbmovie.GetExternalIDs(ctx, client, id, options)
 }
-func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*tmdbmovie.GetExternalIDsReply, error) {
+func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*GetMovieExternalIDsReply, error) {
 	return tmdbmovie.ParseGetExternalIDsReply(httpReply)
 }
 
@@ -43,6 +43,6 @@ type GetMovieReleaseDatesReply = tmdbmovie.GetReleaseDatesReply
 func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*http.Response, error) {
 	return tmdbmovie.GetReleaseDates(ctx, client, id, options)
 }
-func ParseGetMovieReleaseDatesReply(httpReply *http.Response) (*tmdbmovie.GetReleaseDatesReply, error) {
+func ParseGetMovieReleaseDatesReply(httpReply *http.Response) (*GetMovieReleaseDatesReply, error) {
 	return tmdbmovie.ParseGetReleaseDatesReply(httpReply)
 }
