@@ -1,4 +1,4 @@
-package movies_test
+package tmdbmovie_test
 
 import (
 	"context"
@@ -12,11 +12,11 @@ import (
 func TestGetReleaseDates(t *testing.T) {
 	ctx := context.Background()
 
-	options := movies.GetReleaseDatesOptions{
+	options := tmdbmovie.GetReleaseDatesOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := movies.GetReleaseDates(ctx, http.DefaultClient, 11, options)
+	reply, err := tmdbmovie.GetReleaseDates(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetReleaseDates failed: %v", err)
 	}

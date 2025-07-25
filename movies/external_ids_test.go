@@ -1,4 +1,4 @@
-package movies_test
+package tmdbmovie_test
 
 import (
 	"context"
@@ -12,11 +12,11 @@ import (
 func TestGetExternalIDs(t *testing.T) {
 	ctx := context.Background()
 
-	options := movies.GetExternalIDsOptions{
+	options := tmdbmovie.GetExternalIDsOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := movies.GetExternalIDs(ctx, http.DefaultClient, 11, options)
+	reply, err := tmdbmovie.GetExternalIDs(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetExternalIDs failed: %v", err)
 	}

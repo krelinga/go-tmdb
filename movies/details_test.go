@@ -1,4 +1,4 @@
-package movies_test
+package tmdbmovie_test
 
 import (
 	"context"
@@ -12,14 +12,14 @@ import (
 func TestGetDetails(t *testing.T) {
 	ctx := context.Background()
 
-	options := movies.GetDetailsOptions{
+	options := tmdbmovie.GetDetailsOptions{
 		ReadAccessToken:    os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 		AppendCredits:      true,
 		AppendExternalIDs:  true,
 		AppendReleaseDates: true,
 	}
 
-	reply, err := movies.GetDetails(ctx, http.DefaultClient, 11, options)
+	reply, err := tmdbmovie.GetDetails(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

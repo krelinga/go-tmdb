@@ -7,30 +7,30 @@ import (
 	"github.com/krelinga/go-tmdb/movies"
 )
 
-type GetMovieDetailsOptions = movies.GetDetailsOptions
-type GetMovieDetailsReply = movies.GetDetailsReply
+type GetMovieDetailsOptions = tmdbmovie.GetDetailsOptions
+type GetMovieDetailsReply = tmdbmovie.GetDetailsReply
 
 func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options GetMovieDetailsOptions) (*GetMovieDetailsReply, error) {
-	return movies.GetDetails(ctx, client, id, options)
+	return tmdbmovie.GetDetails(ctx, client, id, options)
 }
 
-type GetMovieCreditsOptions = movies.GetCreditsOptions
-type GetMovieCreditsReply = movies.GetCreditsReply
+type GetMovieCreditsOptions = tmdbmovie.GetCreditsOptions
+type GetMovieCreditsReply = tmdbmovie.GetCreditsReply
 
 func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options GetMovieCreditsOptions) (*GetMovieCreditsReply, error) {
-	return movies.GetCredits(ctx, client, id, options)
+	return tmdbmovie.GetCredits(ctx, client, id, options)
 }
 
-type GetMovieExternalIDsOptions = movies.GetExternalIDsOptions
-type GetMovieExternalIDsReply = movies.GetExternalIDsReply
+type GetMovieExternalIDsOptions = tmdbmovie.GetExternalIDsOptions
+type GetMovieExternalIDsReply = tmdbmovie.GetExternalIDsReply
 
 func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*GetMovieExternalIDsReply, error) {
-	return movies.GetExternalIDs(ctx, client, id, options)
+	return tmdbmovie.GetExternalIDs(ctx, client, id, options)
 }
 
-type GetMovieReleaseDatesOptions = movies.GetReleaseDatesOptions
-type GetMovieReleaseDatesReply = movies.GetReleaseDatesReply
+type GetMovieReleaseDatesOptions = tmdbmovie.GetReleaseDatesOptions
+type GetMovieReleaseDatesReply = tmdbmovie.GetReleaseDatesReply
 
 func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*GetMovieReleaseDatesReply, error) {
-	return movies.GetReleaseDates(ctx, client, id, options)
+	return tmdbmovie.GetReleaseDates(ctx, client, id, options)
 }

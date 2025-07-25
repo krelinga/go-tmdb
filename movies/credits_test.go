@@ -1,4 +1,4 @@
-package movies_test
+package tmdbmovie_test
 
 import (
 	"context"
@@ -12,11 +12,11 @@ import (
 func TestGetCredits(t *testing.T) {
 	ctx := context.Background()
 
-	options := movies.GetCreditsOptions{
+	options := tmdbmovie.GetCreditsOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := movies.GetCredits(ctx, http.DefaultClient, 11, options)
+	reply, err := tmdbmovie.GetCredits(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetCredits failed: %v", err)
 	}
