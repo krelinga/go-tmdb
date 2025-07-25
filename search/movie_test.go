@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/namespaces/search"
+	"github.com/krelinga/go-tmdb/search"
 )
 
 func TestMovie(t *testing.T) {

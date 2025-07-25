@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/krelinga/go-tmdb/namespaces/search"
+	"github.com/krelinga/go-tmdb/search"
 )
 
 type SearchMovieOptions = search.MovieOptions
