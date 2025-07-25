@@ -1,4 +1,4 @@
-package search
+package tmdbsearch
 
 import (
 	"context"

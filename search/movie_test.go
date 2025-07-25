@@ -1,4 +1,4 @@
-package search_test
+package tmdbsearch_test
 
 import (
 	"context"
@@ -12,10 +12,10 @@ import (
 func TestMovie(t *testing.T) {
 	ctx := context.Background()
 
-	options := search.MovieOptions{
+	options := tmdbsearch.MovieOptions{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
-	reply, err := search.Movie(ctx, http.DefaultClient, "Star Wars", options)
+	reply, err := tmdbsearch.Movie(ctx, http.DefaultClient, "Star Wars", options)
 	if err != nil {
 		t.Fatalf("Movie search failed: %v", err)
 	}
