@@ -17,7 +17,7 @@ type GetDetailsOptions struct {
 	Language        string
 }
 
-func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*GetDetailsReply, error) {
+func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
@@ -36,6 +36,10 @@ func GetDetails(ctx context.Context, client *http.Client, id int32, options GetD
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {
 	defer httpReply.Body.Close()
 
 	if httpReply.StatusCode != http.StatusOK {

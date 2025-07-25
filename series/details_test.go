@@ -16,9 +16,13 @@ func TestGetDetails(t *testing.T) {
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 	}
 
-	reply, err := tmdbseries.GetDetails(ctx, http.DefaultClient, 1399, options)
+	httpReply, err := tmdbseries.GetDetails(ctx, http.DefaultClient, 1399, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
+	}
+	reply, err := tmdbseries.ParseGetDetailsReply(httpReply)
+	if err != nil {
+		t.Fatalf("ParseGetDetailsReply failed: %v", err)
 	}
 
 	if reply.ID == nil || *reply.ID != 1399 {
