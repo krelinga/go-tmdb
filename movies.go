@@ -21,13 +21,6 @@ func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options
 	return movies.GetCredits(ctx, client, id, options)
 }
 
-type GetMovieMultiOptions = movies.GetMultiOptions
-type GetMovieMultiReply = movies.GetMultiReply
-
-func GetMovieMulti(ctx context.Context, client *http.Client, id int32, options GetMovieMultiOptions) (*GetMovieMultiReply, error) {
-	return movies.GetMulti(ctx, client, id, options)
-}
-
 type GetMovieExternalIDsOptions = movies.GetExternalIDsOptions
 type GetMovieExternalIDsReply = movies.GetExternalIDsReply
 
