@@ -69,10 +69,10 @@ func ParseFindMoviesReply(httpReply *http.Response) (*FindMoviesReply, error) {
 }
 
 type FindMoviesReply struct {
-	Page         *int32         `json:"page"`
-	MovieResults []*Movie `json:"results"`
-	TotalPages   *int32         `json:"total_pages"`
-	TotalResults *int32         `json:"total_results"`
+	Page         *int32   `json:"page"`
+	Movies       []*Movie `json:"results"`
+	TotalPages   *int32   `json:"total_pages"`
+	TotalResults *int32   `json:"total_results"`
 }
 
 func (mr *FindMoviesReply) SetDefaults() {
@@ -80,7 +80,7 @@ func (mr *FindMoviesReply) SetDefaults() {
 		return
 	}
 	util.SetIfNil(&mr.Page, 0)
-	for _, movie := range mr.MovieResults {
+	for _, movie := range mr.Movies {
 		movie.SetDefaults()
 	}
 	util.SetIfNil(&mr.TotalPages, 0)
@@ -94,7 +94,7 @@ func (mr *FindMoviesReply) String() string {
 	var b strings.Builder
 	b.WriteString("{")
 	fmt.Fprintf(&b, "Page: %s", util.FmtOrNil(mr.Page))
-	fmt.Fprintf(&b, " MovieResults: %v", mr.MovieResults)
+	fmt.Fprintf(&b, " MovieResults: %v", mr.Movies)
 	fmt.Fprintf(&b, " TotalPages: %s", util.FmtOrNil(mr.TotalPages))
 	fmt.Fprintf(&b, " TotalResults: %s", util.FmtOrNil(mr.TotalResults))
 	b.WriteString("}")
