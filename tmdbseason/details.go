@@ -17,14 +17,14 @@ type GetDetailsOptions struct {
 	Language        string
 }
 
-func GetDetails(ctx context.Context, client *http.Client, seriesId, seasonNumber int32, options GetDetailsOptions) (*http.Response, error) {
+func GetDetails(ctx context.Context, client *http.Client, seriesID, seasonNumber int32, options GetDetailsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
 	url := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
-		Path:     fmt.Sprintf("/3/tv/%d/season/%d", seriesId, seasonNumber),
+		Path:     fmt.Sprintf("/3/tv/%d/season/%d", seriesID, seasonNumber),
 		RawQuery: values.Encode(),
 	}
 	request := &http.Request{

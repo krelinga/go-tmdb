@@ -17,14 +17,14 @@ type GetDetailsOptions struct {
 	Language        string
 }
 
-func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
+func GetDetails(ctx context.Context, client *http.Client, SeriesID int32, options GetDetailsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
 	url := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
-		Path:     "/3/tv/" + fmt.Sprintf("%d", id),
+		Path:     "/3/tv/" + fmt.Sprintf("%d", SeriesID),
 		RawQuery: values.Encode(),
 	}
 	request := &http.Request{
@@ -198,7 +198,7 @@ func (d *Details) String() string {
 
 type Creator struct {
 	ID          *int32  `json:"id"`
-	CreditId    *string `json:"credit_id"`
+	CreditID    *string `json:"credit_id"`
 	Name        *string `json:"name"`
 	Gender      *int32  `json:"gender"`
 	ProfilePath *string `json:"profile_path"`
@@ -216,7 +216,7 @@ func (c *Creator) String() string {
 	if c == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("{ID: %s CreditId: %s Name: %s Gender: %s ProfilePath: %s}", util.FmtOrNil(c.ID), util.FmtOrNil(c.CreditId), util.FmtOrNil(c.Name), util.FmtOrNil(c.Gender), util.FmtOrNil(c.ProfilePath))
+	return fmt.Sprintf("{ID: %s CreditID: %s Name: %s Gender: %s ProfilePath: %s}", util.FmtOrNil(c.ID), util.FmtOrNil(c.CreditID), util.FmtOrNil(c.Name), util.FmtOrNil(c.Gender), util.FmtOrNil(c.ProfilePath))
 }
 
 type Genre struct {

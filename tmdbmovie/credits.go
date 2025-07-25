@@ -17,14 +17,14 @@ type GetCreditsOptions struct {
 	Language        string
 }
 
-func GetCredits(ctx context.Context, client *http.Client, id int32, options GetCreditsOptions) (*http.Response, error) {
+func GetCredits(ctx context.Context, client *http.Client, movieID int32, options GetCreditsOptions) (*http.Response, error) {
 	values := url.Values{}
 	util.SetIfNotZero(&values, "api_key", options.Key)
 	util.SetIfNotZero(&values, "language", options.Language)
 	url := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
-		Path:     "/3/movie/" + fmt.Sprint(id) + "/credits",
+		Path:     "/3/movie/" + fmt.Sprint(movieID) + "/credits",
 		RawQuery: values.Encode(),
 	}
 	request := &http.Request{
@@ -115,9 +115,9 @@ type Cast struct {
 	OriginalName       *string  `json:"original_name"`
 	Popularity         *float32 `json:"popularity"`
 	ProfilePath        *string  `json:"profile_path"`
-	CastId             *int32   `json:"cast_id"`
+	CastID             *int32   `json:"cast_id"`
 	Character          *string  `json:"character"`
-	CreditId           *string  `json:"credit_id"`
+	CreditID           *string  `json:"credit_id"`
 	Order              *int32   `json:"order"`
 }
 
@@ -129,7 +129,7 @@ func (c *Cast) SetDefaults() {
 	util.SetIfNil(&c.Gender, 0)
 	util.SetIfNil(&c.ID, 0)
 	util.SetIfNil(&c.Popularity, 0.0)
-	util.SetIfNil(&c.CastId, 0)
+	util.SetIfNil(&c.CastID, 0)
 	util.SetIfNil(&c.Order, 0)
 }
 
@@ -147,9 +147,9 @@ func (c *Cast) String() string {
 	fmt.Fprintf(&builder, " OriginalName: %s", util.FmtOrNil(c.OriginalName))
 	fmt.Fprintf(&builder, " Popularity: %s", util.FmtOrNil(c.Popularity))
 	fmt.Fprintf(&builder, " ProfilePath: %s", util.FmtOrNil(c.ProfilePath))
-	fmt.Fprintf(&builder, " CastId: %s", util.FmtOrNil(c.CastId))
+	fmt.Fprintf(&builder, " CastID: %s", util.FmtOrNil(c.CastID))
 	fmt.Fprintf(&builder, " Character: %s", util.FmtOrNil(c.Character))
-	fmt.Fprintf(&builder, " CreditId: %s", util.FmtOrNil(c.CreditId))
+	fmt.Fprintf(&builder, " CreditID: %s", util.FmtOrNil(c.CreditID))
 	fmt.Fprintf(&builder, " Order: %s", util.FmtOrNil(c.Order))
 	builder.WriteString("}")
 	return builder.String()
@@ -164,7 +164,7 @@ type Crew struct {
 	OriginalName       *string  `json:"original_name"`
 	Popularity         *float32 `json:"popularity"`
 	ProfilePath        *string  `json:"profile_path"`
-	CreditId           *string  `json:"credit_id"`
+	CreditID           *string  `json:"credit_id"`
 	Department         *string  `json:"department"`
 	Job                *string  `json:"job"`
 }
@@ -193,7 +193,7 @@ func (c *Crew) String() string {
 	fmt.Fprintf(&builder, " OriginalName: %s", util.FmtOrNil(c.OriginalName))
 	fmt.Fprintf(&builder, " Popularity: %s", util.FmtOrNil(c.Popularity))
 	fmt.Fprintf(&builder, " ProfilePath: %s", util.FmtOrNil(c.ProfilePath))
-	fmt.Fprintf(&builder, " CreditId: %s", util.FmtOrNil(c.CreditId))
+	fmt.Fprintf(&builder, " CreditID: %s", util.FmtOrNil(c.CreditID))
 	fmt.Fprintf(&builder, " Department: %s", util.FmtOrNil(c.Department))
 	fmt.Fprintf(&builder, " Job: %s", util.FmtOrNil(c.Job))
 	builder.WriteString("}")
