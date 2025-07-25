@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/namespaces/movies"
+	"github.com/krelinga/go-tmdb/movies"
 )
 
 func TestGetCredits(t *testing.T) {
