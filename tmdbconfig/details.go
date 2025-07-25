@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/krelinga/go-tmdb/internal/util"
@@ -17,14 +16,9 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, client *http.Client, options GetDetailsOptions) (*http.Response, error) {
-	values := url.Values{}
-	util.SetIfNotZero(&values, "api_key", options.Key)
-	url := &url.URL{
-		Scheme:   "https",
-		Host:     "api.themoviedb.org",
-		Path:     "/3/configuration",
-		RawQuery: values.Encode(),
-	}
+	url := util.NewURLBuilder("/3/configuration").
+		SetApiKey(options.Key).
+		URL()
 	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
 }
 

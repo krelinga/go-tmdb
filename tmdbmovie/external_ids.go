@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 
 	"github.com/krelinga/go-tmdb/internal/util"
 )
@@ -16,14 +15,9 @@ type GetExternalIDsOptions struct {
 }
 
 func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options GetExternalIDsOptions) (*http.Response, error) {
-	values := url.Values{}
-	util.SetIfNotZero(&values, "api_key", options.Key)
-	url := &url.URL{
-		Scheme:   "https",
-		Host:     "api.themoviedb.org",
-		Path:     "/3/movie/" + fmt.Sprint(id) + "/external_ids",
-		RawQuery: values.Encode(),
-	}
+	url := util.NewURLBuilder("/3/movie/" + fmt.Sprint(id) + "/external_ids").
+		SetApiKey(options.Key).
+		URL()
 	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
 }
 
