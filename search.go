@@ -16,3 +16,13 @@ func SearchMovies(ctx context.Context, client *http.Client, query string, option
 func ParseSearchMoviesReply(httpReply *http.Response) (*tmdbsearch.FindMoviesReply, error) {
 	return tmdbsearch.ParseFindMoviesReply(httpReply)
 }
+
+type SearchSeriesOptions = tmdbsearch.FindSeriesOptions
+type SearchSeriesReply = tmdbsearch.FindSeriesReply
+
+func SearchSeries(ctx context.Context, client *http.Client, query string, options SearchSeriesOptions) (*http.Response, error) {
+	return tmdbsearch.FindSeries(ctx, client, query, options)
+}
+func ParseSearchSeriesReply(httpReply *http.Response) (*tmdbsearch.FindSeriesReply, error) {
+	return tmdbsearch.ParseFindSeriesReply(httpReply)
+}
