@@ -10,8 +10,11 @@ import (
 type GetMovieDetailsOptions = tmdbmovie.GetDetailsOptions
 type GetMovieDetailsReply = tmdbmovie.GetDetailsReply
 
-func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options GetMovieDetailsOptions) (*GetMovieDetailsReply, error) {
+func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options GetMovieDetailsOptions) (*http.Response, error) {
 	return tmdbmovie.GetDetails(ctx, client, id, options)
+}
+func ParseGetMovieDetailsReply(httpReply *http.Response) (*tmdbmovie.GetDetailsReply, error) {
+	return tmdbmovie.ParseGetDetailsReply(httpReply)
 }
 
 type GetMovieCreditsOptions = tmdbmovie.GetCreditsOptions

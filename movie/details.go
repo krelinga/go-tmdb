@@ -21,7 +21,7 @@ type GetDetailsOptions struct {
 	AppendReleaseDates bool
 }
 
-func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*GetDetailsReply, error) {
+func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
 	var appends []string
 	if options.AppendCredits {
 		appends = append(appends, "credits")
@@ -51,6 +51,10 @@ func GetDetails(ctx context.Context, client *http.Client, id int32, options GetD
 	if err != nil {
 		return nil, err
 	}
+	return httpReply, nil
+}
+
+func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {
 	defer httpReply.Body.Close()
 	if httpReply.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", httpReply.StatusCode)

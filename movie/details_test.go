@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb/movie"
+	tmdbmovie "github.com/krelinga/go-tmdb/movie"
 )
 
 func TestGetDetails(t *testing.T) {
@@ -19,9 +19,13 @@ func TestGetDetails(t *testing.T) {
 		AppendReleaseDates: true,
 	}
 
-	reply, err := tmdbmovie.GetDetails(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetDetails(ctx, http.DefaultClient, 11, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
+	}
+	reply, err := tmdbmovie.ParseGetDetailsReply(httpReply)
+	if err != nil {
+		t.Fatalf("ParseGetDetailsReply failed: %v", err)
 	}
 
 	if reply.ID == nil || *reply.ID != 11 {
