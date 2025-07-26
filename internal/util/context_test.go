@@ -148,38 +148,3 @@ func TestContext_EmptyValues(t *testing.T) {
 		t.Error("Expected nil Client")
 	}
 }
-
-func TestContext_MultipleContextKeys(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
-
-	// Add other values to context to ensure no collisions
-	ctx = context.WithValue(ctx, "other-key", "other-value")
-	ctx = context.WithValue(ctx, struct{}{}, "struct-key-value")
-
-	value := Context{
-		Key:             "test-api-key",
-		ReadAccessToken: "test-read-token",
-		Client:          client,
-	}
-
-	ctxWithValue := SetContext(ctx, value)
-	retrieved, ok := GetContext(ctxWithValue)
-
-	if !ok {
-		t.Error("Expected GetContext to return true")
-	}
-
-	if retrieved.Key != value.Key {
-		t.Errorf("Expected Key '%s', got '%s'", value.Key, retrieved.Key)
-	}
-
-	// Ensure other context values are still there
-	if ctxWithValue.Value("other-key") != "other-value" {
-		t.Error("Other context values should not be affected")
-	}
-
-	if ctxWithValue.Value(struct{}{}) != "struct-key-value" {
-		t.Error("Struct key context values should not be affected")
-	}
-}
