@@ -40,7 +40,7 @@ func TestAssertAllFieldsSetWithTMDBStructures(t *testing.T) {
 		Status:                     "Released",
 		Tagline:                    "A great movie",
 	}
-	
+
 	// This should pass since all slices are initialized (even if empty)
 	result := AssertAllFieldsSet(t, movie)
 	if !result {
@@ -79,7 +79,7 @@ func TestAssertAllFieldsSetWithTMDBStructures_NilSlices(t *testing.T) {
 		Status:                     "Released",
 		Tagline:                    "A great movie",
 	}
-	
+
 	// Create a separate test to capture errors without affecting this test
 	mockT := &testing.T{}
 	result := AssertAllFieldsSet(mockT, movieWithNilSlices)

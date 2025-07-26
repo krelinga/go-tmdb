@@ -74,5 +74,5 @@ type searchTvSeriesOptions struct {
 	baseOptions
 	wantAdult        bool
 	firstAirDateYear int
-	year int
+	year             int
 }

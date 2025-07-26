@@ -39,19 +39,19 @@ func AssertAllFieldsSet(t *testing.T, structPtr any) bool {
 // checkFieldsRecursively performs the actual recursive field checking
 func checkFieldsRecursively(t *testing.T, val reflect.Value, fieldPath string) bool {
 	t.Helper()
-	
+
 	allFieldsSet := true
 	valType := val.Type()
 
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 		fieldType := valType.Field(i)
-		
+
 		// Skip unexported fields
 		if !field.CanInterface() {
 			continue
 		}
-		
+
 		currentPath := fieldType.Name
 		if fieldPath != "" {
 			currentPath = fieldPath + "." + fieldType.Name
@@ -68,7 +68,7 @@ func checkFieldsRecursively(t *testing.T, val reflect.Value, fieldPath string) b
 // checkField checks a single field for nil values and handles different types
 func checkField(t *testing.T, field reflect.Value, fieldPath string) bool {
 	t.Helper()
-	
+
 	switch field.Kind() {
 	case reflect.Ptr:
 		if field.IsNil() {
@@ -79,7 +79,7 @@ func checkField(t *testing.T, field reflect.Value, fieldPath string) bool {
 		if field.Elem().Kind() == reflect.Struct {
 			return checkFieldsRecursively(t, field.Elem(), fieldPath)
 		}
-		
+
 	case reflect.Slice:
 		if field.IsNil() {
 			t.Errorf("field %s (slice) is nil", fieldPath)
@@ -93,7 +93,7 @@ func checkField(t *testing.T, field reflect.Value, fieldPath string) bool {
 				return false
 			}
 		}
-		
+
 	case reflect.Map:
 		if field.IsNil() {
 			t.Errorf("field %s (map) is nil", fieldPath)
@@ -107,35 +107,33 @@ func checkField(t *testing.T, field reflect.Value, fieldPath string) bool {
 				return false
 			}
 		}
-		
+
 	case reflect.Chan:
 		if field.IsNil() {
 			t.Errorf("field %s (channel) is nil", fieldPath)
 			return false
 		}
-		
+
 	case reflect.Func:
 		if field.IsNil() {
 			t.Errorf("field %s (function) is nil", fieldPath)
 			return false
 		}
-		
+
 	case reflect.Struct:
 		// Recursively check nested struct fields
 		return checkFieldsRecursively(t, field, fieldPath)
-		
+
 	case reflect.Interface:
 		if field.IsNil() {
 			t.Errorf("field %s (interface) is nil", fieldPath)
 			return false
 		}
-		// Check the concrete value inside the interface
-		if field.Elem().Kind() == reflect.Struct {
-			return checkFieldsRecursively(t, field.Elem(), fieldPath)
-		}
+		// Check the concrete value inside the interface recursively
+		return checkField(t, field.Elem(), fieldPath)
 	}
-	
-	// For non-pointer, non-slice, non-map, non-channel, non-func, non-interface types, 
+
+	// For non-pointer, non-slice, non-map, non-channel, non-func, non-interface types,
 	// we don't check for nil as they cannot be nil (they have zero values instead)
 	return true
 }

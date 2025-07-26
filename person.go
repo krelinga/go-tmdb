@@ -13,17 +13,17 @@ type PersonId int
 type ImdbPersonId string
 
 type PersonCore struct {
-	Gender             Gender       `json:"gender"`
-	PersonId           PersonId     `json:"id"`
-	Name               string       `json:"name"`
-	ProfileImage       ProfileImage `json:"profile_path"`
+	Gender       Gender       `json:"gender"`
+	PersonId     PersonId     `json:"id"`
+	Name         string       `json:"name"`
+	ProfileImage ProfileImage `json:"profile_path"`
 }
 
 type PersonSum struct {
 	PersonCore
-	Adult              bool         `json:"adult"`
-	KnownForDepartment string       `json:"known_for_department"`
-	Popularity         float64      `json:"popularity"`
+	Adult              bool    `json:"adult"`
+	KnownForDepartment string  `json:"known_for_department"`
+	Popularity         float64 `json:"popularity"`
 }
 
 type Person struct {
