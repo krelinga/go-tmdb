@@ -5,31 +5,31 @@ import (
 	"net/http"
 )
 
-// tmdbContextKey is an unexported type for context keys to avoid collisions
-type tmdbContextKey struct{}
+// contextKey is an unexported type for context keys to avoid collisions
+type contextKey struct{}
 
-// TMDBContextValue holds the TMDB-specific values stored in context
-type TMDBContextValue struct {
+// Context holds the TMDB-specific values stored in context
+type Context struct {
 	Key             string
 	ReadAccessToken string
 	Client          *http.Client
 }
 
-// WithTMDBContext stores TMDB-specific values in the context
-func WithTMDBContext(ctx context.Context, key, readAccessToken string, client *http.Client) context.Context {
-	value := &TMDBContextValue{
+// WithContext stores TMDB-specific values in the context
+func WithContext(ctx context.Context, key, readAccessToken string, client *http.Client) context.Context {
+	value := &Context{
 		Key:             key,
 		ReadAccessToken: readAccessToken,
 		Client:          client,
 	}
-	return context.WithValue(ctx, tmdbContextKey{}, value)
+	return context.WithValue(ctx, contextKey{}, value)
 }
 
-// FromTMDBContext retrieves TMDB-specific values from the context
-func FromTMDBContext(ctx context.Context) (TMDBContextValue, bool) {
-	value, ok := ctx.Value(tmdbContextKey{}).(*TMDBContextValue)
+// GetContext retrieves TMDB-specific values from the context
+func GetContext(ctx context.Context) (Context, bool) {
+	value, ok := ctx.Value(contextKey{}).(*Context)
 	if !ok || value == nil {
-		return TMDBContextValue{}, false
+		return Context{}, false
 	}
 	return *value, true
 }
