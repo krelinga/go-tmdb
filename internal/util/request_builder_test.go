@@ -2,17 +2,16 @@ package util
 
 import (
 	"context"
-	"net/http"
 	"testing"
 )
 
 func TestRequestBuilder_URLConstruction(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
+	ctx := SetContext(context.Background(), Context{
+		Key: "test-api-key",
+	})
 	
-	rb := NewRequestBuilder(ctx, client).
+	rb := NewRequestBuilder(ctx).
 		SetPath("/3/movie/123").
-		SetApiKey("test-api-key").
 		SetValue("language", "en-US").
 		AppendToResponse("credits", true).
 		AppendToResponse("external_ids", false).
@@ -24,11 +23,6 @@ func TestRequestBuilder_URLConstruction(t *testing.T) {
 	// Verify path is set correctly
 	if rb.path != "/3/movie/123" {
 		t.Errorf("Expected path '/3/movie/123', got '%s'", rb.path)
-	}
-	
-	// Verify API key is set
-	if rb.values.Get("api_key") != "test-api-key" {
-		t.Errorf("Expected api_key 'test-api-key', got '%s'", rb.values.Get("api_key"))
 	}
 	
 	// Verify language is set
@@ -49,15 +43,15 @@ func TestRequestBuilder_URLConstruction(t *testing.T) {
 }
 
 func TestRequestBuilder_ChainableMethods(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
-	
+	ctx := SetContext(context.Background(), Context{
+		Key: "key",
+		ReadAccessToken: "token",
+	})
+
 	// Test that all methods return *RequestBuilder for chaining
-	rb := NewRequestBuilder(ctx, client)
+	rb := NewRequestBuilder(ctx)
 	
 	result := rb.SetPath("/test").
-		SetApiKey("key").
-		SetReadAccessToken("token").
 		SetValue("param", "value").
 		AppendToResponse("test", true)
 	
@@ -67,12 +61,11 @@ func TestRequestBuilder_ChainableMethods(t *testing.T) {
 }
 
 func TestRequestBuilder_EmptyValues(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
+	ctx := SetContext(context.Background(), Context{
+	})
 	
-	rb := NewRequestBuilder(ctx, client).
+	rb := NewRequestBuilder(ctx).
 		SetPath("/test").
-		SetApiKey("").  // Empty API key should not be set
 		SetValue("empty", "").  // Empty value should not be set
 		SetValue("nonempty", "value")
 	
