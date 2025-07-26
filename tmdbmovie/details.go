@@ -20,8 +20,8 @@ type GetDetailsOptions struct {
 
 func GetDetails(ctx context.Context, id int32, options GetDetailsOptions) (*http.Response, error) {
 	return util.NewRequestBuilder(ctx).
-		SetPath("/3/movie/" + fmt.Sprint(id)).
-		SetValue("language", options.Language).
+		SetPath("/3/movie/"+fmt.Sprint(id)).
+		SetValueString("language", options.Language).
 		AppendToResponse("credits", options.AppendCredits).
 		AppendToResponse("external_ids", options.AppendExternalIDs).
 		AppendToResponse("release_dates", options.AppendReleaseDates).

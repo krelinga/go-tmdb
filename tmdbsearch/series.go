@@ -21,22 +21,22 @@ type FindSeriesOptions struct {
 func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*http.Response, error) {
 	rb := util.NewRequestBuilder(ctx).
 		SetPath("/3/search/tv").
-		SetValue("query", query).
-		SetValue("language", options.Language)
-	
+		SetValueString("query", query).
+		SetValueString("language", options.Language)
+
 	if options.FirstAirDateYear > 0 {
-		rb.SetValue("first_air_date_year", fmt.Sprint(options.FirstAirDateYear))
+		rb.SetValueString("first_air_date_year", fmt.Sprint(options.FirstAirDateYear))
 	}
 	if options.IncludeAdult {
-		rb.SetValue("include_adult", "true")
+		rb.SetValueString("include_adult", "true")
 	}
 	if options.Page > 0 {
-		rb.SetValue("page", fmt.Sprint(options.Page))
+		rb.SetValueString("page", fmt.Sprint(options.Page))
 	}
 	if options.Year > 0 {
-		rb.SetValue("year", fmt.Sprint(options.Year))
+		rb.SetValueString("year", fmt.Sprint(options.Year))
 	}
-	
+
 	return rb.Do()
 }
 

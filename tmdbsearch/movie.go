@@ -22,19 +22,19 @@ type FindMoviesOptions struct {
 func FindMovies(ctx context.Context, query string, options FindMoviesOptions) (*http.Response, error) {
 	rb := util.NewRequestBuilder(ctx).
 		SetPath("/3/search/movie").
-		SetValue("query", query).
-		SetValue("language", options.Language).
-		SetValue("primary_release_year", options.PrimaryReleaseYear).
-		SetValue("region", options.Region).
-		SetValue("year", options.Year)
-	
+		SetValueString("query", query).
+		SetValueString("language", options.Language).
+		SetValueString("primary_release_year", options.PrimaryReleaseYear).
+		SetValueString("region", options.Region).
+		SetValueString("year", options.Year)
+
 	if options.IncludeAdult {
-		rb.SetValue("include_adult", "true")
+		rb.SetValueString("include_adult", "true")
 	}
 	if options.Page > 0 {
-		rb.SetValue("page", fmt.Sprint(options.Page))
+		rb.SetValueString("page", fmt.Sprint(options.Page))
 	}
-	
+
 	return rb.Do()
 }
 

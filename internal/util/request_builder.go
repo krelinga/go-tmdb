@@ -38,8 +38,8 @@ func (rb *RequestBuilder) AppendToResponse(value string, do bool) *RequestBuilde
 	return rb
 }
 
-// SetValue sets a custom query parameter
-func (rb *RequestBuilder) SetValue(key, value string) *RequestBuilder {
+// SetValueString sets a custom query parameter
+func (rb *RequestBuilder) SetValueString(key, value string) *RequestBuilder {
 	setIfNotZero(&rb.values, key, value)
 	return rb
 }

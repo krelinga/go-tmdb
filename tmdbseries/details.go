@@ -17,7 +17,7 @@ type GetDetailsOptions struct {
 func GetDetails(ctx context.Context, SeriesID int32, options GetDetailsOptions) (*http.Response, error) {
 	return util.NewRequestBuilder(ctx).
 		SetPath("/3/tv/"+fmt.Sprintf("%d", SeriesID)).
-		SetValue("language", options.Language).
+		SetValueString("language", options.Language).
 		Do()
 }
 

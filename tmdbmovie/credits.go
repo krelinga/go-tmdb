@@ -17,7 +17,7 @@ type GetCreditsOptions struct {
 func GetCredits(ctx context.Context, movieID int32, options GetCreditsOptions) (*http.Response, error) {
 	return util.NewRequestBuilder(ctx).
 		SetPath("/3/movie/"+fmt.Sprint(movieID)+"/credits").
-		SetValue("language", options.Language).
+		SetValueString("language", options.Language).
 		Do()
 }
 
