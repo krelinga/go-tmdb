@@ -22,6 +22,9 @@ func SetContext(ctx context.Context, value Context) context.Context {
 
 // GetContext retrieves TMDB-specific values from the context
 func GetContext(ctx context.Context) (Context, bool) {
+	if ctx == nil {
+		return Context{}, false
+	}
 	value, ok := ctx.Value(contextKey{}).(*Context)
 	if !ok || value == nil {
 		return Context{}, false
