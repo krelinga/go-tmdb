@@ -2,27 +2,17 @@ package tmdbseason_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbseason"
-	"github.com/krelinga/go-tmdb"
 )
 
 func TestGetDetails(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	
-	// Set up context with TMDB configuration
-	tmdbCtx := tmdb.Context{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		Client:          http.DefaultClient,
-	}
-	ctx = tmdb.SetContext(ctx, tmdbCtx)
-options := tmdbseason.GetDetailsOptions{
-
-	}
+	options := tmdbseason.GetDetailsOptions{}
 
 	httpReply, err := tmdbseason.GetDetails(ctx, 1399, 1, options)
 	if err != nil {

@@ -2,7 +2,6 @@ package util
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -52,14 +51,8 @@ func (rb *RequestBuilder) SetValueInt32(key string, value int32) *RequestBuilder
 
 // Do executes the HTTP request and returns the response
 func (rb *RequestBuilder) Do() (*http.Response, error) {
-	// Get configuration from context
-	tmdbCtx, ok := GetContext(rb.ctx)
-	if !ok {
-		return nil, fmt.Errorf("TMDB context not found")
-	}
-
 	// Set API key if available
-	setIfNotZero(&rb.values, "api_key", tmdbCtx.Key)
+	setIfNotZero(&rb.values, "api_key", APIKeyFromContext(rb.ctx))
 
 	// Build the URL
 	setIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
@@ -77,14 +70,8 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 	}
 
 	// Set authorization if provided
-	setAuthIfNotZero(request, tmdbCtx.ReadAccessToken)
-
-	// Use client from context, fallback to default client
-	client := tmdbCtx.Client
-	if client == nil {
-		client = http.DefaultClient
-	}
+	setAuthIfNotZero(request, APIReadAccessTokenFromContext(rb.ctx))
 
 	// Execute the request
-	return client.Do(request.WithContext(rb.ctx))
+	return HTTPClientFromContext(rb.ctx).Do(request.WithContext(rb.ctx))
 }

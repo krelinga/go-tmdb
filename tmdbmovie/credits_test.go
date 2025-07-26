@@ -2,23 +2,15 @@ package tmdbmovie_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb"
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetCredits(t *testing.T) {
-	ctx := context.Background()
-	
-	// Set up context with TMDB configuration
-	tmdbCtx := tmdb.Context{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		Client:          http.DefaultClient,
-	}
-	ctx = tmdb.SetContext(ctx, tmdbCtx)
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
 	options := tmdbmovie.GetCreditsOptions{}
 

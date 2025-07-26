@@ -2,27 +2,17 @@ package tmdbseries_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbseries"
-	"github.com/krelinga/go-tmdb"
 )
 
 func TestGetDetails(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	
-	// Set up context with TMDB configuration
-	tmdbCtx := tmdb.Context{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		Client:          http.DefaultClient,
-	}
-	ctx = tmdb.SetContext(ctx, tmdbCtx)
-options := tmdbseries.GetDetailsOptions{
-
-	}
+	options := tmdbseries.GetDetailsOptions{}
 
 	httpReply, err := tmdbseries.GetDetails(ctx, 1399, options)
 	if err != nil {

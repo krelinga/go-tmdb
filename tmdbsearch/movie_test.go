@@ -2,27 +2,17 @@ package tmdbsearch_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbsearch"
-	"github.com/krelinga/go-tmdb"
 )
 
 func TestMovie(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	
-	// Set up context with TMDB configuration
-	tmdbCtx := tmdb.Context{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		Client:          http.DefaultClient,
-	}
-	ctx = tmdb.SetContext(ctx, tmdbCtx)
-options := tmdbsearch.FindMoviesOptions{
-
-	}
+	options := tmdbsearch.FindMoviesOptions{}
 	httpReply, err := tmdbsearch.FindMovies(ctx, "Star Wars", options)
 	if err != nil {
 		t.Fatalf("Movie search failed: %v", err)

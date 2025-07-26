@@ -2,7 +2,6 @@ package tmdbmovie_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
@@ -11,14 +10,7 @@ import (
 )
 
 func TestGetExternalIDs(t *testing.T) {
-	ctx := context.Background()
-
-	// Set up context with TMDB configuration
-	tmdbCtx := tmdb.Context{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-		Client:          http.DefaultClient,
-	}
-	ctx = tmdb.SetContext(ctx, tmdbCtx)
+	ctx := tmdb.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
 	options := tmdbmovie.GetExternalIDsOptions{}
 

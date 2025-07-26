@@ -6,9 +6,7 @@ import (
 )
 
 func TestRequestBuilder_URLConstruction(t *testing.T) {
-	ctx := SetContext(context.Background(), Context{
-		Key: "test-api-key",
-	})
+	ctx := ContextWithAPIKey(context.Background(), "test-api-key")
 
 	rb := NewRequestBuilder(ctx).
 		SetPath("/3/movie/123").
@@ -43,10 +41,8 @@ func TestRequestBuilder_URLConstruction(t *testing.T) {
 }
 
 func TestRequestBuilder_ChainableMethods(t *testing.T) {
-	ctx := SetContext(context.Background(), Context{
-		Key:             "key",
-		ReadAccessToken: "token",
-	})
+	ctx := ContextWithAPIKey(context.Background(), "key")
+	ctx = ContextWithAPIReadAccessToken(ctx, "token")
 
 	// Test that all methods return *RequestBuilder for chaining
 	rb := NewRequestBuilder(ctx)
@@ -61,7 +57,7 @@ func TestRequestBuilder_ChainableMethods(t *testing.T) {
 }
 
 func TestRequestBuilder_EmptyValues(t *testing.T) {
-	ctx := SetContext(context.Background(), Context{})
+	ctx := context.Background()
 
 	rb := NewRequestBuilder(ctx).
 		SetPath("/test").
