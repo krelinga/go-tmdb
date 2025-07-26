@@ -7,16 +7,24 @@ import (
 	"testing"
 
 	"github.com/krelinga/go-tmdb/tmdbmovie"
+	"github.com/krelinga/go-tmdb"
 )
 
 func TestGetReleaseDates(t *testing.T) {
 	ctx := context.Background()
 
-	options := tmdbmovie.GetReleaseDatesOptions{
+	
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
+	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
+options := tmdbmovie.GetReleaseDatesOptions{
+
 	}
 
-	httpReply, err := tmdbmovie.GetReleaseDates(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetReleaseDates(ctx, 11, options)
 	if err != nil {
 		t.Fatalf("GetReleaseDates failed: %v", err)
 	}

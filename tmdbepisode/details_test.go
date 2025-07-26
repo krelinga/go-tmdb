@@ -7,16 +7,24 @@ import (
 	"testing"
 
 	"github.com/krelinga/go-tmdb/tmdbepisode"
+	"github.com/krelinga/go-tmdb"
 )
 
 func TestGetDetails(t *testing.T) {
 	ctx := context.Background()
 
-	options := tmdbepisode.GetDetailsOptions{
+	
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
+	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
+options := tmdbepisode.GetDetailsOptions{
+
 	}
 
-	httpReply, err := tmdbepisode.GetDetails(ctx, http.DefaultClient, 1399, 1, 1, options)
+	httpReply, err := tmdbepisode.GetDetails(ctx, 1399, 1, 1, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

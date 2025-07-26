@@ -6,17 +6,23 @@ import (
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetExternalIDs(t *testing.T) {
 	ctx := context.Background()
 
-	options := tmdbmovie.GetExternalIDsOptions{
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
 	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
 
-	httpReply, err := tmdbmovie.GetExternalIDs(ctx, http.DefaultClient, 11, options)
+	options := tmdbmovie.GetExternalIDsOptions{}
+
+	httpReply, err := tmdbmovie.GetExternalIDs(ctx, 11, options)
 	if err != nil {
 		t.Fatalf("GetExternalIDs failed: %v", err)
 	}

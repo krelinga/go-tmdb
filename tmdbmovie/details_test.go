@@ -6,20 +6,28 @@ import (
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetDetails(t *testing.T) {
 	ctx := context.Background()
+	
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
+		Key:             os.Getenv("TMDB_API_KEY"),
+		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
+	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
 
 	options := tmdbmovie.GetDetailsOptions{
-		ReadAccessToken:    os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 		AppendCredits:      true,
 		AppendExternalIDs:  true,
 		AppendReleaseDates: true,
 	}
 
-	httpReply, err := tmdbmovie.GetDetails(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetDetails(ctx, 11, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

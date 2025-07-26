@@ -6,17 +6,23 @@ import (
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetCredits(t *testing.T) {
 	ctx := context.Background()
-
-	options := tmdbmovie.GetCreditsOptions{
+	
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
 	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
 
-	httpReply, err := tmdbmovie.GetCredits(ctx, http.DefaultClient, 11, options)
+	options := tmdbmovie.GetCreditsOptions{}
+
+	httpReply, err := tmdbmovie.GetCredits(ctx, 11, options)
 	if err != nil {
 		t.Fatalf("GetCredits failed: %v", err)
 	}

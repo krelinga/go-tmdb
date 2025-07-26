@@ -7,16 +7,24 @@ import (
 	"testing"
 
 	"github.com/krelinga/go-tmdb/tmdbseason"
+	"github.com/krelinga/go-tmdb"
 )
 
 func TestGetDetails(t *testing.T) {
 	ctx := context.Background()
 
-	options := tmdbseason.GetDetailsOptions{
+	
+	// Set up context with TMDB configuration
+	tmdbCtx := tmdb.Context{
 		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+		Client:          http.DefaultClient,
+	}
+	ctx = tmdb.SetContext(ctx, tmdbCtx)
+options := tmdbseason.GetDetailsOptions{
+
 	}
 
-	httpReply, err := tmdbseason.GetDetails(ctx, http.DefaultClient, 1399, 1, options)
+	httpReply, err := tmdbseason.GetDetails(ctx, 1399, 1, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}
