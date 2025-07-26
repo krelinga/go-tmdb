@@ -11,17 +11,13 @@ import (
 )
 
 type GetDetailsOptions struct {
-	Key             string
-	ReadAccessToken string
-	Language        string
+	Language string
 }
 
-func GetDetails(ctx context.Context, client *http.Client, seriesID, seasonNumber, episodeNumber int32, options GetDetailsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetDetails(ctx context.Context, seriesID, seasonNumber, episodeNumber int32, options GetDetailsOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath(fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", seriesID, seasonNumber, episodeNumber)).
-		SetApiKey(options.Key).
 		SetValue("language", options.Language).
-		SetReadAccessToken(options.ReadAccessToken).
 		Do()
 }
 

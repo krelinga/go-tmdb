@@ -10,8 +10,8 @@ import (
 type GetMovieDetailsOptions = tmdbmovie.GetDetailsOptions
 type GetMovieDetailsReply = tmdbmovie.GetDetailsReply
 
-func GetMovieDetails(ctx context.Context, client *http.Client, id int32, options GetMovieDetailsOptions) (*http.Response, error) {
-	return tmdbmovie.GetDetails(ctx, client, id, options)
+func GetMovieDetails(ctx context.Context, id int32, options GetMovieDetailsOptions) (*http.Response, error) {
+	return tmdbmovie.GetDetails(ctx, id, options)
 }
 func ParseGetMovieDetailsReply(httpReply *http.Response) (*GetMovieDetailsReply, error) {
 	return tmdbmovie.ParseGetDetailsReply(httpReply)
@@ -20,8 +20,8 @@ func ParseGetMovieDetailsReply(httpReply *http.Response) (*GetMovieDetailsReply,
 type GetMovieCreditsOptions = tmdbmovie.GetCreditsOptions
 type GetMovieCreditsReply = tmdbmovie.GetCreditsReply
 
-func GetMovieCredits(ctx context.Context, client *http.Client, id int32, options GetMovieCreditsOptions) (*http.Response, error) {
-	return tmdbmovie.GetCredits(ctx, client, id, options)
+func GetMovieCredits(ctx context.Context, id int32, options GetMovieCreditsOptions) (*http.Response, error) {
+	return tmdbmovie.GetCredits(ctx, id, options)
 }
 func ParseGetMovieCreditsReply(httpReply *http.Response) (*GetMovieCreditsReply, error) {
 	return tmdbmovie.ParseGetCreditsReply(httpReply)
@@ -30,8 +30,8 @@ func ParseGetMovieCreditsReply(httpReply *http.Response) (*GetMovieCreditsReply,
 type GetMovieExternalIDsOptions = tmdbmovie.GetExternalIDsOptions
 type GetMovieExternalIDsReply = tmdbmovie.GetExternalIDsReply
 
-func GetMovieExternalIDs(ctx context.Context, client *http.Client, id int32, options GetMovieExternalIDsOptions) (*http.Response, error) {
-	return tmdbmovie.GetExternalIDs(ctx, client, id, options)
+func GetMovieExternalIDs(ctx context.Context, id int32, options GetMovieExternalIDsOptions) (*http.Response, error) {
+	return tmdbmovie.GetExternalIDs(ctx, id, options)
 }
 func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*GetMovieExternalIDsReply, error) {
 	return tmdbmovie.ParseGetExternalIDsReply(httpReply)
@@ -40,8 +40,8 @@ func ParseGetMovieExternalIDsReply(httpReply *http.Response) (*GetMovieExternalI
 type GetMovieReleaseDatesOptions = tmdbmovie.GetReleaseDatesOptions
 type GetMovieReleaseDatesReply = tmdbmovie.GetReleaseDatesReply
 
-func GetMovieReleaseDates(ctx context.Context, client *http.Client, id int32, options GetMovieReleaseDatesOptions) (*http.Response, error) {
-	return tmdbmovie.GetReleaseDates(ctx, client, id, options)
+func GetMovieReleaseDates(ctx context.Context, id int32, options GetMovieReleaseDatesOptions) (*http.Response, error) {
+	return tmdbmovie.GetReleaseDates(ctx, id, options)
 }
 func ParseGetMovieReleaseDatesReply(httpReply *http.Response) (*GetMovieReleaseDatesReply, error) {
 	return tmdbmovie.ParseGetReleaseDatesReply(httpReply)

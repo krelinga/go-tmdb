@@ -11,24 +11,20 @@ import (
 )
 
 type GetDetailsOptions struct {
-	Key             string
-	ReadAccessToken string
-	Language        string
+	Language string
 
 	AppendCredits      bool
 	AppendExternalIDs  bool
 	AppendReleaseDates bool
 }
 
-func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetDetails(ctx context.Context, id int32, options GetDetailsOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath("/3/movie/" + fmt.Sprint(id)).
-		SetApiKey(options.Key).
 		SetValue("language", options.Language).
 		AppendToResponse("credits", options.AppendCredits).
 		AppendToResponse("external_ids", options.AppendExternalIDs).
 		AppendToResponse("release_dates", options.AppendReleaseDates).
-		SetReadAccessToken(options.ReadAccessToken).
 		Do()
 }
 

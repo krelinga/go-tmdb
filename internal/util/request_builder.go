@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -9,19 +10,16 @@ import (
 
 // RequestBuilder combines URL building and HTTP request functionality
 type RequestBuilder struct {
-	ctx             context.Context
-	client          *http.Client
-	path            string
-	appends         []string
-	values          url.Values
-	readAccessToken string
+	ctx     context.Context
+	path    string
+	appends []string
+	values  url.Values
 }
 
-// NewRequestBuilder creates a new RequestBuilder with the provided context and HTTP client
-func NewRequestBuilder(ctx context.Context, client *http.Client) *RequestBuilder {
+// NewRequestBuilder creates a new RequestBuilder with the provided context
+func NewRequestBuilder(ctx context.Context) *RequestBuilder {
 	return &RequestBuilder{
 		ctx:    ctx,
-		client: client,
 		values: make(url.Values),
 	}
 }
@@ -29,18 +27,6 @@ func NewRequestBuilder(ctx context.Context, client *http.Client) *RequestBuilder
 // SetPath sets the API path for the request
 func (rb *RequestBuilder) SetPath(path string) *RequestBuilder {
 	rb.path = path
-	return rb
-}
-
-// SetApiKey sets the API key parameter
-func (rb *RequestBuilder) SetApiKey(apiKey string) *RequestBuilder {
-	SetIfNotZero(&rb.values, "api_key", apiKey)
-	return rb
-}
-
-// SetReadAccessToken sets the read access token for authorization
-func (rb *RequestBuilder) SetReadAccessToken(token string) *RequestBuilder {
-	rb.readAccessToken = token
 	return rb
 }
 
@@ -60,6 +46,15 @@ func (rb *RequestBuilder) SetValue(key, value string) *RequestBuilder {
 
 // Do executes the HTTP request and returns the response
 func (rb *RequestBuilder) Do() (*http.Response, error) {
+	// Get configuration from context
+	tmdbCtx, ok := GetContext(rb.ctx)
+	if !ok {
+		return nil, fmt.Errorf("TMDB context not found")
+	}
+
+	// Set API key if available
+	SetIfNotZero(&rb.values, "api_key", tmdbCtx.Key)
+
 	// Build the URL
 	SetIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
 	requestURL := &url.URL{
@@ -76,8 +71,14 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 	}
 
 	// Set authorization if provided
-	SetAuthIfNotZero(request, rb.readAccessToken)
+	SetAuthIfNotZero(request, tmdbCtx.ReadAccessToken)
+
+	// Use client from context, fallback to default client
+	client := tmdbCtx.Client
+	if client == nil {
+		client = http.DefaultClient
+	}
 
 	// Execute the request
-	return rb.client.Do(request.WithContext(rb.ctx))
+	return client.Do(request.WithContext(rb.ctx))
 }

@@ -10,15 +10,11 @@ import (
 )
 
 type GetReleaseDatesOptions struct {
-	Key             string
-	ReadAccessToken string
 }
 
-func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options GetReleaseDatesOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetReleaseDates(ctx context.Context, id int32, options GetReleaseDatesOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath("/3/movie/" + fmt.Sprint(id) + "/release_dates").
-		SetApiKey(options.Key).
-		SetReadAccessToken(options.ReadAccessToken).
 		Do()
 }
 
