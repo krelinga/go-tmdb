@@ -40,7 +40,7 @@ func (rb *RequestBuilder) AppendToResponse(value string, do bool) *RequestBuilde
 
 // SetValue sets a custom query parameter
 func (rb *RequestBuilder) SetValue(key, value string) *RequestBuilder {
-	SetIfNotZero(&rb.values, key, value)
+	setIfNotZero(&rb.values, key, value)
 	return rb
 }
 
@@ -53,10 +53,10 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 	}
 
 	// Set API key if available
-	SetIfNotZero(&rb.values, "api_key", tmdbCtx.Key)
+	setIfNotZero(&rb.values, "api_key", tmdbCtx.Key)
 
 	// Build the URL
-	SetIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
+	setIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
 	requestURL := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
@@ -71,7 +71,7 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 	}
 
 	// Set authorization if provided
-	SetAuthIfNotZero(request, tmdbCtx.ReadAccessToken)
+	setAuthIfNotZero(request, tmdbCtx.ReadAccessToken)
 
 	// Use client from context, fallback to default client
 	client := tmdbCtx.Client

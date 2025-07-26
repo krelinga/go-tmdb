@@ -12,13 +12,13 @@ func IsZero[T comparable](v T) bool {
 	return v == zero
 }
 
-func SetIfNotZero[T comparable](values *url.Values, key string, value T) {
+func setIfNotZero[T comparable](values *url.Values, key string, value T) {
 	if !IsZero(value) {
 		values.Set(key, fmt.Sprint(value))
 	}
 }
 
-func SetAuthIfNotZero(request *http.Request, value string) {
+func setAuthIfNotZero(request *http.Request, value string) {
 	if !IsZero(value) {
 		if request.Header == nil {
 			request.Header = http.Header{}
