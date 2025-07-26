@@ -1,0 +1,137 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.themoviedb.org
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Authorization:
+                - Bearer REDACTED_TMDB_BEARER_TOKEN
+        url: https://api.themoviedb.org/3/configuration?api_key=REDACTED_TMDB_API_KEY
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '{"change_keys":["adult","air_date","also_known_as","alternative_titles","biography","birthday","budget","cast","certifications","character_names","created_by","crew","deathday","episode","episode_number","episode_run_time","freebase_id","freebase_mid","general","genres","guest_stars","homepage","images","imdb_id","languages","name","network","origin_country","original_name","original_title","overview","parts","place_of_birth","plot_keywords","production_code","production_companies","production_countries","releases","revenue","runtime","season","season_number","season_regular","spoken_languages","status","tagline","title","translations","tvdb_id","tvrage_id","type","video","videos"],"images":{"base_url":"http://image.tmdb.org/t/p/","secure_base_url":"https://image.tmdb.org/t/p/","backdrop_sizes":["w300","w780","w1280","original"],"logo_sizes":["w45","w92","w154","w185","w300","w500","original"],"poster_sizes":["w92","w154","w185","w342","w500","w780","original"],"profile_sizes":["w45","w185","h632","original"],"still_sizes":["w92","w185","w300","original"]}}'
+        headers:
+            Age:
+                - "178"
+            Alt-Svc:
+                - h3=":443"; ma=86400
+            Cache-Control:
+                - public, max-age=21590
+            Content-Type:
+                - application/json;charset=utf-8
+            Date:
+                - Thu, 05 Jun 2025 06:02:59 GMT
+            Etag:
+                - W/"633473beea78b7c1134b70098a3f7420"
+            Server:
+                - openresty
+            Vary:
+                - accept-encoding
+                - Origin
+            Via:
+                - 1.1 f980a3c7b60f30ed2a5a86b44fa742fa.cloudfront.net (CloudFront)
+            X-Amz-Cf-Id:
+                - a8kpLLxHL7mOg-liIj0wV5_lpebyrsg15UsmhZWLBpNUstgnb6_8Iw==
+            X-Amz-Cf-Pop:
+                - ORD56-P12
+            X-Az:
+                - us-east-1c
+            X-Cache:
+                - Hit from cloudfront
+            X-Memc:
+                - HIT
+            X-Memc-Age:
+                - "1715"
+            X-Memc-Expires:
+                - "21590"
+            X-Memc-Key:
+                - 7a5a8ba4b0a7dc8def909bb4971ed158
+            X-Task-Id:
+                - 03e2018322f74fe8b973ddf1bd673363
+        status: 200 OK
+        code: 200
+        duration: 49.51302ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.themoviedb.org
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Authorization:
+                - Bearer REDACTED_TMDB_BEARER_TOKEN
+        url: https://api.themoviedb.org/3/search/movie?api_key=REDACTED_TMDB_API_KEY&page=1&query=Inception
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '{"page":1,"results":[{"adult":false,"backdrop_path":"/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg","genre_ids":[28,878,12],"id":27205,"original_language":"en","original_title":"Inception","overview":"Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person''s idea into a target''s subconscious.","popularity":26.1397,"poster_path":"/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg","release_date":"2010-07-15","title":"Inception","video":false,"vote_average":8.4,"vote_count":37522},{"adult":false,"backdrop_path":"/JeGkRdNsOuMrgwBdtB0hp763MU.jpg","genre_ids":[18,53],"id":613092,"original_language":"es","original_title":"El crack cero","overview":"Madrid, Spain, 1975; shortly after the end of the Franco dictatorship. Six months after the mysterious death of his lover, a prestigious tailor, a married woman visits the office of the young Germán Areta, a former police officer turned private detective, to request his professional services.","popularity":0.7261,"poster_path":"/kzgPu2CMxBr4YZZxC1Off4cUfR9.jpg","release_date":"2019-10-04","title":"The Crack: Inception","video":false,"vote_average":6.7,"vote_count":38},{"adult":false,"backdrop_path":"/p8K8Z4yjaslJx5mTsIC5L6LJxQB.jpg","genre_ids":[16,28,53,878],"id":64956,"original_language":"en","original_title":"Inception: The Cobol Job","overview":"This \"Inception\" prequel unfolds courtesy of a beautiful Motion Comic, and explains how Cobb, Arthur and Nash were enlisted by Cobol Engineering.","popularity":0.7403,"poster_path":"/sNxqwtyHMNQwKWoFYDqcYTui5Ok.jpg","release_date":"2010-12-07","title":"Inception: The Cobol Job","video":false,"vote_average":7.251,"vote_count":305},{"adult":false,"backdrop_path":null,"genre_ids":[99,18],"id":1370380,"original_language":"hr","original_title":"Sindrom Halla, začetak hrvatskog profesionalnog filma – rođenog da umre","overview":"One hundred years after the invention of film, Croatian film icon Mr. Fulir, who serves as the author’s alter-ego, comes up with the Faustian idea to bring back his youth. With a group of famous actors, he enthusiastically attempts to remake lost Croatian films from the silent era.","popularity":0.2844,"poster_path":null,"release_date":"2017-01-01","title":"Syndrome Halla, the Inception of Croatian Professional Film – Born to Die","video":false,"vote_average":0.0,"vote_count":0},{"adult":false,"backdrop_path":null,"genre_ids":[],"id":350632,"original_language":"en","original_title":"Nātyārambham","overview":"On certain Adavus: the basic steps in Bharatanatyam. The first part covers Tatta Adavu, Natta Adavu, Visharu Adavu , Tatti Metti Adavu and Teermanam Adavu.","popularity":0.0214,"poster_path":null,"release_date":"","title":"The Inception of Dramatic Representation","video":true,"vote_average":5.8,"vote_count":3},{"adult":false,"backdrop_path":"/x7ZzkFECLu9JUiKGzj52TWlnwir.jpg","genre_ids":[18],"id":1359046,"original_language":"mn","original_title":"Эхлэл","overview":"This film shows how ordinary people work to build the Erdenet factory, and how the finished product becomes the result of collective labor, and tells about the friendship of workers from Mongolia.","popularity":0.1021,"poster_path":null,"release_date":"1980-01-23","title":"Inception","video":false,"vote_average":0.0,"vote_count":0},{"adult":false,"backdrop_path":null,"genre_ids":[35],"id":542438,"original_language":"en","original_title":"Bikini Inception","overview":"Two flunky Janitors in an Arctic Lab perform unauthorized experiments transporting them to a beach dream world in Malibu California w/50 beautiful young girls and a female Brazilian PhD Student wearing only a bra and panties. A ''67 Muscle car races chases horses guns fights surfing, sumo wrestler, wolf monster, underwater scenes tons of gorgeous models. Sexy sci-fi fun.","popularity":0.5638,"poster_path":"/mNASlEOFX2c9upxaSbgeKFvIr1L.jpg","release_date":"2015-05-19","title":"Bikini Inception","video":false,"vote_average":4.0,"vote_count":2},{"adult":false,"backdrop_path":null,"genre_ids":[10402],"id":973484,"original_language":"en","original_title":"Inception: Music from the Motion Picture","overview":"The Special Features Blu-ray disc contains a lossless DTS-HD MA 5.1 surround mix of the Inception soundtrack.","popularity":0.1779,"poster_path":"/7uM4DyRVAcgagvhZoWrkrqMPbqV.jpg","release_date":"2010-12-07","title":"Inception: Music from the Motion Picture","video":true,"vote_average":6.0,"vote_count":2},{"adult":false,"backdrop_path":null,"genre_ids":[],"id":250845,"original_language":"en","original_title":"WWA The Inception","overview":"The first World Wrestling Allstars pay per view, live from Sydney, Australia! A tournament titled \"7 Deadly Sins\", each round having a stipulation match, the winner will be crowned the first ever WWA Heavyweight Champion! Wrestlers such as Jeff Jarrett, Road Dogg, Jerry Lawler all compete in the tournament, with the WWA Commissioner, Bret Hart not too far away to make sure nothing gets to far out of hand!","popularity":0.6557,"poster_path":null,"release_date":"2001-10-26","title":"WWA The Inception","video":true,"vote_average":3.1,"vote_count":5}],"total_pages":1,"total_results":9}'
+        headers:
+            Alt-Svc:
+                - h3=":443"; ma=86400
+            Cache-Control:
+                - public, max-age=21291
+            Content-Type:
+                - application/json;charset=utf-8
+            Date:
+                - Thu, 05 Jun 2025 06:05:57 GMT
+            Etag:
+                - W/"7bc6bc425f3654ab6fadc4f545bcfe14"
+            Server:
+                - openresty
+            Vary:
+                - accept-encoding
+                - Origin
+            Via:
+                - 1.1 f980a3c7b60f30ed2a5a86b44fa742fa.cloudfront.net (CloudFront)
+            X-Amz-Cf-Id:
+                - XYpEtzav21PYdBL-CaifirM3VeBQGlqlk8P2-eFJClDNjHUqmZ84lA==
+            X-Amz-Cf-Pop:
+                - ORD56-P12
+            X-Az:
+                - us-east-1c
+            X-Cache:
+                - Miss from cloudfront
+            X-Memc:
+                - HIT
+            X-Memc-Age:
+                - "4603"
+            X-Memc-Expires:
+                - "21291"
+            X-Memc-Key:
+                - d7af0dfed81ea202c1bb22c178e0b5ec
+            X-Task-Id:
+                - d88d71c87bd0404989825a6df248ee2b
+        status: 200 OK
+        code: 200
+        duration: 32.435471ms
