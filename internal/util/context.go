@@ -15,14 +15,9 @@ type Context struct {
 	Client          *http.Client
 }
 
-// WithContext stores TMDB-specific values in the context
-func WithContext(ctx context.Context, key, readAccessToken string, client *http.Client) context.Context {
-	value := &Context{
-		Key:             key,
-		ReadAccessToken: readAccessToken,
-		Client:          client,
-	}
-	return context.WithValue(ctx, contextKey{}, value)
+// SetContext stores TMDB-specific values in the context
+func SetContext(ctx context.Context, value Context) context.Context {
+	return context.WithValue(ctx, contextKey{}, &value)
 }
 
 // GetContext retrieves TMDB-specific values from the context
