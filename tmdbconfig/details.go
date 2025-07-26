@@ -16,10 +16,11 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, client *http.Client, options GetDetailsOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/configuration").
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/configuration").
 		SetApiKey(options.Key).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {

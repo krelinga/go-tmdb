@@ -21,14 +21,15 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, client *http.Client, id int32, options GetDetailsOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/movie/" + fmt.Sprint(id)).
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/movie/" + fmt.Sprint(id)).
 		SetApiKey(options.Key).
 		SetValue("language", options.Language).
 		AppendToResponse("credits", options.AppendCredits).
 		AppendToResponse("external_ids", options.AppendExternalIDs).
 		AppendToResponse("release_dates", options.AppendReleaseDates).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {

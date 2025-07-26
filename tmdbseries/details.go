@@ -17,11 +17,12 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, client *http.Client, SeriesID int32, options GetDetailsOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/tv/"+fmt.Sprintf("%d", SeriesID)).
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/tv/"+fmt.Sprintf("%d", SeriesID)).
 		SetApiKey(options.Key).
 		SetValue("language", options.Language).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {

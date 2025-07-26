@@ -15,10 +15,11 @@ type GetExternalIDsOptions struct {
 }
 
 func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options GetExternalIDsOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/movie/" + fmt.Sprint(id) + "/external_ids").
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/movie/" + fmt.Sprint(id) + "/external_ids").
 		SetApiKey(options.Key).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetExternalIDsReply(httpReply *http.Response) (*GetExternalIDsReply, error) {

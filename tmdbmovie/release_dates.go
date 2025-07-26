@@ -15,10 +15,11 @@ type GetReleaseDatesOptions struct {
 }
 
 func GetReleaseDates(ctx context.Context, client *http.Client, id int32, options GetReleaseDatesOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/movie/" + fmt.Sprint(id) + "/release_dates").
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/movie/" + fmt.Sprint(id) + "/release_dates").
 		SetApiKey(options.Key).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetReleaseDatesReply(httpReply *http.Response) (*GetReleaseDatesReply, error) {
