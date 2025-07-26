@@ -8,8 +8,8 @@ import (
 // tmdbContextKey is an unexported type for context keys to avoid collisions
 type tmdbContextKey struct{}
 
-// tmdbContextValue holds the TMDB-specific values stored in context
-type tmdbContextValue struct {
+// TMDBContextValue holds the TMDB-specific values stored in context
+type TMDBContextValue struct {
 	Key             string
 	ReadAccessToken string
 	Client          *http.Client
@@ -17,7 +17,7 @@ type tmdbContextValue struct {
 
 // WithTMDBContext stores TMDB-specific values in the context
 func WithTMDBContext(ctx context.Context, key, readAccessToken string, client *http.Client) context.Context {
-	value := &tmdbContextValue{
+	value := &TMDBContextValue{
 		Key:             key,
 		ReadAccessToken: readAccessToken,
 		Client:          client,
@@ -26,10 +26,10 @@ func WithTMDBContext(ctx context.Context, key, readAccessToken string, client *h
 }
 
 // FromTMDBContext retrieves TMDB-specific values from the context
-func FromTMDBContext(ctx context.Context) (key, readAccessToken string, client *http.Client, ok bool) {
-	value, ok := ctx.Value(tmdbContextKey{}).(*tmdbContextValue)
+func FromTMDBContext(ctx context.Context) (TMDBContextValue, bool) {
+	value, ok := ctx.Value(tmdbContextKey{}).(*TMDBContextValue)
 	if !ok || value == nil {
-		return "", "", nil, false
+		return TMDBContextValue{}, false
 	}
-	return value.Key, value.ReadAccessToken, value.Client, true
+	return *value, true
 }
