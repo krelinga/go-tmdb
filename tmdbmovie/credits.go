@@ -17,11 +17,12 @@ type GetCreditsOptions struct {
 }
 
 func GetCredits(ctx context.Context, client *http.Client, movieID int32, options GetCreditsOptions) (*http.Response, error) {
-	url := util.NewURLBuilder("/3/movie/"+fmt.Sprint(movieID)+"/credits").
+	return util.NewRequestBuilder(ctx, client).
+		SetPath("/3/movie/"+fmt.Sprint(movieID)+"/credits").
 		SetApiKey(options.Key).
 		SetValue("language", options.Language).
-		URL()
-	return util.MakeRequest(ctx, client, url, options.ReadAccessToken)
+		SetReadAccessToken(options.ReadAccessToken).
+		Do()
 }
 
 func ParseGetCreditsReply(httpReply *http.Response) (*GetCreditsReply, error) {
