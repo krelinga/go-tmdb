@@ -44,6 +44,12 @@ func (rb *RequestBuilder) SetValueString(key, value string) *RequestBuilder {
 	return rb
 }
 
+// SetValueInt32 sets a custom query parameter with an int32 value
+func (rb *RequestBuilder) SetValueInt32(key string, value int32) *RequestBuilder {
+	setIfNotZero(&rb.values, key, value)
+	return rb
+}
+
 // Do executes the HTTP request and returns the response
 func (rb *RequestBuilder) Do() (*http.Response, error) {
 	// Get configuration from context

@@ -22,7 +22,10 @@ func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*
 	rb := util.NewRequestBuilder(ctx).
 		SetPath("/3/search/tv").
 		SetValueString("query", query).
-		SetValueString("language", options.Language)
+		SetValueInt32("first_air_date_year", options.FirstAirDateYear).
+		SetValueString("language", options.Language).
+		SetValueInt32("page", options.Page).
+		SetValueInt32("year", options.Year)
 
 	if options.FirstAirDateYear > 0 {
 		rb.SetValueString("first_air_date_year", fmt.Sprint(options.FirstAirDateYear))

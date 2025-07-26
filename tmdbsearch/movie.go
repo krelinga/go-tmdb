@@ -25,6 +25,7 @@ func FindMovies(ctx context.Context, query string, options FindMoviesOptions) (*
 		SetValueString("query", query).
 		SetValueString("language", options.Language).
 		SetValueString("primary_release_year", options.PrimaryReleaseYear).
+		SetValueInt32("page", options.Page).
 		SetValueString("region", options.Region).
 		SetValueString("year", options.Year)
 
