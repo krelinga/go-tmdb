@@ -49,8 +49,8 @@ func (rb *RequestBuilder) SetValueInt32(key string, value int32) *RequestBuilder
 	return rb
 }
 
-// Do executes the HTTP request and returns the response
-func (rb *RequestBuilder) Do() (*http.Response, error) {
+// Request builds the HTTP request using the provided context and parameters
+func (rb *RequestBuilder) Request() *http.Request {
 	// Set API key if available
 	setIfNotZero(&rb.values, "api_key", APIKeyFromContext(rb.ctx))
 
@@ -71,7 +71,13 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 
 	// Set authorization if provided
 	setAuthIfNotZero(request, APIReadAccessTokenFromContext(rb.ctx))
+	// Set the context for the request
+	return request.WithContext(rb.ctx)
+}
+
+// Do executes the HTTP request and returns the response
+func (rb *RequestBuilder) Do() (*http.Response, error) {
 
 	// Execute the request
-	return HTTPClientFromContext(rb.ctx).Do(request.WithContext(rb.ctx))
+	return HTTPClientFromContext(rb.ctx).Do(rb.Request())
 }
