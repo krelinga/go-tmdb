@@ -77,7 +77,5 @@ func (rb *RequestBuilder) Request() *http.Request {
 
 // Do executes the HTTP request and returns the response
 func (rb *RequestBuilder) Do() (*http.Response, error) {
-
-	// Execute the request
 	return HTTPClientFromContext(rb.ctx).Do(rb.Request())
 }
