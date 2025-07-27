@@ -13,9 +13,9 @@ type GetReleaseDatesOptions struct {
 }
 
 func GetReleaseDates(ctx context.Context, id int32, options GetReleaseDatesOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx).
+	return util.NewRequestBuilder().
 		SetPath("/3/movie/" + fmt.Sprint(id) + "/release_dates").
-		Do()
+		Do(ctx)
 }
 
 func ParseGetReleaseDatesReply(httpReply *http.Response) (*GetReleaseDatesReply, error) {

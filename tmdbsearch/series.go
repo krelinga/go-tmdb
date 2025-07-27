@@ -19,7 +19,7 @@ type FindSeriesOptions struct {
 }
 
 func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*http.Response, error) {
-	rb := util.NewRequestBuilder(ctx).
+	rb := util.NewRequestBuilder().
 		SetPath("/3/search/tv").
 		SetValueString("query", query).
 		SetValueInt32("first_air_date_year", options.FirstAirDateYear).
@@ -40,7 +40,7 @@ func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*
 		rb.SetValueString("year", fmt.Sprint(options.Year))
 	}
 
-	return rb.Do()
+	return rb.Do(ctx)
 }
 
 func ParseFindSeriesReply(httpReply *http.Response) (*FindSeriesReply, error) {

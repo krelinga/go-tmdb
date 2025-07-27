@@ -13,9 +13,9 @@ type GetExternalIDsOptions struct {
 }
 
 func GetExternalIDs(ctx context.Context, id int32, options GetExternalIDsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx).
+	return util.NewRequestBuilder().
 		SetPath("/3/movie/" + fmt.Sprint(id) + "/external_ids").
-		Do()
+		Do(ctx)
 }
 
 func ParseGetExternalIDsReply(httpReply *http.Response) (*GetExternalIDsReply, error) {

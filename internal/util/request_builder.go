@@ -9,16 +9,14 @@ import (
 
 // RequestBuilder combines URL building and HTTP request functionality
 type RequestBuilder struct {
-	ctx     context.Context
 	path    string
 	appends []string
 	values  url.Values
 }
 
-// NewRequestBuilder creates a new RequestBuilder with the provided context
-func NewRequestBuilder(ctx context.Context) *RequestBuilder {
+// NewRequestBuilder creates a new RequestBuilder
+func NewRequestBuilder() *RequestBuilder {
 	return &RequestBuilder{
-		ctx:    ctx,
 		values: make(url.Values),
 	}
 }
@@ -50,9 +48,9 @@ func (rb *RequestBuilder) SetValueInt32(key string, value int32) *RequestBuilder
 }
 
 // Request builds the HTTP request using the provided context and parameters
-func (rb *RequestBuilder) Request() *http.Request {
+func (rb *RequestBuilder) Request(ctx context.Context) *http.Request {
 	// Set API key if available
-	setIfNotZero(&rb.values, "api_key", APIKeyFromContext(rb.ctx))
+	setIfNotZero(&rb.values, "api_key", APIKeyFromContext(ctx))
 
 	// Build the URL
 	setIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
@@ -70,12 +68,12 @@ func (rb *RequestBuilder) Request() *http.Request {
 	}
 
 	// Set authorization if provided
-	setAuthIfNotZero(request, APIReadAccessTokenFromContext(rb.ctx))
+	setAuthIfNotZero(request, APIReadAccessTokenFromContext(ctx))
 	// Set the context for the request
-	return request.WithContext(rb.ctx)
+	return request.WithContext(ctx)
 }
 
 // Do executes the HTTP request and returns the response
-func (rb *RequestBuilder) Do() (*http.Response, error) {
-	return HTTPClientFromContext(rb.ctx).Do(rb.Request())
+func (rb *RequestBuilder) Do(ctx context.Context) (*http.Response, error) {
+	return HTTPClientFromContext(ctx).Do(rb.Request(ctx))
 }

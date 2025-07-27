@@ -8,15 +8,18 @@ import (
 func TestRequestBuilder_URLConstruction(t *testing.T) {
 	ctx := ContextWithAPIKey(context.Background(), "test-api-key")
 
-	rb := NewRequestBuilder(ctx).
+	rb := NewRequestBuilder().
 		SetPath("/3/movie/123").
 		SetValueString("language", "en-US").
 		AppendToResponse("credits", true).
 		AppendToResponse("external_ids", false).
 		AppendToResponse("reviews", true)
 
-	// Test that we can access the URL construction logic by accessing the internal state
-	// In a real scenario, we'd test this by intercepting the HTTP call
+	// Test URL construction by building the request
+	req := rb.Request(ctx)
+	if req == nil {
+		t.Fatal("Request should not be nil")
+	}
 
 	// Verify path is set correctly
 	if rb.path != "/3/movie/123" {
@@ -45,7 +48,7 @@ func TestRequestBuilder_ChainableMethods(t *testing.T) {
 	ctx = ContextWithAPIReadAccessToken(ctx, "token")
 
 	// Test that all methods return *RequestBuilder for chaining
-	rb := NewRequestBuilder(ctx)
+	rb := NewRequestBuilder()
 
 	result := rb.SetPath("/test").
 		SetValueString("param", "value").
@@ -57,9 +60,7 @@ func TestRequestBuilder_ChainableMethods(t *testing.T) {
 }
 
 func TestRequestBuilder_EmptyValues(t *testing.T) {
-	ctx := context.Background()
-
-	rb := NewRequestBuilder(ctx).
+	rb := NewRequestBuilder().
 		SetPath("/test").
 		SetValueString("empty", ""). // Empty value should not be set
 		SetValueString("nonempty", "value")

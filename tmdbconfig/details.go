@@ -14,9 +14,9 @@ type GetDetailsOptions struct {
 }
 
 func GetDetails(ctx context.Context, options GetDetailsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx).
+	return util.NewRequestBuilder().
 		SetPath("/3/configuration").
-		Do()
+		Do(ctx)
 }
 
 func ParseGetDetailsReply(httpReply *http.Response) (*GetDetailsReply, error) {
