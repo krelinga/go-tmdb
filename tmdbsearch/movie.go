@@ -20,8 +20,7 @@ type FindMoviesOptions struct {
 }
 
 func FindMovies(ctx context.Context, query string, options FindMoviesOptions) (*http.Response, error) {
-	rb := util.NewRequestBuilder().
-		SetPath("/3/search/movie").
+	rb := util.NewRequestBuilder("/3/search/movie").
 		SetValueString("query", query).
 		SetValueString("language", options.Language).
 		SetValueString("primary_release_year", options.PrimaryReleaseYear).

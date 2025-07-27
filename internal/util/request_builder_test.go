@@ -8,8 +8,7 @@ import (
 func TestRequestBuilder_URLConstruction(t *testing.T) {
 	ctx := ContextWithAPIKey(context.Background(), "test-api-key")
 
-	rb := NewRequestBuilder().
-		SetPath("/3/movie/123").
+	rb := NewRequestBuilder("/3/movie/123").
 		SetValueString("language", "en-US").
 		AppendToResponse("credits", true).
 		AppendToResponse("external_ids", false).
@@ -44,14 +43,10 @@ func TestRequestBuilder_URLConstruction(t *testing.T) {
 }
 
 func TestRequestBuilder_ChainableMethods(t *testing.T) {
-	ctx := ContextWithAPIKey(context.Background(), "key")
-	ctx = ContextWithAPIReadAccessToken(ctx, "token")
-
 	// Test that all methods return *RequestBuilder for chaining
-	rb := NewRequestBuilder()
+	rb := NewRequestBuilder("/test")
 
-	result := rb.SetPath("/test").
-		SetValueString("param", "value").
+	result := rb.SetValueString("param", "value").
 		AppendToResponse("test", true)
 
 	if result != rb {
@@ -60,8 +55,7 @@ func TestRequestBuilder_ChainableMethods(t *testing.T) {
 }
 
 func TestRequestBuilder_EmptyValues(t *testing.T) {
-	rb := NewRequestBuilder().
-		SetPath("/test").
+	rb := NewRequestBuilder("/test").
 		SetValueString("empty", ""). // Empty value should not be set
 		SetValueString("nonempty", "value")
 

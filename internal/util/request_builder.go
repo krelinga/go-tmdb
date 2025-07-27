@@ -14,17 +14,12 @@ type RequestBuilder struct {
 	values  url.Values
 }
 
-// NewRequestBuilder creates a new RequestBuilder
-func NewRequestBuilder() *RequestBuilder {
+// NewRequestBuilder creates a new RequestBuilder with the given path
+func NewRequestBuilder(path string) *RequestBuilder {
 	return &RequestBuilder{
+		path:   path,
 		values: make(url.Values),
 	}
-}
-
-// SetPath sets the API path for the request
-func (rb *RequestBuilder) SetPath(path string) *RequestBuilder {
-	rb.path = path
-	return rb
 }
 
 // AppendToResponse adds a value to the append_to_response parameter if the condition is true

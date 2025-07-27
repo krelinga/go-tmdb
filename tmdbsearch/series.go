@@ -19,8 +19,7 @@ type FindSeriesOptions struct {
 }
 
 func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*http.Response, error) {
-	rb := util.NewRequestBuilder().
-		SetPath("/3/search/tv").
+	rb := util.NewRequestBuilder("/3/search/tv").
 		SetValueString("query", query).
 		SetValueInt32("first_air_date_year", options.FirstAirDateYear).
 		SetValueString("language", options.Language).
