@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/krelinga/go-tmdb"
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetExternalIDs(t *testing.T) {
-	ctx := tmdb.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
 	options := tmdbmovie.GetExternalIDsOptions{}
 
