@@ -5,29 +5,53 @@ import (
 	"net/http"
 )
 
-// contextKey is an unexported type for context keys to avoid collisions
-type contextKey struct{}
+type apiKeyContextKey struct{}
 
-// Context holds the TMDB-specific values stored in context
-type Context struct {
-	Key             string
-	ReadAccessToken string
-	Client          *http.Client
+func ContextWithAPIKey(ctx context.Context, apiKey string) context.Context {
+	return context.WithValue(ctx, apiKeyContextKey{}, apiKey)
 }
 
-// SetContext stores TMDB-specific values in the context
-func SetContext(ctx context.Context, value Context) context.Context {
-	return context.WithValue(ctx, contextKey{}, &value)
-}
-
-// GetContext retrieves TMDB-specific values from the context
-func GetContext(ctx context.Context) (Context, bool) {
+func APIKeyFromContext(ctx context.Context) string {
 	if ctx == nil {
-		return Context{}, false
+		return ""
 	}
-	value, ok := ctx.Value(contextKey{}).(*Context)
-	if !ok || value == nil {
-		return Context{}, false
+	apiKey, ok := ctx.Value(apiKeyContextKey{}).(string)
+	if !ok {
+		return ""
 	}
-	return *value, true
+	return apiKey
+}
+
+type apiReadAccessTokenContextKey struct{}
+
+func ContextWithAPIReadAccessToken(ctx context.Context, token string) context.Context {
+	return context.WithValue(ctx, apiReadAccessTokenContextKey{}, token)
+}
+
+func APIReadAccessTokenFromContext(ctx context.Context) string {
+	if ctx == nil {
+		return ""
+	}
+	token, ok := ctx.Value(apiReadAccessTokenContextKey{}).(string)
+	if !ok {
+		return ""
+	}
+	return token
+}
+
+type httpClientContextKey struct{}
+
+func ContextWithHTTPClient(ctx context.Context, client *http.Client) context.Context {
+	return context.WithValue(ctx, httpClientContextKey{}, client)
+}
+
+func HTTPClientFromContext(ctx context.Context) *http.Client {
+	if ctx == nil {
+		return http.DefaultClient
+	}
+	client, ok := ctx.Value(httpClientContextKey{}).(*http.Client)
+	if !ok {
+		return http.DefaultClient
+	}
+	return client
 }

@@ -11,15 +11,11 @@ import (
 )
 
 type GetDetailsOptions struct {
-	Key             string
-	ReadAccessToken string
 }
 
-func GetDetails(ctx context.Context, client *http.Client, options GetDetailsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetDetails(ctx context.Context, options GetDetailsOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath("/3/configuration").
-		SetApiKey(options.Key).
-		SetReadAccessToken(options.ReadAccessToken).
 		Do()
 }
 

@@ -5,15 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/krelinga/go-tmdb/internal/util"
 )
 
 type FindMoviesOptions struct {
-	Key                string
-	ReadAccessToken    string
 	IncludeAdult       bool
 	Language           string
 	PrimaryReleaseYear string
@@ -22,33 +19,24 @@ type FindMoviesOptions struct {
 	Year               string
 }
 
-func FindMovies(ctx context.Context, client *http.Client, query string, options FindMoviesOptions) (*http.Response, error) {
-	values := url.Values{
-		"query": []string{query},
+func FindMovies(ctx context.Context, query string, options FindMoviesOptions) (*http.Response, error) {
+	rb := util.NewRequestBuilder(ctx).
+		SetPath("/3/search/movie").
+		SetValueString("query", query).
+		SetValueString("language", options.Language).
+		SetValueString("primary_release_year", options.PrimaryReleaseYear).
+		SetValueInt32("page", options.Page).
+		SetValueString("region", options.Region).
+		SetValueString("year", options.Year)
+
+	if options.IncludeAdult {
+		rb.SetValueString("include_adult", "true")
 	}
-	util.SetIfNotZero(&values, "api_key", options.Key)
-	util.SetIfNotZero(&values, "include_adult", options.IncludeAdult)
-	util.SetIfNotZero(&values, "language", options.Language)
-	util.SetIfNotZero(&values, "primary_release_year", options.PrimaryReleaseYear)
-	util.SetIfNotZero(&values, "page", options.Page)
-	util.SetIfNotZero(&values, "region", options.Region)
-	util.SetIfNotZero(&values, "year", options.Year)
-	url := &url.URL{
-		Scheme:   "https",
-		Host:     "api.themoviedb.org",
-		Path:     "/3/search/movie",
-		RawQuery: values.Encode(),
+	if options.Page > 0 {
+		rb.SetValueString("page", fmt.Sprint(options.Page))
 	}
-	request := &http.Request{
-		Method: http.MethodGet,
-		URL:    url,
-	}
-	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request)
-	if err != nil {
-		return nil, err
-	}
-	return httpReply, nil
+
+	return rb.Do()
 }
 
 func ParseFindMoviesReply(httpReply *http.Response) (*FindMoviesReply, error) {

@@ -10,15 +10,11 @@ import (
 )
 
 type GetExternalIDsOptions struct {
-	Key             string
-	ReadAccessToken string
 }
 
-func GetExternalIDs(ctx context.Context, client *http.Client, id int32, options GetExternalIDsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetExternalIDs(ctx context.Context, id int32, options GetExternalIDsOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath("/3/movie/" + fmt.Sprint(id) + "/external_ids").
-		SetApiKey(options.Key).
-		SetReadAccessToken(options.ReadAccessToken).
 		Do()
 }
 

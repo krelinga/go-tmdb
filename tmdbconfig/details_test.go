@@ -2,21 +2,19 @@ package tmdbconfig_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbconfig"
 )
 
 func TestGetDetails(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	options := tmdbconfig.GetDetailsOptions{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-	}
+	options := tmdbconfig.GetDetailsOptions{}
 
-	httpReply, err := tmdbconfig.GetDetails(ctx, http.DefaultClient, options)
+	httpReply, err := tmdbconfig.GetDetails(ctx, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

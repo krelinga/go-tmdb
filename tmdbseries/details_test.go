@@ -2,21 +2,19 @@ package tmdbseries_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbseries"
 )
 
 func TestGetDetails(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	options := tmdbseries.GetDetailsOptions{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-	}
+	options := tmdbseries.GetDetailsOptions{}
 
-	httpReply, err := tmdbseries.GetDetails(ctx, http.DefaultClient, 1399, options)
+	httpReply, err := tmdbseries.GetDetails(ctx, 1399, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

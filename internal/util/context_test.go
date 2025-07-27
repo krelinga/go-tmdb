@@ -4,182 +4,185 @@ import (
 	"context"
 	"net/http"
 	"testing"
+	"time"
 )
 
-func TestSetContext_Success(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
-
-	value := Context{
-		Key:             "test-api-key",
-		ReadAccessToken: "test-read-token",
-		Client:          client,
+func TestAPIKeyFromContext(t *testing.T) {
+	tests := []struct {
+		name        string
+		ctx         context.Context
+		expectedKey string
+	}{
+		{
+			name:        "retrieve API key from context",
+			ctx:         ContextWithAPIKey(context.Background(), "my-api-key"),
+			expectedKey: "my-api-key",
+		},
+		{
+			name:        "retrieve empty API key",
+			ctx:         ContextWithAPIKey(context.Background(), ""),
+			expectedKey: "",
+		},
+		{
+			name:        "nil context returns empty string",
+			ctx:         nil,
+			expectedKey: "",
+		},
+		{
+			name:        "context without API key returns empty string",
+			ctx:         context.Background(),
+			expectedKey: "",
+		},
+		{
+			name:        "context with wrong value type returns empty string",
+			ctx:         context.WithValue(context.Background(), apiKeyContextKey{}, 123),
+			expectedKey: "",
+		},
 	}
 
-	newCtx := SetContext(ctx, value)
-
-	if newCtx == ctx {
-		t.Error("SetContext should return a new context")
-	}
-}
-
-func TestGetContext_Success(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
-
-	original := Context{
-		Key:             "test-api-key",
-		ReadAccessToken: "test-read-token",
-		Client:          client,
-	}
-
-	ctxWithValue := SetContext(ctx, original)
-	retrieved, ok := GetContext(ctxWithValue)
-
-	if !ok {
-		t.Error("Expected GetContext to return true")
-	}
-
-	if retrieved.Key != original.Key {
-		t.Errorf("Expected Key '%s', got '%s'", original.Key, retrieved.Key)
-	}
-
-	if retrieved.ReadAccessToken != original.ReadAccessToken {
-		t.Errorf("Expected ReadAccessToken '%s', got '%s'", original.ReadAccessToken, retrieved.ReadAccessToken)
-	}
-
-	if retrieved.Client != original.Client {
-		t.Error("Expected Client to be the same instance")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			retrievedKey := APIKeyFromContext(tt.ctx)
+			if retrievedKey != tt.expectedKey {
+				t.Errorf("Expected API key %q, got %q", tt.expectedKey, retrievedKey)
+			}
+		})
 	}
 }
 
-func TestGetContext_EmptyContext(t *testing.T) {
-	ctx := context.Background()
+func TestAPIReadAccessTokenFromContext(t *testing.T) {
+	tests := []struct {
+		name          string
+		ctx           context.Context
+		expectedToken string
+	}{
+		{
+			name:          "retrieve token from context",
+			ctx:           ContextWithAPIReadAccessToken(context.Background(), "my-token"),
+			expectedToken: "my-token",
+		},
+		{
+			name:          "retrieve empty token",
+			ctx:           ContextWithAPIReadAccessToken(context.Background(), ""),
+			expectedToken: "",
+		},
+		{
+			name:          "nil context returns empty string",
+			ctx:           nil,
+			expectedToken: "",
+		},
+		{
+			name:          "context without token returns empty string",
+			ctx:           context.Background(),
+			expectedToken: "",
+		},
+		{
+			name:          "context with wrong value type returns empty string",
+			ctx:           context.WithValue(context.Background(), apiReadAccessTokenContextKey{}, 456),
+			expectedToken: "",
+		},
+	}
 
-	_, ok := GetContext(ctx)
-
-	if ok {
-		t.Error("Expected GetContext to return false for empty context")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			retrievedToken := APIReadAccessTokenFromContext(tt.ctx)
+			if retrievedToken != tt.expectedToken {
+				t.Errorf("Expected token %q, got %q", tt.expectedToken, retrievedToken)
+			}
+		})
 	}
 }
 
-func TestGetContext_NilContext(t *testing.T) {
-	var ctx context.Context
+func TestHTTPClientFromContext(t *testing.T) {
+	customClient := &http.Client{Timeout: 15 * time.Second}
 
-	_, ok := GetContext(ctx)
+	tests := []struct {
+		name           string
+		ctx            context.Context
+		expectedClient *http.Client
+	}{
+		{
+			name:           "retrieve custom client from context",
+			ctx:            ContextWithHTTPClient(context.Background(), customClient),
+			expectedClient: customClient,
+		},
+		{
+			name:           "nil context returns default client",
+			ctx:            nil,
+			expectedClient: http.DefaultClient,
+		},
+		{
+			name:           "context without client returns default client",
+			ctx:            context.Background(),
+			expectedClient: http.DefaultClient,
+		},
+		{
+			name:           "context with wrong value type returns default client",
+			ctx:            context.WithValue(context.Background(), httpClientContextKey{}, "not-a-client"),
+			expectedClient: http.DefaultClient,
+		},
+		{
+			name:           "context with nil client value returns nil",
+			ctx:            context.WithValue(context.Background(), httpClientContextKey{}, (*http.Client)(nil)),
+			expectedClient: nil,
+		},
+	}
 
-	if ok {
-		t.Error("Expected GetContext to return false for nil context")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			retrievedClient := HTTPClientFromContext(tt.ctx)
+			if retrievedClient != tt.expectedClient {
+				t.Errorf("Expected client %v, got %v", tt.expectedClient, retrievedClient)
+			}
+		})
 	}
 }
 
-func TestSetGetContext_RoundTrip(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
+// Integration tests
+func TestContextIntegration(t *testing.T) {
+	t.Run("multiple values in same context", func(t *testing.T) {
+		apiKey := "test-api-key"
+		token := "test-token"
+		client := &http.Client{Timeout: 20 * time.Second}
 
-	original := Context{
-		Key:             "test-api-key",
-		ReadAccessToken: "test-read-token",
-		Client:          client,
-	}
+		// Build context with all values
+		ctx := context.Background()
+		ctx = ContextWithAPIKey(ctx, apiKey)
+		ctx = ContextWithAPIReadAccessToken(ctx, token)
+		ctx = ContextWithHTTPClient(ctx, client)
 
-	// Set and get multiple times to ensure consistency
-	ctx1 := SetContext(ctx, original)
-	_, ok1 := GetContext(ctx1)
+		// Verify all values can be retrieved
+		if retrievedKey := APIKeyFromContext(ctx); retrievedKey != apiKey {
+			t.Errorf("Expected API key %q, got %q", apiKey, retrievedKey)
+		}
 
-	if !ok1 {
-		t.Error("First retrieval should succeed")
-	}
+		if retrievedToken := APIReadAccessTokenFromContext(ctx); retrievedToken != token {
+			t.Errorf("Expected token %q, got %q", token, retrievedToken)
+		}
 
-	// Set again with different values
-	updated := Context{
-		Key:             "updated-api-key",
-		ReadAccessToken: "updated-read-token",
-		Client:          client,
-	}
+		if retrievedClient := HTTPClientFromContext(ctx); retrievedClient != client {
+			t.Errorf("Expected client %v, got %v", client, retrievedClient)
+		}
+	})
 
-	ctx2 := SetContext(ctx1, updated)
-	retrieved2, ok2 := GetContext(ctx2)
+	t.Run("overwriting values", func(t *testing.T) {
+		ctx := context.Background()
 
-	if !ok2 {
-		t.Error("Second retrieval should succeed")
-	}
+		// Add initial values
+		ctx = ContextWithAPIKey(ctx, "first-key")
+		ctx = ContextWithAPIReadAccessToken(ctx, "first-token")
 
-	if retrieved2.Key != updated.Key {
-		t.Errorf("Expected updated Key '%s', got '%s'", updated.Key, retrieved2.Key)
-	}
+		// Overwrite with new values
+		ctx = ContextWithAPIKey(ctx, "second-key")
+		ctx = ContextWithAPIReadAccessToken(ctx, "second-token")
 
-	// Original context should still have original values
-	retrievedOriginal, okOriginal := GetContext(ctx1)
-	if !okOriginal {
-		t.Error("Original context retrieval should succeed")
-	}
+		// Verify we get the latest values
+		if retrievedKey := APIKeyFromContext(ctx); retrievedKey != "second-key" {
+			t.Errorf("Expected API key %q, got %q", "second-key", retrievedKey)
+		}
 
-	if retrievedOriginal.Key != original.Key {
-		t.Errorf("Expected original Key '%s', got '%s'", original.Key, retrievedOriginal.Key)
-	}
-}
-
-func TestContext_EmptyValues(t *testing.T) {
-	ctx := context.Background()
-
-	value := Context{
-		Key:             "",
-		ReadAccessToken: "",
-		Client:          nil,
-	}
-
-	ctxWithValue := SetContext(ctx, value)
-	retrieved, ok := GetContext(ctxWithValue)
-
-	if !ok {
-		t.Error("Expected GetContext to return true even with empty values")
-	}
-
-	if retrieved.Key != "" {
-		t.Errorf("Expected empty Key, got '%s'", retrieved.Key)
-	}
-
-	if retrieved.ReadAccessToken != "" {
-		t.Errorf("Expected empty ReadAccessToken, got '%s'", retrieved.ReadAccessToken)
-	}
-
-	if retrieved.Client != nil {
-		t.Error("Expected nil Client")
-	}
-}
-
-func TestContext_MultipleContextKeys(t *testing.T) {
-	ctx := context.Background()
-	client := &http.Client{}
-
-	// Add other values to context to ensure no collisions
-	ctx = context.WithValue(ctx, "other-key", "other-value")
-	ctx = context.WithValue(ctx, struct{}{}, "struct-key-value")
-
-	value := Context{
-		Key:             "test-api-key",
-		ReadAccessToken: "test-read-token",
-		Client:          client,
-	}
-
-	ctxWithValue := SetContext(ctx, value)
-	retrieved, ok := GetContext(ctxWithValue)
-
-	if !ok {
-		t.Error("Expected GetContext to return true")
-	}
-
-	if retrieved.Key != value.Key {
-		t.Errorf("Expected Key '%s', got '%s'", value.Key, retrieved.Key)
-	}
-
-	// Ensure other context values are still there
-	if ctxWithValue.Value("other-key") != "other-value" {
-		t.Error("Other context values should not be affected")
-	}
-
-	if ctxWithValue.Value(struct{}{}) != "struct-key-value" {
-		t.Error("Struct key context values should not be affected")
-	}
+		if retrievedToken := APIReadAccessTokenFromContext(ctx); retrievedToken != "second-token" {
+			t.Errorf("Expected token %q, got %q", "second-token", retrievedToken)
+		}
+	})
 }

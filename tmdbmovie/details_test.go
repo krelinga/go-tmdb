@@ -2,24 +2,23 @@ package tmdbmovie_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbmovie"
 )
 
 func TestGetDetails(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
 	options := tmdbmovie.GetDetailsOptions{
-		ReadAccessToken:    os.Getenv("TMDB_READ_ACCESS_TOKEN"),
 		AppendCredits:      true,
 		AppendExternalIDs:  true,
 		AppendReleaseDates: true,
 	}
 
-	httpReply, err := tmdbmovie.GetDetails(ctx, http.DefaultClient, 11, options)
+	httpReply, err := tmdbmovie.GetDetails(ctx, 11, options)
 	if err != nil {
 		t.Fatalf("GetDetails failed: %v", err)
 	}

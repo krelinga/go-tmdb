@@ -5,15 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/krelinga/go-tmdb/internal/util"
 )
 
 type FindSeriesOptions struct {
-	Key              string
-	ReadAccessToken  string
 	FirstAirDateYear int32
 	IncludeAdult     bool
 	Language         string
@@ -21,32 +18,29 @@ type FindSeriesOptions struct {
 	Year             int32
 }
 
-func FindSeries(ctx context.Context, client *http.Client, query string, options FindSeriesOptions) (*http.Response, error) {
-	values := url.Values{
-		"query": []string{query},
+func FindSeries(ctx context.Context, query string, options FindSeriesOptions) (*http.Response, error) {
+	rb := util.NewRequestBuilder(ctx).
+		SetPath("/3/search/tv").
+		SetValueString("query", query).
+		SetValueInt32("first_air_date_year", options.FirstAirDateYear).
+		SetValueString("language", options.Language).
+		SetValueInt32("page", options.Page).
+		SetValueInt32("year", options.Year)
+
+	if options.FirstAirDateYear > 0 {
+		rb.SetValueString("first_air_date_year", fmt.Sprint(options.FirstAirDateYear))
 	}
-	util.SetIfNotZero(&values, "api_key", options.Key)
-	util.SetIfNotZero(&values, "first_air_date_year", options.FirstAirDateYear)
-	util.SetIfNotZero(&values, "include_adult", options.IncludeAdult)
-	util.SetIfNotZero(&values, "language", options.Language)
-	util.SetIfNotZero(&values, "page", options.Page)
-	util.SetIfNotZero(&values, "year", options.Year)
-	url := &url.URL{
-		Scheme:   "https",
-		Host:     "api.themoviedb.org",
-		Path:     "/3/search/tv",
-		RawQuery: values.Encode(),
+	if options.IncludeAdult {
+		rb.SetValueString("include_adult", "true")
 	}
-	request := &http.Request{
-		Method: http.MethodGet,
-		URL:    url,
+	if options.Page > 0 {
+		rb.SetValueString("page", fmt.Sprint(options.Page))
 	}
-	util.SetAuthIfNotZero(request, options.ReadAccessToken)
-	httpReply, err := client.Do(request)
-	if err != nil {
-		return nil, err
+	if options.Year > 0 {
+		rb.SetValueString("year", fmt.Sprint(options.Year))
 	}
-	return httpReply, nil
+
+	return rb.Do()
 }
 
 func ParseFindSeriesReply(httpReply *http.Response) (*FindSeriesReply, error) {

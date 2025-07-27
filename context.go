@@ -2,12 +2,19 @@ package tmdb
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/krelinga/go-tmdb/internal/util"
 )
 
-type Context = util.Context
+func ContextWithAPIKey(ctx context.Context, key string) context.Context {
+	return util.ContextWithAPIKey(ctx, key)
+}
 
-func SetContext(ctx context.Context, value Context) context.Context {
-	return util.SetContext(ctx, value)
+func ContextWithAPIReadAccessToken(ctx context.Context, token string) context.Context {
+	return util.ContextWithAPIReadAccessToken(ctx, token)
+}
+
+func ContextWithHTTPClient(ctx context.Context, client *http.Client) context.Context {
+	return util.ContextWithHTTPClient(ctx, client)
 }

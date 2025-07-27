@@ -9,19 +9,16 @@ import (
 
 // RequestBuilder combines URL building and HTTP request functionality
 type RequestBuilder struct {
-	ctx             context.Context
-	client          *http.Client
-	path            string
-	appends         []string
-	values          url.Values
-	readAccessToken string
+	ctx     context.Context
+	path    string
+	appends []string
+	values  url.Values
 }
 
-// NewRequestBuilder creates a new RequestBuilder with the provided context and HTTP client
-func NewRequestBuilder(ctx context.Context, client *http.Client) *RequestBuilder {
+// NewRequestBuilder creates a new RequestBuilder with the provided context
+func NewRequestBuilder(ctx context.Context) *RequestBuilder {
 	return &RequestBuilder{
 		ctx:    ctx,
-		client: client,
 		values: make(url.Values),
 	}
 }
@@ -29,18 +26,6 @@ func NewRequestBuilder(ctx context.Context, client *http.Client) *RequestBuilder
 // SetPath sets the API path for the request
 func (rb *RequestBuilder) SetPath(path string) *RequestBuilder {
 	rb.path = path
-	return rb
-}
-
-// SetApiKey sets the API key parameter
-func (rb *RequestBuilder) SetApiKey(apiKey string) *RequestBuilder {
-	SetIfNotZero(&rb.values, "api_key", apiKey)
-	return rb
-}
-
-// SetReadAccessToken sets the read access token for authorization
-func (rb *RequestBuilder) SetReadAccessToken(token string) *RequestBuilder {
-	rb.readAccessToken = token
 	return rb
 }
 
@@ -52,16 +37,25 @@ func (rb *RequestBuilder) AppendToResponse(value string, do bool) *RequestBuilde
 	return rb
 }
 
-// SetValue sets a custom query parameter
-func (rb *RequestBuilder) SetValue(key, value string) *RequestBuilder {
-	SetIfNotZero(&rb.values, key, value)
+// SetValueString sets a custom query parameter
+func (rb *RequestBuilder) SetValueString(key, value string) *RequestBuilder {
+	setIfNotZero(&rb.values, key, value)
+	return rb
+}
+
+// SetValueInt32 sets a custom query parameter with an int32 value
+func (rb *RequestBuilder) SetValueInt32(key string, value int32) *RequestBuilder {
+	setIfNotZero(&rb.values, key, value)
 	return rb
 }
 
 // Do executes the HTTP request and returns the response
 func (rb *RequestBuilder) Do() (*http.Response, error) {
+	// Set API key if available
+	setIfNotZero(&rb.values, "api_key", APIKeyFromContext(rb.ctx))
+
 	// Build the URL
-	SetIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
+	setIfNotZero(&rb.values, "append_to_response", strings.Join(rb.appends, ","))
 	requestURL := &url.URL{
 		Scheme:   "https",
 		Host:     "api.themoviedb.org",
@@ -76,8 +70,8 @@ func (rb *RequestBuilder) Do() (*http.Response, error) {
 	}
 
 	// Set authorization if provided
-	SetAuthIfNotZero(request, rb.readAccessToken)
+	setAuthIfNotZero(request, APIReadAccessTokenFromContext(rb.ctx))
 
 	// Execute the request
-	return rb.client.Do(request.WithContext(rb.ctx))
+	return HTTPClientFromContext(rb.ctx).Do(request.WithContext(rb.ctx))
 }

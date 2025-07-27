@@ -2,20 +2,18 @@ package tmdbsearch_test
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"testing"
 
+	"github.com/krelinga/go-tmdb/internal/util"
 	"github.com/krelinga/go-tmdb/tmdbsearch"
 )
 
 func TestFindSeries(t *testing.T) {
-	ctx := context.Background()
+	ctx := util.ContextWithAPIReadAccessToken(context.Background(), os.Getenv("TMDB_READ_ACCESS_TOKEN"))
 
-	options := tmdbsearch.FindSeriesOptions{
-		ReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-	}
-	httpReply, err := tmdbsearch.FindSeries(ctx, http.DefaultClient, "Breaking Bad", options)
+	options := tmdbsearch.FindSeriesOptions{}
+	httpReply, err := tmdbsearch.FindSeries(ctx, "Breaking Bad", options)
 	if err != nil {
 		t.Fatalf("Series search failed: %v", err)
 	}

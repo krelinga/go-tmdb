@@ -11,17 +11,13 @@ import (
 )
 
 type GetCreditsOptions struct {
-	Key             string
-	ReadAccessToken string
-	Language        string
+	Language string
 }
 
-func GetCredits(ctx context.Context, client *http.Client, movieID int32, options GetCreditsOptions) (*http.Response, error) {
-	return util.NewRequestBuilder(ctx, client).
+func GetCredits(ctx context.Context, movieID int32, options GetCreditsOptions) (*http.Response, error) {
+	return util.NewRequestBuilder(ctx).
 		SetPath("/3/movie/"+fmt.Sprint(movieID)+"/credits").
-		SetApiKey(options.Key).
-		SetValue("language", options.Language).
-		SetReadAccessToken(options.ReadAccessToken).
+		SetValueString("language", options.Language).
 		Do()
 }
 
