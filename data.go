@@ -44,22 +44,14 @@ func fieldData[T field](parent Data[Object], key string) Data[T] {
 func int32FieldData(parent Data[Object], key string) Data[int32] {
 	var zero int32
 	return dataFunc[int32](func() (int32, error) {
-		obj, err := parent.get()
+		asFloat64, err := fieldData[float64](parent, key).get()
 		if err != nil {
 			return zero, err
 		}
-		anyVal, ok := obj[key]
-		if !ok {
-			return zero, fmt.Errorf("key %q not found in object", key)
-		}
-		val, ok := anyVal.(float64)
-		if !ok {
-			return zero, fmt.Errorf("value for key %q is not a float64", key)
-		}
-		if val < float64(math.MinInt32) || val > float64(math.MaxInt32) || val != float64(int32(val)) {
+		if asFloat64 < float64(math.MinInt32) || asFloat64 > float64(math.MaxInt32) || asFloat64 != float64(int32(asFloat64)) {
 			return zero, fmt.Errorf("value for key %q is out of int32 range", key)
 		}
-		return int32(val), nil
+		return int32(asFloat64), nil
 	})
 }
 
