@@ -9,6 +9,12 @@ type Data[T any] interface {
 	get() (T, error)
 }
 
+func NewData[T any](t T) Data[T] {
+	return dataFunc[T](func() (T, error) {
+		return t, nil
+	})
+}
+
 // Alias for allowing unexported embedding
 type data[T any] = Data[T]
 
@@ -94,14 +100,5 @@ func fieldData[T any](parent Data[Object], key string, trans transformer[T]) Dat
 			return zero, fmt.Errorf("key %q not found in object", key)
 		}
 		return trans(anyVal)
-	})
-}
-
-func rootData(o Object) Data[Object] {
-	return dataFunc[Object](func() (Object, error) {
-		if o == nil {
-			return nil, fmt.Errorf("object is nil")
-		}
-		return o, nil
 	})
 }

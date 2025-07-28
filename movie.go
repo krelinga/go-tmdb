@@ -10,7 +10,7 @@ type Movie struct {
 }
 
 func NewMovie(o Object) Movie {
-	return newMovie(rootData(o))
+	return newMovie(NewData(o))
 }
 
 func newMovie(in Data[Object]) Movie {
@@ -50,7 +50,7 @@ type Keyword struct {
 }
 
 func NewKeyword(o Object) Keyword {
-	return Keyword{data: rootData(o)}
+	return Keyword{data: NewData(o)}
 }
 
 func (k Keyword) Name() Data[string] {
@@ -66,7 +66,7 @@ type ExternalIDs struct {
 }
 
 func NewExternalIDs(o Object) ExternalIDs {
-	return ExternalIDs{data: rootData(o)}
+	return ExternalIDs{data: NewData(o)}
 }
 
 func newExternalIDs(in Data[Object]) ExternalIDs {
@@ -80,7 +80,7 @@ func (e ExternalIDs) IMDBID() Data[string] {
 type SearchMoviePage = PageOf[Movie]
 
 func NewSearchMoviePage(o Object) SearchMoviePage {
-	return newSearchMoviePage(rootData(o))
+	return newSearchMoviePage(NewData(o))
 }
 
 func newSearchMoviePage(in Data[Object]) SearchMoviePage {
