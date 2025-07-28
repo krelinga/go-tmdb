@@ -30,9 +30,7 @@ func (m Movie) Title() Data[string] {
 }
 
 func (m Movie) Keywords() Slice[Keyword] {
-	return Slice[Keyword]{
-		data: fieldData[Array](m, "keywords"),
-	}
+	return NewSlice[Keyword](fieldData[Array](m, "keywords"))
 }
 
 func (m Movie) ExternalIDs() ExternalIDs {

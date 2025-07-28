@@ -9,14 +9,9 @@ type Slice[T any] struct {
 	data[Array]
 }
 
-func NewSlice[T any](arr Array) Slice[T] {
+func NewSlice[T any](in Data[Array]) Slice[T] {
 	return Slice[T]{
-		data: dataFunc[Array](func() (Array, error) {
-			if arr == nil {
-				return nil, fmt.Errorf("array cannot be nil")
-			}
-			return arr, nil
-		}),
+		data: in,
 	}
 }
 
