@@ -24,81 +24,127 @@ func (f dataFunc[T]) get() (T, error) {
 	return f()
 }
 
-type transformer[T any] func(any) (T, error)
-
-func asString(in any) (string, error) {
-	if in == nil {
-		return "", fmt.Errorf("input is nil")
-	}
-	if str, ok := in.(string); ok {
-		return str, nil
-	}
-	return "", fmt.Errorf("input is not a string")
-}
-
-func asFloat64(in any) (float64, error) {
-	if in == nil {
-		return 0, fmt.Errorf("input is nil")
-	}
-	if num, ok := in.(float64); ok {
-		return num, nil
-	}
-	return 0, fmt.Errorf("input is not a float64")
-}
-
-func asInt32(in any) (int32, error) {
-	f64, err := asFloat64(in)
-	if err != nil {
-		return 0, err
-	}
-	if f64 < float64(math.MinInt32) || f64 > float64(math.MaxInt32) || f64 != float64(int32(f64)) {
-		return 0, fmt.Errorf("input is out of int32 range")
-	}
-	return int32(f64), nil
-}
-
-func asObject(in any) (Object, error) {
-	if in == nil {
-		return nil, fmt.Errorf("input is nil")
-	}
-	if obj, ok := in.(Object); ok {
-		return obj, nil
-	}
-	return nil, fmt.Errorf("input is not an Object")
-}
-
-func asArray(in any) (Array, error) {
-	if in == nil {
-		return nil, fmt.Errorf("input is nil")
-	}
-	if arr, ok := in.([]any); ok {
-		return arr, nil
-	}
-	return nil, fmt.Errorf("input is not an array")
-}
-
-func asTypedObject[T any](in func(Object) T) transformer[T] {
-	return func(anyVal any) (T, error) {
-		obj, err := asObject(anyVal)
-		if err != nil {
-			var zero T
-			return zero, err
-		}
-		return in(obj), nil
-	}
-}
-
-func fieldData[T any](parent Data[Object], key string, trans transformer[T]) Data[T] {
-	var zero T
-	return dataFunc[T](func() (T, error) {
+func GetField(parent Data[Object], key string) Data[any] {
+	return dataFunc[any](func() (any, error) {
 		obj, err := parent.get()
 		if err != nil {
-			return zero, err
+			return nil, err
 		}
-		anyVal, ok := obj[key]
-		if !ok {
-			return zero, fmt.Errorf("key %q not found in object", key)
+		if val, ok := obj[key]; !ok {
+			return nil, fmt.Errorf("key %q not found in object", key)
+		} else {
+			return val, nil
 		}
-		return trans(anyVal)
 	})
+}
+
+func GetIndex(parent Data[Array], index int) Data[any] {
+	return dataFunc[any](func() (any, error) {
+		arr, err := parent.get()
+		if err != nil {
+			return nil, err
+		}
+		if arr == nil {
+			return nil, fmt.Errorf("array is nil")
+		}
+		if index < 0 || index >= len(arr) {
+			return nil, fmt.Errorf("index %d out of bounds for array of length %d", index, len(arr))
+		}
+		return arr[index], nil
+	})
+}
+
+func AsString(in Data[any]) Data[string] {
+	return dataFunc[string](func() (string, error) {
+		val, err := in.get()
+		if err != nil {
+			return "", err
+		}
+		if val == nil {
+			return "", fmt.Errorf("input is nil")
+		}
+		if str, ok := val.(string); !ok {
+			return "", fmt.Errorf("input is not a string")
+		} else {
+			return str, nil
+		}
+	})
+}
+
+func AsNumber(in Data[any]) Data[Number] {
+	return dataFunc[Number](func() (Number, error) {
+		val, err := in.get()
+		if err != nil {
+			return 0, err
+		}
+		if val == nil {
+			return 0, fmt.Errorf("input is nil")
+		}
+		if num, ok := val.(Number); !ok {
+			return 0, fmt.Errorf("input is not a Number")
+		} else {
+			return num, nil
+		}
+	})
+}
+
+func AsInt32(in Data[any]) Data[int32] {
+	asNumberData := AsNumber(in)
+	return dataFunc[int32](func() (int32, error) {
+		numberVal, err := asNumberData.get()
+		if err != nil {
+			return 0, err
+		}
+		if numberVal < float64(math.MinInt32) || numberVal > float64(math.MaxInt32) || numberVal != float64(int32(numberVal)) {
+			return 0, fmt.Errorf("input is out of int32 range")
+		}
+		return int32(numberVal), nil
+	})
+}
+
+func AsObject(in Data[any]) Data[Object] {
+	return dataFunc[Object](func() (Object, error) {
+		val, err := in.get()
+		if err != nil {
+			return nil, err
+		}
+		if val == nil {
+			return nil, fmt.Errorf("input is nil")
+		}
+		if obj, ok := val.(Object); !ok {
+			return nil, fmt.Errorf("input is not an Object")
+		} else {
+			return obj, nil
+		}
+	})
+}
+
+func AsArray(in Data[any]) Data[Array] {
+	return dataFunc[Array](func() (Array, error) {
+		val, err := in.get()
+		if err != nil {
+			return nil, err
+		}
+		if val == nil {
+			return nil, fmt.Errorf("input is nil")
+		}
+		if arr, ok := val.([]any); !ok {
+			return nil, fmt.Errorf("input is not an array")
+		} else {
+			return arr, nil
+		}
+	})
+}
+
+func AsFunc[T Data[Object]](newFunc func(Data[Object]) T) func(Data[any]) T {
+	return func(obj Data[any]) T {
+		return newFunc(AsObject(obj))
+	}
+}
+
+func Compose[In Data[X], Middle Data[Y], Out Data[Z], X , Y, Z any](f1 func(In) Middle, f2 func(Middle) Out) func(In) Out {
+	return func(input In) Out {
+		middle := f1(input)
+		return f2(middle)
+	}
 }

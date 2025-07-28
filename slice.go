@@ -1,34 +1,23 @@
 package tmdb
 
 import (
-	"fmt"
 	"iter"
 )
 
 type Slice[T any] struct {
 	data[Array]
-	trans transformer[T]
+	members func(Data[any]) T
 }
 
-func newSlice[T any](in Data[Array], trans transformer[T]) Slice[T] {
+func NewSlice[T any](in Data[Array], members func(Data[any]) T) Slice[T] {
 	return Slice[T]{
-		data: in,
-		trans: trans,
+		data:    in,
+		members: members,
 	}
 }
 
-func (s Slice[T]) Get(index int) Data[T] {
-	var zero T
-	return dataFunc[T](func() (T, error) {
-		arr, err := s.get()
-		if err != nil {
-			return zero, err
-		}
-		if index < 0 || index >= len(arr) {
-			return zero, fmt.Errorf("index %d out of bounds for array of length %d", index, len(arr))
-		}
-		return s.trans(arr[index])
-	})
+func (s Slice[T]) Get(index int) T {
+	return s.members(GetIndex(s, index))
 }
 
 // TODO: should I change the return type to be int32 here?
@@ -43,17 +32,15 @@ func (s Slice[T]) Len() Data[int] {
 	})
 }
 
-func (s Slice[T]) All() Data[iter.Seq2[int, Data[T]]] {
-	return dataFunc[iter.Seq2[int, Data[T]]](func() (iter.Seq2[int, Data[T]], error) {
+func (s Slice[T]) All() Data[iter.Seq2[int, T]] {
+	return dataFunc[iter.Seq2[int, T]](func() (iter.Seq2[int, T], error) {
 		arr, err := s.get()
 		if err != nil {
 			return nil, err
 		}
-		return func(yield func(int, Data[T]) bool) {
-			for i, item := range arr {
-				if !yield(i, dataFunc[T](func() (T, error) {
-					return s.trans(item)
-				})) {
+		return func(yield func(int, T) bool) {
+			for i := range arr {
+				if !yield(i, s.members(GetIndex(s, i))) {
 					return
 				}
 			}

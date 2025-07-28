@@ -2,28 +2,28 @@ package tmdb
 
 type PageOf[T Data[Object]] struct {
 	data[Object]
-	resultTrans transformer[T]
+	members func(Data[Object]) T
 }
 
-func newPaged[T Data[Object]](in Data[Object], resultTrans transformer[T]) PageOf[T] {
+func NewPaged[T Data[Object]](in Data[Object], members func(Data[Object]) T) PageOf[T] {
 	return PageOf[T]{
-		data:        in,
-		resultTrans: resultTrans,
+		data:   in,
+		members: members,
 	}
 }
 
 func (p PageOf[T]) Page() Data[int32] {
-	return fieldData(p, "page", asInt32)
+	return AsInt32(GetField(p, "page"))
 }
 
 func (p PageOf[T]) Results() Slice[T] {
-	return newSlice(fieldData(p, "results", asArray), p.resultTrans)
+	return NewSlice(AsArray(GetField(p, "results")), Compose(AsObject, p.members))
 }
 
 func (p PageOf[T]) TotalPages() Data[int32] {
-	return fieldData(p, "total_pages", asInt32)
+	return AsInt32(GetField(p, "total_pages"))
 }
 
 func (p PageOf[T]) TotalResults() Data[int32] {
-	return fieldData(p, "total_results", asInt32)
+	return AsInt32(GetField(p, "total_results"))
 }

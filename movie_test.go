@@ -38,20 +38,20 @@ func TestMovie(t *testing.T) {
 	}{
 		{
 			name:       "Empty",
-			movie:      tmdb.NewMovie(tmdb.Object{}),
+			movie:      tmdb.NewMovie(tmdb.NewData(tmdb.Object{})),
 			wantTitle:  expected[string]{wantError: true},
 			wantID:     expected[int32]{wantError: true},
 			wantIMDBID: expected[string]{wantError: true},
 		},
 		{
 			name: "With Title and ID",
-			movie: tmdb.NewMovie(tmdb.Object{
+			movie: tmdb.NewMovie(tmdb.NewData(tmdb.Object{
 				"title": "Inception",
 				"id":    tmdb.Number(12345),
 				"external_ids": tmdb.Object{
 					"imdb_id": "tt1375666",
 				},
-			}),
+			})),
 			wantTitle:  expected[string]{Want: "Inception"},
 			wantID:     expected[int32]{Want: 12345},
 			wantIMDBID: expected[string]{Want: "tt1375666"},
