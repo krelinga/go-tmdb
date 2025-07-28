@@ -68,9 +68,9 @@ func TestMovie(t *testing.T) {
 }
 
 func TestGetMovie(t *testing.T) {
-	client := tmdb.NewClient(tmdb.ClientOptions{
+	client := tmdb.ClientOptions{
 		APIReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
-	})
+	}.NewClient()
 	movieID := int32(550) // Example movie ID for "Fight Club"
 	movie, err := tmdb.GetMovie(context.Background(), client, movieID)
 	if err != nil {

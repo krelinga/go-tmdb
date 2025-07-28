@@ -18,12 +18,12 @@ type ClientOptions struct {
 	HttpClient         *http.Client
 }
 
-func NewClient(options ClientOptions) Client {
-	if options.HttpClient == nil {
-		options.HttpClient = http.DefaultClient
+func (co ClientOptions) NewClient() Client {
+	if co.HttpClient == nil {
+		co.HttpClient = http.DefaultClient
 	}
 	return &clientImpl{
-		options: options,
+		options: co,
 	}
 }
 
