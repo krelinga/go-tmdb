@@ -7,11 +7,13 @@ import (
 
 type Slice[T any] struct {
 	data[Array]
+	trans transformer[T]
 }
 
-func NewSlice[T any](in Data[Array]) Slice[T] {
+func newSlice[T any](in Data[Array], trans transformer[T]) Slice[T] {
 	return Slice[T]{
 		data: in,
+		trans: trans,
 	}
 }
 
@@ -25,14 +27,12 @@ func (s Slice[T]) Get(index int) Data[T] {
 		if index < 0 || index >= len(arr) {
 			return zero, fmt.Errorf("index %d out of bounds for array of length %d", index, len(arr))
 		}
-		val, ok := arr[index].(T)
-		if !ok {
-			return zero, fmt.Errorf("value at index %d is not of type %T", index, zero)
-		}
-		return val, nil
+		return s.trans(arr[index])
 	})
 }
 
+// TODO: should I change the return type to be int32 here?
+// That would make it consistent with other integer types in the package.
 func (s Slice[T]) Len() Data[int] {
 	return dataFunc[int](func() (int, error) {
 		arr, err := s.get()
@@ -52,12 +52,7 @@ func (s Slice[T]) All() Data[iter.Seq2[int, Data[T]]] {
 		return func(yield func(int, Data[T]) bool) {
 			for i, item := range arr {
 				if !yield(i, dataFunc[T](func() (T, error) {
-					val, ok := item.(T)
-					if !ok {
-						var zero T
-						return zero, fmt.Errorf("value at index %d is not of type %T", i, zero)
-					}
-					return val, nil
+					return s.trans(item)
 				})) {
 					return
 				}

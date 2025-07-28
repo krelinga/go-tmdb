@@ -1,29 +1,29 @@
 package tmdb
 
-type Paged[T Data[Object]] struct {
+type PageOf[T Data[Object]] struct {
 	data[Object]
+	resultTrans transformer[T]
 }
 
-func NewPaged[T Data[Object]](o Object) Paged[T] {
-	return Paged[T]{
-		data: rootData(o),
+func newPaged[T Data[Object]](in Data[Object], resultTrans transformer[T]) PageOf[T] {
+	return PageOf[T]{
+		data:        in,
+		resultTrans: resultTrans,
 	}
 }
 
-func (p Paged[T]) Page() Data[int32] {
-	return fieldDataInt32(p, "page")
+func (p PageOf[T]) Page() Data[int32] {
+	return fieldData(p, "page", asInt32)
 }
 
-func (p Paged[T]) Results() Slice[T] {
-	return Slice[T]{
-		data: fieldData[Array](p, "results"),
-	}
+func (p PageOf[T]) Results() Slice[T] {
+	return newSlice(fieldData(p, "results", asArray), p.resultTrans)
 }
 
-func (p Paged[T]) TotalPages() Data[int32] {
-	return fieldDataInt32(p, "total_pages")
+func (p PageOf[T]) TotalPages() Data[int32] {
+	return fieldData(p, "total_pages", asInt32)
 }
 
-func (p Paged[T]) TotalResults() Data[int32] {
-	return fieldDataInt32(p, "total_results")
+func (p PageOf[T]) TotalResults() Data[int32] {
+	return fieldData(p, "total_results", asInt32)
 }
