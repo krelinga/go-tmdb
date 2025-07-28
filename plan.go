@@ -10,7 +10,7 @@ type Data[T any] interface {
 }
 
 // Alias for allowing embedding
-type plan[T any] = Data[T]
+type data[T any] = Data[T]
 
 type leaf interface {
 	bool | float64 | string | Array | Object

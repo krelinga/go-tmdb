@@ -6,12 +6,12 @@ import (
 )
 
 type Slice[T any] struct {
-	plan[Array]
+	data[Array]
 }
 
 func NewSlice[T any](arr Array) Slice[T] {
 	return Slice[T]{
-		plan: planFunc[Array](func() (Array, error) {
+		data: planFunc[Array](func() (Array, error) {
 			if arr == nil {
 				return nil, fmt.Errorf("array cannot be nil")
 			}
@@ -23,7 +23,7 @@ func NewSlice[T any](arr Array) Slice[T] {
 func (s Slice[T]) Get(index int) Data[T] {
 	var zero T
 	return planFunc[T](func() (T, error) {
-		arr, err := s.plan.do()
+		arr, err := s.do()
 		if err != nil {
 			return zero, err
 		}
@@ -40,7 +40,7 @@ func (s Slice[T]) Get(index int) Data[T] {
 
 func (s Slice[T]) Len() Data[int] {
 	return planFunc[int](func() (int, error) {
-		arr, err := s.plan.do()
+		arr, err := s.do()
 		if err != nil {
 			return 0, err
 		}
@@ -50,7 +50,7 @@ func (s Slice[T]) Len() Data[int] {
 
 func (s Slice[T]) All() Data[iter.Seq2[int, Data[T]]] {
 	return planFunc[iter.Seq2[int, Data[T]]](func() (iter.Seq2[int, Data[T]], error) {
-		arr, err := s.plan.do()
+		arr, err := s.do()
 		if err != nil {
 			return nil, err
 		}

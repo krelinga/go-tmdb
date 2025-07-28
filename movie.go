@@ -1,11 +1,11 @@
 package tmdb
 
 type Movie struct {
-	plan[Object]
+	data[Object]
 }
 
 func NewMovie(o Object) Movie {
-	return Movie{plan: rootPlan(o)}
+	return Movie{data: rootPlan(o)}
 }
 
 func (m Movie) ID() Data[int32] {
@@ -18,22 +18,22 @@ func (m Movie) Title() Data[string] {
 
 func (m Movie) Keywords() Slice[Keyword] {
 	return Slice[Keyword]{
-		plan: leafPlan[Array](m, "keywords"),
+		data: leafPlan[Array](m, "keywords"),
 	}
 }
 
 func (m Movie) ExternalIDs() ExternalIDs {
 	return ExternalIDs{
-		plan: leafPlan[Object](m, "external_ids"),
+		data: leafPlan[Object](m, "external_ids"),
 	}
 }
 
 type Keyword struct {
-	plan[Object]
+	data[Object]
 }
 
 func NewKeyword(o Object) Keyword {
-	return Keyword{plan: rootPlan(o)}
+	return Keyword{data: rootPlan(o)}
 }
 
 func (k Keyword) Name() Data[string] {
@@ -45,11 +45,11 @@ func (k Keyword) ID() Data[int32] {
 }
 
 type ExternalIDs struct {
-	plan[Object]
+	data[Object]
 }
 
 func NewExternalIDs(o Object) ExternalIDs {
-	return ExternalIDs{plan: rootPlan(o)}
+	return ExternalIDs{data: rootPlan(o)}
 }
 
 func (e ExternalIDs) IMDBID() Data[string] {
