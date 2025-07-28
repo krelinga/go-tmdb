@@ -1,6 +1,8 @@
 package tmdb_test
 
 import (
+	"context"
+	"os"
 	"testing"
 
 	"github.com/krelinga/go-tmdb"
@@ -63,4 +65,30 @@ func TestMovie(t *testing.T) {
 			tc.wantIMDBID.compare(t, tc.movie.ExternalIDs().IMDBID())
 		})
 	}
+}
+
+func TestGetMovie(t *testing.T) {
+	client := tmdb.NewClient(tmdb.ClientOptions{
+		APIReadAccessToken: os.Getenv("TMDB_READ_ACCESS_TOKEN"),
+	})
+	movieID := int32(550) // Example movie ID for "Fight Club"
+	movie, err := tmdb.GetMovie(context.Background(), client, movieID)
+	if err != nil {
+		t.Fatalf("failed to get movie: %v", err)
+	}
+	id, err := tmdb.Get(movie.ID())
+	if err != nil {
+		t.Fatalf("failed to get movie ID: %v", err)
+	}
+	if id != movieID {
+		t.Errorf("expected movie ID %d, got %d", movieID, id)
+	}
+	title, err := tmdb.Get(movie.Title())
+	if err != nil {
+		t.Fatalf("failed to get movie title: %v", err)
+	}
+	if title != "Fight Club" {
+		t.Errorf("expected movie title 'Fight Club', got '%s'", title)
+	}
+	t.Logf("Movie ID: %d, Title: %s", id, title)
 }

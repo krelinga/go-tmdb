@@ -1,11 +1,24 @@
 package tmdb
 
+import (
+	"context"
+	"fmt"
+)
+
 type Movie struct {
 	data[Object]
 }
 
 func NewMovie(o Object) Movie {
 	return Movie{data: rootPlan(o)}
+}
+
+func GetMovie(ctx context.Context, client Client, id int32, options ...RequestOption) (Movie, error) {
+	o, err := client.Get(ctx, fmt.Sprintf("/3/movie/%d", id), options...)
+	if err != nil {
+		return Movie{}, err
+	}
+	return NewMovie(o), nil
 }
 
 func (m Movie) ID() Data[int32] {
