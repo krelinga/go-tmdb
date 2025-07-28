@@ -20,7 +20,7 @@ func NewSlice[T any](arr Array) Slice[T] {
 	}
 }
 
-func (s Slice[T]) Get(index int) Plan[T] {
+func (s Slice[T]) Get(index int) Data[T] {
 	var zero T
 	return planFunc[T](func() (T, error) {
 		arr, err := s.plan.do()
@@ -38,7 +38,7 @@ func (s Slice[T]) Get(index int) Plan[T] {
 	})
 }
 
-func (s Slice[T]) Len() Plan[int] {
+func (s Slice[T]) Len() Data[int] {
 	return planFunc[int](func() (int, error) {
 		arr, err := s.plan.do()
 		if err != nil {
@@ -48,13 +48,13 @@ func (s Slice[T]) Len() Plan[int] {
 	})
 }
 
-func (s Slice[T]) All() Plan[iter.Seq2[int, Plan[T]]] {
-	return planFunc[iter.Seq2[int, Plan[T]]](func() (iter.Seq2[int, Plan[T]], error) {
+func (s Slice[T]) All() Data[iter.Seq2[int, Data[T]]] {
+	return planFunc[iter.Seq2[int, Data[T]]](func() (iter.Seq2[int, Data[T]], error) {
 		arr, err := s.plan.do()
 		if err != nil {
 			return nil, err
 		}
-		return func(yield func(int, Plan[T]) bool) {
+		return func(yield func(int, Data[T]) bool) {
 			for i, item := range arr {
 				if !yield(i, planFunc[T](func() (T, error) {
 					val, ok := item.(T)

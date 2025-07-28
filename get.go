@@ -1,10 +1,10 @@
 package tmdb
 
-func Get[T any](p Plan[T]) (T, error) {
+func Get[T any](p Data[T]) (T, error) {
 	return p.do()
 }
 
-func GetDefault[T any](p Plan[T], defaultValue T) T {
+func GetDefault[T any](p Data[T], defaultValue T) T {
 	val, err := p.do()
 	if err != nil {
 		return defaultValue

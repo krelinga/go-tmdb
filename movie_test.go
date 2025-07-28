@@ -11,7 +11,7 @@ type expected[T comparable] struct {
 	wantError bool
 }
 
-func (e expected[T]) compare(t *testing.T, p tmdb.Plan[T]) {
+func (e expected[T]) compare(t *testing.T, p tmdb.Data[T]) {
 	t.Helper()
 	got, err := tmdb.Get(p)
 	if e.wantError {

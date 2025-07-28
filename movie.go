@@ -8,11 +8,11 @@ func NewMovie(o Object) Movie {
 	return Movie{plan: rootPlan(o)}
 }
 
-func (m Movie) ID() Plan[int32] {
+func (m Movie) ID() Data[int32] {
 	return int32LeafPlan(m, "id")
 }
 
-func (m Movie) Title() Plan[string] {
+func (m Movie) Title() Data[string] {
 	return leafPlan[string](m, "title")
 }
 
@@ -36,11 +36,11 @@ func NewKeyword(o Object) Keyword {
 	return Keyword{plan: rootPlan(o)}
 }
 
-func (k Keyword) Name() Plan[string] {
+func (k Keyword) Name() Data[string] {
 	return leafPlan[string](k, "name")
 }
 
-func (k Keyword) ID() Plan[int32] {
+func (k Keyword) ID() Data[int32] {
 	return int32LeafPlan(k, "id")
 }
 
@@ -52,6 +52,6 @@ func NewExternalIDs(o Object) ExternalIDs {
 	return ExternalIDs{plan: rootPlan(o)}
 }
 
-func (e ExternalIDs) IMDBID() Plan[string] {
+func (e ExternalIDs) IMDBID() Data[string] {
 	return leafPlan[string](e, "imdb_id")
 }

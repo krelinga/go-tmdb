@@ -5,13 +5,12 @@ import (
 	"math"
 )
 
-
-type Plan[T any] interface {
+type Data[T any] interface {
 	do() (T, error)
 }
 
 // Alias for allowing embedding
-type plan[T any] = Plan[T]
+type plan[T any] = Data[T]
 
 type leaf interface {
 	bool | float64 | string | Array | Object
@@ -23,7 +22,7 @@ func (f planFunc[T]) do() (T, error) {
 	return f()
 }
 
-func leafPlan[T leaf](parent Plan[Object], key string) Plan[T] {
+func leafPlan[T leaf](parent Data[Object], key string) Data[T] {
 	var zero T
 	return planFunc[T](func() (T, error) {
 		obj, err := parent.do()
@@ -42,7 +41,7 @@ func leafPlan[T leaf](parent Plan[Object], key string) Plan[T] {
 	})
 }
 
-func int32LeafPlan(parent Plan[Object], key string) Plan[int32] {
+func int32LeafPlan(parent Data[Object], key string) Data[int32] {
 	var zero int32
 	return planFunc[int32](func() (int32, error) {
 		obj, err := parent.do()
@@ -64,7 +63,7 @@ func int32LeafPlan(parent Plan[Object], key string) Plan[int32] {
 	})
 }
 
-func rootPlan(o Object) Plan[Object] {
+func rootPlan(o Object) Data[Object] {
 	return planFunc[Object](func() (Object, error) {
 		if o == nil {
 			return nil, fmt.Errorf("object is nil")
