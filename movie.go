@@ -79,7 +79,7 @@ func NewSearchMoviePage(o Object) SearchMoviePage {
 }
 
 func newSearchMoviePage(in Data[Object]) SearchMoviePage {
-	return NewPaged(in, NewMovie)
+	return NewPageOf(in, NewMovie)
 
 }
 

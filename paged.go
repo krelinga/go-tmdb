@@ -5,9 +5,9 @@ type PageOf[T Data[Object]] struct {
 	members func(Data[Object]) T
 }
 
-func NewPaged[T Data[Object]](in Data[Object], members func(Data[Object]) T) PageOf[T] {
+func NewPageOf[T Data[Object]](in Data[Object], members func(Data[Object]) T) PageOf[T] {
 	return PageOf[T]{
-		data:   in,
+		data:    in,
 		members: members,
 	}
 }
