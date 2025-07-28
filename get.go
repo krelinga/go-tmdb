@@ -1,11 +1,11 @@
 package tmdb
 
-func Get[T any](p Data[T]) (T, error) {
-	return p.do()
+func Get[T any](d Data[T]) (T, error) {
+	return d.do()
 }
 
-func GetDefault[T any](p Data[T], defaultValue T) T {
-	val, err := p.do()
+func GetDefault[T any](d Data[T], defaultValue T) T {
+	val, err := d.do()
 	if err != nil {
 		return defaultValue
 	}
