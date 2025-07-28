@@ -74,13 +74,8 @@ func (e ExternalIDs) IMDBID() Data[string] {
 
 type SearchMoviePage = PageOf[Movie]
 
-func NewSearchMoviePage(o Object) SearchMoviePage {
-	return newSearchMoviePage(NewData(o))
-}
-
-func newSearchMoviePage(in Data[Object]) SearchMoviePage {
+func NewSearchMoviePage(in Data[Object]) SearchMoviePage {
 	return NewPageOf(in, NewMovie)
-
 }
 
 func SearchMovie(ctx context.Context, client Client, query string, options ...RequestOption) (SearchMoviePage, error) {
@@ -88,5 +83,5 @@ func SearchMovie(ctx context.Context, client Client, query string, options ...Re
 	if err != nil {
 		return SearchMoviePage{}, err
 	}
-	return NewSearchMoviePage(o), nil
+	return NewSearchMoviePage(NewData(o)), nil
 }
