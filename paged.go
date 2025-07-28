@@ -17,7 +17,9 @@ func (p PageOf[T]) Page() Data[int32] {
 }
 
 func (p PageOf[T]) Results() Slice[T] {
-	return NewSlice(AsArray(GetField(p, "results")), Compose(AsObject, p.members))
+	sliceAny := NewSlice(AsArray(GetField(p, "results")))
+	sliceObject := ConvertSlice(sliceAny, AsObject)
+	return ConvertSlice(sliceObject, p.members)
 }
 
 func (p PageOf[T]) TotalPages() Data[int32] {

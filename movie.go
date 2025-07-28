@@ -30,7 +30,9 @@ func (m Movie) Title() Data[string] {
 }
 
 func (m Movie) Keywords() Slice[Keyword] {
-	return NewSlice(AsArray(GetField(m, "keywords")), Compose(AsObject, NewKeyword))
+	sliceAny := NewSlice(AsArray(GetField(m, "keywords")))
+	sliceObject := ConvertSlice(sliceAny, AsObject)
+	return ConvertSlice(sliceObject, NewKeyword)
 }
 
 func (m Movie) ExternalIDs() ExternalIDs {
@@ -38,7 +40,8 @@ func (m Movie) ExternalIDs() ExternalIDs {
 }
 
 func (m Movie) KeywordIDs() Slice[Data[int32]] {
-	return NewSlice(AsArray(GetField(m, "keyword_ids")), AsInt32)
+	sliceAny := NewSlice(AsArray(GetField(m, "keyword_ids")))
+	return ConvertSlice(sliceAny, AsInt32)
 }
 
 type Keyword struct {
