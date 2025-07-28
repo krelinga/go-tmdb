@@ -41,7 +41,7 @@ func fieldData[T field](parent Data[Object], key string) Data[T] {
 	})
 }
 
-func int32FieldData(parent Data[Object], key string) Data[int32] {
+func fieldDataInt32(parent Data[Object], key string) Data[int32] {
 	var zero int32
 	return dataFunc[int32](func() (int32, error) {
 		asFloat64, err := fieldData[float64](parent, key).get()

@@ -22,7 +22,7 @@ func GetMovie(ctx context.Context, client Client, id int32, options ...RequestOp
 }
 
 func (m Movie) ID() Data[int32] {
-	return int32FieldData(m, "id")
+	return fieldDataInt32(m, "id")
 }
 
 func (m Movie) Title() Data[string] {
@@ -54,7 +54,7 @@ func (k Keyword) Name() Data[string] {
 }
 
 func (k Keyword) ID() Data[int32] {
-	return int32FieldData(k, "id")
+	return fieldDataInt32(k, "id")
 }
 
 type ExternalIDs struct {
