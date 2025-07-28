@@ -22,7 +22,7 @@ func (f planFunc[T]) do() (T, error) {
 	return f()
 }
 
-func leafPlan[T leaf](parent Data[Object], key string) Data[T] {
+func leafData[T leaf](parent Data[Object], key string) Data[T] {
 	var zero T
 	return planFunc[T](func() (T, error) {
 		obj, err := parent.do()

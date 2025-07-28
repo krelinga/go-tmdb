@@ -26,18 +26,18 @@ func (m Movie) ID() Data[int32] {
 }
 
 func (m Movie) Title() Data[string] {
-	return leafPlan[string](m, "title")
+	return leafData[string](m, "title")
 }
 
 func (m Movie) Keywords() Slice[Keyword] {
 	return Slice[Keyword]{
-		data: leafPlan[Array](m, "keywords"),
+		data: leafData[Array](m, "keywords"),
 	}
 }
 
 func (m Movie) ExternalIDs() ExternalIDs {
 	return ExternalIDs{
-		data: leafPlan[Object](m, "external_ids"),
+		data: leafData[Object](m, "external_ids"),
 	}
 }
 
@@ -50,7 +50,7 @@ func NewKeyword(o Object) Keyword {
 }
 
 func (k Keyword) Name() Data[string] {
-	return leafPlan[string](k, "name")
+	return leafData[string](k, "name")
 }
 
 func (k Keyword) ID() Data[int32] {
@@ -66,5 +66,5 @@ func NewExternalIDs(o Object) ExternalIDs {
 }
 
 func (e ExternalIDs) IMDBID() Data[string] {
-	return leafPlan[string](e, "imdb_id")
+	return leafData[string](e, "imdb_id")
 }
