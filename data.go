@@ -12,7 +12,7 @@ type Data[T any] interface {
 // Alias for allowing embedding
 type data[T any] = Data[T]
 
-type leaf interface {
+type field interface {
 	bool | float64 | string | Array | Object
 }
 
@@ -22,7 +22,7 @@ func (f dataFunc[T]) do() (T, error) {
 	return f()
 }
 
-func leafData[T leaf](parent Data[Object], key string) Data[T] {
+func fieldData[T field](parent Data[Object], key string) Data[T] {
 	var zero T
 	return dataFunc[T](func() (T, error) {
 		obj, err := parent.do()
@@ -41,7 +41,7 @@ func leafData[T leaf](parent Data[Object], key string) Data[T] {
 	})
 }
 
-func int32LeafData(parent Data[Object], key string) Data[int32] {
+func int32FieldData(parent Data[Object], key string) Data[int32] {
 	var zero int32
 	return dataFunc[int32](func() (int32, error) {
 		obj, err := parent.do()

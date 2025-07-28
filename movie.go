@@ -22,22 +22,22 @@ func GetMovie(ctx context.Context, client Client, id int32, options ...RequestOp
 }
 
 func (m Movie) ID() Data[int32] {
-	return int32LeafData(m, "id")
+	return int32FieldData(m, "id")
 }
 
 func (m Movie) Title() Data[string] {
-	return leafData[string](m, "title")
+	return fieldData[string](m, "title")
 }
 
 func (m Movie) Keywords() Slice[Keyword] {
 	return Slice[Keyword]{
-		data: leafData[Array](m, "keywords"),
+		data: fieldData[Array](m, "keywords"),
 	}
 }
 
 func (m Movie) ExternalIDs() ExternalIDs {
 	return ExternalIDs{
-		data: leafData[Object](m, "external_ids"),
+		data: fieldData[Object](m, "external_ids"),
 	}
 }
 
@@ -50,11 +50,11 @@ func NewKeyword(o Object) Keyword {
 }
 
 func (k Keyword) Name() Data[string] {
-	return leafData[string](k, "name")
+	return fieldData[string](k, "name")
 }
 
 func (k Keyword) ID() Data[int32] {
-	return int32LeafData(k, "id")
+	return int32FieldData(k, "id")
 }
 
 type ExternalIDs struct {
@@ -66,5 +66,5 @@ func NewExternalIDs(o Object) ExternalIDs {
 }
 
 func (e ExternalIDs) IMDBID() Data[string] {
-	return leafData[string](e, "imdb_id")
+	return fieldData[string](e, "imdb_id")
 }
