@@ -6,7 +6,7 @@ import (
 )
 
 type Data[T any] interface {
-	do() (T, error)
+	get() (T, error)
 }
 
 // Alias for allowing embedding
@@ -18,14 +18,14 @@ type field interface {
 
 type dataFunc[T any] func() (T, error)
 
-func (f dataFunc[T]) do() (T, error) {
+func (f dataFunc[T]) get() (T, error) {
 	return f()
 }
 
 func fieldData[T field](parent Data[Object], key string) Data[T] {
 	var zero T
 	return dataFunc[T](func() (T, error) {
-		obj, err := parent.do()
+		obj, err := parent.get()
 		if err != nil {
 			return zero, err
 		}
@@ -44,7 +44,7 @@ func fieldData[T field](parent Data[Object], key string) Data[T] {
 func int32FieldData(parent Data[Object], key string) Data[int32] {
 	var zero int32
 	return dataFunc[int32](func() (int32, error) {
-		obj, err := parent.do()
+		obj, err := parent.get()
 		if err != nil {
 			return zero, err
 		}

@@ -23,7 +23,7 @@ func NewSlice[T any](arr Array) Slice[T] {
 func (s Slice[T]) Get(index int) Data[T] {
 	var zero T
 	return dataFunc[T](func() (T, error) {
-		arr, err := s.do()
+		arr, err := s.get()
 		if err != nil {
 			return zero, err
 		}
@@ -40,7 +40,7 @@ func (s Slice[T]) Get(index int) Data[T] {
 
 func (s Slice[T]) Len() Data[int] {
 	return dataFunc[int](func() (int, error) {
-		arr, err := s.do()
+		arr, err := s.get()
 		if err != nil {
 			return 0, err
 		}
@@ -50,7 +50,7 @@ func (s Slice[T]) Len() Data[int] {
 
 func (s Slice[T]) All() Data[iter.Seq2[int, Data[T]]] {
 	return dataFunc[iter.Seq2[int, Data[T]]](func() (iter.Seq2[int, Data[T]], error) {
-		arr, err := s.do()
+		arr, err := s.get()
 		if err != nil {
 			return nil, err
 		}
