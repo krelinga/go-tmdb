@@ -10,7 +10,7 @@ type Movie struct {
 }
 
 func NewMovie(o Object) Movie {
-	return Movie{data: rootPlan(o)}
+	return Movie{data: rootData(o)}
 }
 
 func GetMovie(ctx context.Context, client Client, id int32, options ...RequestOption) (Movie, error) {
@@ -22,7 +22,7 @@ func GetMovie(ctx context.Context, client Client, id int32, options ...RequestOp
 }
 
 func (m Movie) ID() Data[int32] {
-	return int32LeafPlan(m, "id")
+	return int32LeafData(m, "id")
 }
 
 func (m Movie) Title() Data[string] {
@@ -46,7 +46,7 @@ type Keyword struct {
 }
 
 func NewKeyword(o Object) Keyword {
-	return Keyword{data: rootPlan(o)}
+	return Keyword{data: rootData(o)}
 }
 
 func (k Keyword) Name() Data[string] {
@@ -54,7 +54,7 @@ func (k Keyword) Name() Data[string] {
 }
 
 func (k Keyword) ID() Data[int32] {
-	return int32LeafPlan(k, "id")
+	return int32LeafData(k, "id")
 }
 
 type ExternalIDs struct {
@@ -62,7 +62,7 @@ type ExternalIDs struct {
 }
 
 func NewExternalIDs(o Object) ExternalIDs {
-	return ExternalIDs{data: rootPlan(o)}
+	return ExternalIDs{data: rootData(o)}
 }
 
 func (e ExternalIDs) IMDBID() Data[string] {

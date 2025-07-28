@@ -16,15 +16,15 @@ type leaf interface {
 	bool | float64 | string | Array | Object
 }
 
-type planFunc[T any] func() (T, error)
+type dataFunc[T any] func() (T, error)
 
-func (f planFunc[T]) do() (T, error) {
+func (f dataFunc[T]) do() (T, error) {
 	return f()
 }
 
 func leafData[T leaf](parent Data[Object], key string) Data[T] {
 	var zero T
-	return planFunc[T](func() (T, error) {
+	return dataFunc[T](func() (T, error) {
 		obj, err := parent.do()
 		if err != nil {
 			return zero, err
@@ -41,9 +41,9 @@ func leafData[T leaf](parent Data[Object], key string) Data[T] {
 	})
 }
 
-func int32LeafPlan(parent Data[Object], key string) Data[int32] {
+func int32LeafData(parent Data[Object], key string) Data[int32] {
 	var zero int32
-	return planFunc[int32](func() (int32, error) {
+	return dataFunc[int32](func() (int32, error) {
 		obj, err := parent.do()
 		if err != nil {
 			return zero, err
@@ -63,8 +63,8 @@ func int32LeafPlan(parent Data[Object], key string) Data[int32] {
 	})
 }
 
-func rootPlan(o Object) Data[Object] {
-	return planFunc[Object](func() (Object, error) {
+func rootData(o Object) Data[Object] {
+	return dataFunc[Object](func() (Object, error) {
 		if o == nil {
 			return nil, fmt.Errorf("object is nil")
 		}
