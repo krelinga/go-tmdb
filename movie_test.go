@@ -73,16 +73,13 @@ func TestGetMovie(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
-	id, err := tmdb.Get(movie.ID())
+	id := tmdb.Try(&err, movie.ID())
+	title := tmdb.Try(&err, movie.Title())
 	if err != nil {
-		t.Fatalf("failed to get movie ID: %v", err)
+		t.Fatalf("failed to get movie details: %v", err)
 	}
 	if id != movieID {
 		t.Errorf("expected movie ID %d, got %d", movieID, id)
-	}
-	title, err := tmdb.Get(movie.Title())
-	if err != nil {
-		t.Fatalf("failed to get movie title: %v", err)
 	}
 	if title != "Fight Club" {
 		t.Errorf("expected movie title 'Fight Club', got '%s'", title)
