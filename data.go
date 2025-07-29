@@ -15,6 +15,13 @@ func NewData[T any](t T) Data[T] {
 	})
 }
 
+func NewDataError[T any](err error) Data[T] {
+	return dataFunc[T](func() (T, error) {
+		var zero T
+		return zero, err
+	})
+}
+
 // Alias for allowing unexported embedding
 type data[T any] = Data[T]
 
