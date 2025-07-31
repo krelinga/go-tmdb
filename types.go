@@ -1,7 +1,7 @@
 package tmdb
 
-type Object = map[string]any
+import "github.com/krelinga/go-jsonflex"
 
-type Array = []any
-
-type Number = float64
+type Object = jsonflex.Object
+type Array = jsonflex.Array
+type Number = jsonflex.Number
