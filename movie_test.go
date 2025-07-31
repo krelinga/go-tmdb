@@ -10,7 +10,7 @@ import (
 
 type index int
 
-func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, name string, want ValueType, obj ObjType, calls ...any) {
+func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, want ValueType, obj ObjType, calls ...any) {
 	t.Helper()
 	v := reflect.ValueOf(obj)
 	for i, call := range calls {
@@ -48,10 +48,10 @@ func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, name s
 	}
 	got, ok := v.Interface().(ValueType)
 	if !ok {
-		t.Fatalf("expected field %q to be of type %T, got %T", name, want, v.Interface())
+		t.Fatalf("expected field to be of type %T, got %T", want, v.Interface())
 	}
 	if got != want {
-		t.Errorf("field %q: got %v, want %v", name, got, want)
+		t.Errorf("field: got %v, want %v", got, want)
 	}
 }
 
@@ -61,9 +61,9 @@ func TestGetMovie(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
-	checkField(t, "Adult", false, fightClub, tmdb.Movie.Adult)
-	checkField(t, "ID", int32(550), fightClub, tmdb.Movie.ID)
-	checkField(t, "Genres[0].ID", int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
-	checkField(t, "Genres[0].Name", "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
+	checkField(t, false, fightClub, tmdb.Movie.Adult)
+	checkField(t, int32(550), fightClub, tmdb.Movie.ID)
+	checkField(t, int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
+	checkField(t, "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
 	// TODO: write more tests for other fields.
 }
