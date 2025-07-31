@@ -2,53 +2,56 @@ package tmdb_test
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/krelinga/go-tmdb"
 )
 
-type tester interface {
-	test(t *testing.T, obj tmdb.Object)
-	String() string
-}
+type index int
 
-type testerImpl[ObjType ~tmdb.Object, ValueType comparable] struct {
-	name string
-	obj  ObjType
-	call func(ObjType) (ValueType, error)
-	want ValueType
-}
-
-func newTesterImpl[ObjType ~tmdb.Object, ValueType comparable](
-	name string,
-	obj ObjType,
-	call func(ObjType) (ValueType, error),
-	want ValueType,
-) testerImpl[ObjType, ValueType] {
-	return testerImpl[ObjType, ValueType]{
-		name: name,
-		obj:  obj,
-		call: call,
-		want: want,
+func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, name string, want ValueType, obj ObjType, calls ...any) {
+	t.Helper()
+	v := reflect.ValueOf(obj)
+	for i, call := range calls {
+		callV := reflect.ValueOf(call)
+		if callV.Type() == reflect.TypeFor[index]() {
+			// Handle this as an array index.
+			if v.Kind() != reflect.Slice {
+				t.Fatalf("expected a slice, got %s at function %d", v.Kind(), i)
+			}
+			wantIndex := int(callV.Int())
+			if wantIndex < 0 || wantIndex >= v.Len() {
+				t.Fatalf("index %d out of bounds for slice of length %d at function %d", wantIndex, v.Len(), i)
+			}
+			v = v.Index(wantIndex)
+		} else {
+			// Handle this as a method call.
+			if callV.Kind() != reflect.Func {
+				t.Fatalf("expected a function, got %s at function %d", callV.Kind(), i)
+			}
+			gotValues := callV.Call([]reflect.Value{v})
+			if len(gotValues) != 2 {
+				t.Fatalf("expected function %d to return 2 values, got %d", i, len(gotValues))
+			}
+			if !gotValues[1].IsNil() {
+				err, ok := gotValues[1].Interface().(error)
+				if !ok {
+					t.Fatalf("expected second return value of function %d to be an error, got %T", i, gotValues[1].Interface())
+				}
+				if err != nil {
+					t.Fatalf("function %d returned an error: %v", i, err)
+				}
+			}
+			v = gotValues[0]
+		}
 	}
-}
-
-func (ti testerImpl[ObjType, ValueType]) String() string {
-	return ti.name
-}
-
-func (ti testerImpl[ObjType, ValueType]) test(t *testing.T, obj tmdb.Object) {
-	if obj == nil {
-		t.Errorf("expected non-nil object, got nil")
-		return
+	got, ok := v.Interface().(ValueType)
+	if !ok {
+		t.Fatalf("expected field %q to be of type %T, got %T", name, want, v.Interface())
 	}
-	got, err := ti.call(ObjType(obj))
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-		return
-	}
-	if got != ti.want {
-		t.Errorf("got %v, want %v", got, ti.want)
+	if got != want {
+		t.Errorf("field %q: got %v, want %v", name, got, want)
 	}
 }
 
@@ -58,13 +61,9 @@ func TestGetMovie(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
-	tests := []tester{
-		newTesterImpl("Adult", fightClub, tmdb.Movie.Adult, false),
-		newTesterImpl("ID", fightClub, tmdb.Movie.ID, int32(550)),
-	}
-	for _, test := range tests {
-		t.Run(test.String(), func(t *testing.T) {
-			test.test(t, fightClub)
-		})
-	}
+	checkField(t, "Adult", false, fightClub, tmdb.Movie.Adult)
+	checkField(t, "ID", int32(550), fightClub, tmdb.Movie.ID)
+	checkField(t, "Genres[0].ID", int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
+	checkField(t, "Genres[0].Name", "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
+	// TODO: write more tests for other fields.
 }
