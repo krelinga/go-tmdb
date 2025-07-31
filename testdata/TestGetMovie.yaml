@@ -19,45 +19,43 @@ interactions:
         proto_minor: 0
         content_length: -1
         uncompressed: true
-        body: '{"adult":false,"backdrop_path":"/xRyINp9KfMLVjRiO5nCsoRDdvvF.jpg","belongs_to_collection":null,"budget":63000000,"genres":[{"id":18,"name":"Drama"},{"id":53,"name":"Thriller"}],"homepage":"http://www.foxmovies.com/movies/fight-club","id":550,"imdb_id":"tt0137523","origin_country":["US"],"original_language":"en","original_title":"Fight Club","overview":"A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.","popularity":23.9655,"poster_path":"/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg","production_companies":[{"id":711,"logo_path":"/tEiIH5QesdheJmDAqQwvtN60727.png","name":"Fox 2000 Pictures","origin_country":"US"},{"id":508,"logo_path":"/7cxRWzi4LsVm4Utfpr1hfARNurT.png","name":"Regency Enterprises","origin_country":"US"},{"id":4700,"logo_path":"/A32wmjrs9Psf4zw0uaixF0GXfxq.png","name":"Linson Entertainment","origin_country":"US"},{"id":25,"logo_path":"/qZCc1lty5FzX30aOCVRBLzaVmcp.png","name":"20th Century Fox","origin_country":"US"},{"id":20555,"logo_path":"/hD8yEGUBlHOcfHYbujp71vD8gZp.png","name":"Taurus Film","origin_country":"DE"}],"production_countries":[{"iso_3166_1":"DE","name":"Germany"},{"iso_3166_1":"US","name":"United States of America"}],"release_date":"1999-10-15","revenue":100853753,"runtime":139,"spoken_languages":[{"english_name":"English","iso_639_1":"en","name":"English"}],"status":"Released","tagline":"Mischief. Mayhem. Soap.","title":"Fight Club","video":false,"vote_average":8.437,"vote_count":30514}'
+        body: '{"adult":false,"backdrop_path":"/hZkgoQYus5vegHoetLkCJzb17zJ.jpg","belongs_to_collection":null,"budget":63000000,"genres":[{"id":18,"name":"Drama"},{"id":53,"name":"Thriller"}],"homepage":"http://www.foxmovies.com/movies/fight-club","id":550,"imdb_id":"tt0137523","origin_country":["US"],"original_language":"en","original_title":"Fight Club","overview":"A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.","popularity":23.1752,"poster_path":"/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg","production_companies":[{"id":711,"logo_path":"/tEiIH5QesdheJmDAqQwvtN60727.png","name":"Fox 2000 Pictures","origin_country":"US"},{"id":508,"logo_path":"/7cxRWzi4LsVm4Utfpr1hfARNurT.png","name":"Regency Enterprises","origin_country":"US"},{"id":4700,"logo_path":"/A32wmjrs9Psf4zw0uaixF0GXfxq.png","name":"Linson Entertainment","origin_country":"US"},{"id":25,"logo_path":"/qZCc1lty5FzX30aOCVRBLzaVmcp.png","name":"20th Century Fox","origin_country":"US"},{"id":20555,"logo_path":"/hD8yEGUBlHOcfHYbujp71vD8gZp.png","name":"Taurus Film","origin_country":"DE"}],"production_countries":[{"iso_3166_1":"DE","name":"Germany"},{"iso_3166_1":"US","name":"United States of America"}],"release_date":"1999-10-15","revenue":100853753,"runtime":139,"spoken_languages":[{"english_name":"English","iso_639_1":"en","name":"English"}],"status":"Released","tagline":"Mischief. Mayhem. Soap.","title":"Fight Club","video":false,"vote_average":8.437,"vote_count":30523}'
         headers:
-            Age:
-                - "5757"
             Alt-Svc:
                 - h3=":443"; ma=86400
             Cache-Control:
-                - public, max-age=20586
+                - public, max-age=13176
             Content-Type:
                 - application/json;charset=utf-8
             Date:
-                - Mon, 28 Jul 2025 17:54:48 GMT
+                - Thu, 31 Jul 2025 02:33:16 GMT
             Etag:
-                - W/"68df0c8a9272c1715d9cc846fbddc727"
+                - W/"90006f30d3f413b8ef324af8a630ec86"
             Server:
                 - openresty
             Vary:
                 - accept-encoding
                 - Origin
             Via:
-                - 1.1 66520fa6461afd8e9c82655fe71e2bee.cloudfront.net (CloudFront)
+                - 1.1 eccb44470f382cc1705189e3db5d368c.cloudfront.net (CloudFront)
             X-Amz-Cf-Id:
-                - LbKvU3WXBePmlbiieMcSSLAr28NDvRdz3mYHmrD1wZieaCMWS4--6w==
+                - 6PVLqPazb-QDNhLjczzAHSTW_6E8SS5Edc25VTyZ_owAl6J1pXIA6Q==
             X-Amz-Cf-Pop:
                 - ORD56-P12
             X-Az:
-                - us-east-1c
+                - us-east-1b
             X-Cache:
-                - Hit from cloudfront
+                - Miss from cloudfront
             X-Memc:
                 - HIT
             X-Memc-Age:
-                - "7538"
+                - "9666"
             X-Memc-Expires:
-                - "20586"
+                - "13176"
             X-Memc-Key:
                 - 6c7a52dee8b7e2fa21ee30fa3f3638b7b624e2e442e0e46c5bbb9fc86393d167
             X-Task-Id:
-                - 55e87a0a42e7471b9fdf715f71036a92
+                - abb86fede680400f9d83c278be44472f
         status: 200 OK
         code: 200
-        duration: 35.512215ms
+        duration: 81.03185ms
