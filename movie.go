@@ -110,3 +110,7 @@ func (m Movie) VoteAverage() (float64, error) {
 func (m Movie) VoteCount() (int32, error) {
 	return jsonflex.GetField(m, "vote_count", jsonflex.AsInt32())
 }
+
+func (m Movie) OriginCountry() ([]string, error) {
+	return jsonflex.GetField(m, "origin_country", jsonflex.AsArray(jsonflex.AsString()))
+}

@@ -62,8 +62,24 @@ func TestGetMovie(t *testing.T) {
 		t.Fatalf("failed to get movie: %v", err)
 	}
 	checkField(t, false, fightClub, tmdb.Movie.Adult)
+	checkField(t, int32(63000000), fightClub, tmdb.Movie.Budget)
+	checkField(t, "http://www.foxmovies.com/movies/fight-club", fightClub, tmdb.Movie.Homepage)
 	checkField(t, int32(550), fightClub, tmdb.Movie.ID)
+	checkField(t, "tt0137523", fightClub, tmdb.Movie.IMDBID)
+	checkField(t, "US", fightClub, tmdb.Movie.OriginCountry, index(0))
+	checkField(t, "en", fightClub, tmdb.Movie.OriginalLanguage)
+	checkField(t, "Fight Club", fightClub, tmdb.Movie.OriginalTitle)
+	checkField(t, "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.", fightClub, tmdb.Movie.Overview)
+	checkField(t, float64(23.1752), fightClub, tmdb.Movie.Popularity)
+	checkField(t, "/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", fightClub, tmdb.Movie.PosterPath)
+	checkField(t, int32(711), fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.ID)
 	checkField(t, int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
+	checkField(t, "/tEiIH5QesdheJmDAqQwvtN60727.png", fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.LogoPath)
+	checkField(t, "Fox 2000 Pictures", fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.Name)
+	checkField(t, "US", fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.OriginCountry)
+	if pc, err := fightClub.ProductionCompanies(); err != nil || len(pc) != 5 {
+		t.Errorf("expected no error and 5 production companies, got %v and %d", err, len(pc))
+	}
 	checkField(t, "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
 	// TODO: write more tests for other fields.
 }
