@@ -114,3 +114,7 @@ func (m Movie) VoteCount() (int32, error) {
 func (m Movie) OriginCountry() ([]string, error) {
 	return jsonflex.GetField(m, "origin_country", jsonflex.AsArray(jsonflex.AsString()))
 }
+
+func (m Movie) Credits() (Credits, error) {
+	return jsonflex.GetField(m, "credits", jsonflex.AsObject[Credits]())
+}
