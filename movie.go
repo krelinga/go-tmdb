@@ -118,3 +118,7 @@ func (m Movie) OriginCountry() ([]string, error) {
 func (m Movie) Credits() (Credits, error) {
 	return jsonflex.GetField(m, "credits", jsonflex.AsObject[Credits]())
 }
+
+func (m Movie) Keywords() (Keywords, error) {
+	return jsonflex.GetField(m, "keywords", jsonflex.AsObject[Keywords]())
+}
