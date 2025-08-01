@@ -63,6 +63,7 @@ func TestGetMovie(t *testing.T) {
 	}
 	checkField(t, false, fightClub, tmdb.Movie.Adult)
 	checkField(t, int32(63000000), fightClub, tmdb.Movie.Budget)
+	checkField(t, "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
 	checkField(t, "http://www.foxmovies.com/movies/fight-club", fightClub, tmdb.Movie.Homepage)
 	checkField(t, int32(550), fightClub, tmdb.Movie.ID)
 	checkField(t, "tt0137523", fightClub, tmdb.Movie.IMDBID)
@@ -80,6 +81,5 @@ func TestGetMovie(t *testing.T) {
 	if pc, err := fightClub.ProductionCompanies(); err != nil || len(pc) != 5 {
 		t.Errorf("expected no error and 5 production companies, got %v and %d", err, len(pc))
 	}
-	checkField(t, "Drama", fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.Name)
 	// TODO: write more tests for other fields.
 }
