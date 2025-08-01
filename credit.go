@@ -52,6 +52,14 @@ func (c Credit) Order() (int32, error) {
 	return jsonflex.GetField(c, "order", jsonflex.AsInt32())
 }
 
+func (c Credit) Department() (string, error) {
+	return jsonflex.GetField(c, "department", jsonflex.AsString())
+}
+
+func (c Credit) Job() (string, error) {
+	return jsonflex.GetField(c, "job", jsonflex.AsString())
+}
+
 type Credits Object
 
 func (c Credits) ID() (int32, error) {

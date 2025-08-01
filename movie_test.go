@@ -117,5 +117,20 @@ func TestGetMovie(t *testing.T) {
 	} else if cast, err := credits.Cast(); err != nil || len(cast) != 75 {
 		t.Errorf("expected no error and 75 cast members, got %v and %d", err, len(cast))
 	}
+	checkField(t, false, fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Adult)
+	checkField(t, int32(2), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Gender)
+	checkField(t, int32(7474), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.ID)
+	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.KnownForDepartment)
+	checkField(t, "Ross Grayson Bell", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Name)
+	checkField(t, "Ross Grayson Bell", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.OriginalName)
+	checkField(t, float64(0.057), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Popularity)
+	checkField(t, "52fe4250c3a36847f8014a05", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.CreditID)
+	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Department)
+	checkField(t, "Producer", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Job)
+	if credits, err := fightClub.Credits(); err != nil {
+		t.Fatalf("failed to get credits: %v", err)
+	} else if crew, err := credits.Crew(); err != nil || len(crew) != 188 {
+		t.Errorf("expected no error and 188 crew members, got %v and %d", err, len(crew))
+	}
 	// TODO: write more tests for other fields.
 }
