@@ -81,5 +81,22 @@ func TestGetMovie(t *testing.T) {
 	if pc, err := fightClub.ProductionCompanies(); err != nil || len(pc) != 5 {
 		t.Errorf("expected no error and 5 production companies, got %v and %d", err, len(pc))
 	}
+	checkField(t, "DE", fightClub, tmdb.Movie.ProductionCountries, index(0), tmdb.Country.ISO3166_1)
+	checkField(t, "Germany", fightClub, tmdb.Movie.ProductionCountries, index(0), tmdb.Country.Name)
+	if pc, err := fightClub.ProductionCountries(); err != nil || len(pc) != 2 {
+		t.Errorf("expected no error and 2 production countries, got %v and %d", err, len(pc))
+	}
+	checkField(t, "1999-10-15", fightClub, tmdb.Movie.ReleaseDate)
+	checkField(t, int32(100853753), fightClub, tmdb.Movie.Revenue)
+	checkField(t, int32(139), fightClub, tmdb.Movie.Runtime)
+	checkField(t, "English", fightClub, tmdb.Movie.SpokenLanguages, index(0), tmdb.Language.EnglishName)
+	checkField(t, "en", fightClub, tmdb.Movie.SpokenLanguages, index(0), tmdb.Language.ISO639_1)
+	checkField(t, "English", fightClub, tmdb.Movie.SpokenLanguages, index(0), tmdb.Language.Name)
+	checkField(t, "Released", fightClub, tmdb.Movie.Status)
+	checkField(t, "Mischief. Mayhem. Soap.", fightClub, tmdb.Movie.Tagline)
+	checkField(t, "Fight Club", fightClub, tmdb.Movie.Title)
+	checkField(t, false, fightClub, tmdb.Movie.Video)
+	checkField(t, float64(8.437), fightClub, tmdb.Movie.VoteAverage)
+	checkField(t, int32(30523), fightClub, tmdb.Movie.VoteCount)
 	// TODO: write more tests for other fields.
 }
