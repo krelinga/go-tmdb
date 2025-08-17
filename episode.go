@@ -32,6 +32,10 @@ func (e Episode) EpisodeNumber() (int32, error) {
 	return jsonflex.GetField(e, "episode_number", jsonflex.AsInt32())
 }
 
+func (e Episode) EpisodeType() (string, error) {
+	return jsonflex.GetField(e, "episode_type", jsonflex.AsString())
+}
+
 func (e Episode) ProductionCode() (string, error) {
 	return jsonflex.GetField(e, "production_code", jsonflex.AsString())
 }
