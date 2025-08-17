@@ -203,6 +203,63 @@ func TestGetShow(t *testing.T) {
 	checkField(t, "Scripted", show, tmdb.Show.Type)
 	checkField(t, 8.456, show, tmdb.Show.VoteAverage)
 	checkField(t, int32(25382), show, tmdb.Show.VoteCount)
+	if aggregateCredits, err := show.AggregateCredits(); err != nil {
+		t.Errorf("failed to get aggregate_credits: %v", err)
+	} else {
+		if cast, err := aggregateCredits.Cast(); err != nil {
+			t.Error(err)
+		} else if len(cast) != 580 {
+			t.Errorf("expected 580 cast members, got %d", len(cast))
+		} else if c, err := findCredit(cast, "Peter Dinklage"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, false, c, tmdb.Credit.Adult)
+			checkField(t, int32(2), c, tmdb.Credit.Gender)
+			checkField(t, int32(22970), c, tmdb.Credit.ID)
+			checkField(t, "Peter Dinklage", c, tmdb.Credit.Name)
+			checkField(t, "Peter Dinklage", c, tmdb.Credit.OriginalName)
+			checkField(t, 2.2255, c, tmdb.Credit.Popularity)
+			checkField(t, "/9CAd7wr8QZyIN0E7nm8v1B6WkGn.jpg", c, tmdb.Credit.ProfilePath)
+			if roles, err := c.Roles(); err != nil {
+				t.Errorf("failed to get roles: %v", err)
+			} else if len(roles) != 1 {
+				t.Errorf("expected 1 role, got %d", len(roles))
+			} else {
+				checkField(t, "5256c8b219c2956ff6047cd8", roles[0], tmdb.Role.CreditID)
+				checkField(t, "Tyrion 'The Halfman' Lannister", roles[0], tmdb.Role.Character)
+				checkField(t, int32(73), roles[0], tmdb.Role.EpisodeCount)
+			}
+			checkField(t, int32(73), c, tmdb.Credit.TotalEpisodeCount)
+			checkField(t, int32(0), c, tmdb.Credit.Order)
+		}
+		if crew, err := aggregateCredits.Crew(); err != nil {
+			t.Error(err)
+		} else if len(crew) != 337 {
+			t.Errorf("expected 337 crew members, got %d", len(crew))
+		} else if c, err := findCredit(crew, "Deborah Riley"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, false, c, tmdb.Credit.Adult)
+			checkField(t, int32(1), c, tmdb.Credit.Gender)
+			checkField(t, int32(6411), c, tmdb.Credit.ID)
+			checkField(t, "Art", c, tmdb.Credit.KnownForDepartment)
+			checkField(t, "Deborah Riley", c, tmdb.Credit.Name)
+			checkField(t, "Deborah Riley", c, tmdb.Credit.OriginalName)
+			checkField(t, 1.9493, c, tmdb.Credit.Popularity)
+			checkField(t, "/cjhADpqdrnwB1PdDUKaBnWrIj2Q.jpg", c, tmdb.Credit.ProfilePath)
+			if jobs, err := c.Jobs(); err != nil {
+				t.Errorf("failed to get jobs: %v", err)
+			} else if len(jobs) != 1 {
+				t.Errorf("expected 1 job, got %d", len(jobs))
+			} else {
+				checkField(t, "54eee9e5c3a3686d5800584e", jobs[0], tmdb.Job.CreditID)
+				checkField(t, "Production Design", jobs[0], tmdb.Job.Job)
+				checkField(t, int32(43), jobs[0], tmdb.Job.EpisodeCount)
+			}
+			checkField(t, "Art", c, tmdb.Credit.Department)
+			checkField(t, int32(43), c, tmdb.Credit.TotalEpisodeCount)
+		}
+	}
 	// TODO: checks for other fields.
 }
 

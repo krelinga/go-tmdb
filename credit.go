@@ -60,6 +60,18 @@ func (c Credit) Job() (string, error) {
 	return jsonflex.GetField(c, "job", jsonflex.AsString())
 }
 
+func (c Credit) Roles() ([]Role, error) {
+	return jsonflex.GetField(c, "roles", jsonflex.AsArray(jsonflex.AsObject[Role]()))
+}
+
+func (c Credit) Jobs() ([]Job, error) {
+	return jsonflex.GetField(c, "jobs", jsonflex.AsArray(jsonflex.AsObject[Job]()))
+}
+
+func (c Credit) TotalEpisodeCount() (int32, error) {
+	return jsonflex.GetField(c, "total_episode_count", jsonflex.AsInt32())
+}
+
 type Credits Object
 
 func (c Credits) ID() (int32, error) {

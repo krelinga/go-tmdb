@@ -133,6 +133,10 @@ func (s Show) VoteCount() (int32, error) {
 	return jsonflex.GetField(s, "vote_count", jsonflex.AsInt32())
 }
 
+func (s Show) AggregateCredits() (Credits, error) {
+	return jsonflex.GetField(s, "aggregate_credits", jsonflex.AsObject[Credits]())
+}
+
 func GetShow(ctx context.Context, client Client, showId int32, opts ...RequestOption) (Show, error) {
 	return client.Get(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
 }
