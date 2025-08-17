@@ -58,7 +58,7 @@ func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, want V
 
 func TestGetMovie(t *testing.T) {
 	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
-	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates", "external_ids"))
+	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates", "external_ids", "keywords"))
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
@@ -160,6 +160,22 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "tt0137523", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.IMDBID)
 	checkField(t, "Q190050", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.WikidataID)
 	checkField(t, "FightClub", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.FacebookID)
+	if keywords, err := fightClub.Keywords(); err != nil {
+		t.Fatalf("failed to get keywords: %v", err)
+	} else {
+		if kw, err := findKeyword(keywords, "insomnia"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, int32(4142), kw, tmdb.Keyword.ID)
+			checkField(t, "insomnia", kw, tmdb.Keyword.Name)
+		}
+		if kw, err := findKeyword(keywords, "support group"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, int32(825), kw, tmdb.Keyword.ID)
+			checkField(t, "support group", kw, tmdb.Keyword.Name)
+		}
+	}
 	// TODO: write more tests for other fields.
 }
 
@@ -187,4 +203,19 @@ func findReleaseDate(in tmdb.CountryReleaseDates, want string) (tmdb.ReleaseDate
 		}
 	}
 	return tmdb.ReleaseDate{}, fmt.Errorf("no release date found for date: %s", want)
+}
+
+func findKeyword(in tmdb.Keywords, want string) (tmdb.Keyword, error) {
+	kw, err := in.Keywords()
+	if err != nil {
+		return tmdb.Keyword{}, fmt.Errorf("failed to get keywords: %w", err)
+	}
+	for _, k := range kw {
+		if name, err := k.Name(); err != nil {
+			return tmdb.Keyword{}, fmt.Errorf("failed to get keyword name: %w", err)
+		} else if name == want {
+			return k, nil
+		}
+	}
+	return tmdb.Keyword{}, fmt.Errorf("no keyword found with name: %s", want)
 }
