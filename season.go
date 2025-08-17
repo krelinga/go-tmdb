@@ -8,6 +8,10 @@ func (s Season) AirDate() (string, error) {
 	return jsonflex.GetField(s, "air_date", jsonflex.AsString())
 }
 
+func (s Season) EpisodeCount() (int32, error) {
+	return jsonflex.GetField(s, "episode_count", jsonflex.AsInt32())
+}
+
 func (s Season) ID() (int32, error) {
 	return jsonflex.GetField(s, "id", jsonflex.AsInt32())
 }
