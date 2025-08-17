@@ -18,27 +18,27 @@ func (c CountryReleaseDates) ISO31661() (string, error) {
 	return jsonflex.GetField(c, "iso_3166_1", jsonflex.AsString())
 }
 
-func (c CountryReleaseDates) ReleaseDates() ([]CountryReleaseDate, error) {
-	return jsonflex.GetField(c, "release_dates", jsonflex.AsArray(jsonflex.AsObject[CountryReleaseDate]()))
+func (c CountryReleaseDates) ReleaseDates() ([]ReleaseDate, error) {
+	return jsonflex.GetField(c, "release_dates", jsonflex.AsArray(jsonflex.AsObject[ReleaseDate]()))
 }
 
-type CountryReleaseDate Object
+type ReleaseDate Object
 
-func (c CountryReleaseDate) Certification() (string, error) {
+func (c ReleaseDate) Certification() (string, error) {
 	return jsonflex.GetField(c, "certification", jsonflex.AsString())
 }
 
 // Descriptors?
 
-func (c CountryReleaseDate) ISO639_1() (string, error) {
+func (c ReleaseDate) ISO639_1() (string, error) {
 	return jsonflex.GetField(c, "iso_639_1", jsonflex.AsString())
 }
 
-func (c CountryReleaseDate) Note() (string, error) {
+func (c ReleaseDate) Note() (string, error) {
 	return jsonflex.GetField(c, "note", jsonflex.AsString())
 }
 
-func (c CountryReleaseDate) ReleaseDate() (string, error) {
+func (c ReleaseDate) ReleaseDate() (string, error) {
 	return jsonflex.GetField(c, "release_date", jsonflex.AsString())
 }
 
@@ -51,6 +51,6 @@ const (
 	ReleaseTypeTV                int32 = 6
 )
 
-func (c CountryReleaseDate) Type() (int32, error) {
+func (c ReleaseDate) Type() (int32, error) {
 	return jsonflex.GetField(c, "type", jsonflex.AsInt32())
 }
