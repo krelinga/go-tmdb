@@ -2,6 +2,7 @@ package tmdb_test
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -57,7 +58,7 @@ func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, want V
 
 func TestGetMovie(t *testing.T) {
 	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
-	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits"))
+	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates"))
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
@@ -71,7 +72,7 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "en", fightClub, tmdb.Movie.OriginalLanguage)
 	checkField(t, "Fight Club", fightClub, tmdb.Movie.OriginalTitle)
 	checkField(t, "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.", fightClub, tmdb.Movie.Overview)
-	checkField(t, float64(21.6344), fightClub, tmdb.Movie.Popularity)
+	checkField(t, float64(19.2158), fightClub, tmdb.Movie.Popularity)
 	checkField(t, "/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", fightClub, tmdb.Movie.PosterPath)
 	checkField(t, int32(711), fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.ID)
 	checkField(t, int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
@@ -97,7 +98,7 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "Fight Club", fightClub, tmdb.Movie.Title)
 	checkField(t, false, fightClub, tmdb.Movie.Video)
 	checkField(t, float64(8.437), fightClub, tmdb.Movie.VoteAverage)
-	checkField(t, int32(30526), fightClub, tmdb.Movie.VoteCount)
+	checkField(t, int32(30601), fightClub, tmdb.Movie.VoteCount)
 
 	// Credits appended to response.
 	checkField(t, false, fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Adult)
@@ -106,7 +107,7 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "Acting", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.KnownForDepartment)
 	checkField(t, "Edward Norton", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Name)
 	checkField(t, "Edward Norton", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.OriginalName)
-	checkField(t, float64(3.4637), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Popularity)
+	checkField(t, float64(3.9497), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Popularity)
 	checkField(t, "/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.ProfilePath)
 	checkField(t, int32(4), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.CastID)
 	checkField(t, "Narrator", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Character)
@@ -118,19 +119,69 @@ func TestGetMovie(t *testing.T) {
 		t.Errorf("expected no error and 75 cast members, got %v and %d", err, len(cast))
 	}
 	checkField(t, false, fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Adult)
-	checkField(t, int32(2), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Gender)
-	checkField(t, int32(7474), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.ID)
+	checkField(t, int32(1), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Gender)
+	checkField(t, int32(7481), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.ID)
 	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.KnownForDepartment)
-	checkField(t, "Ross Grayson Bell", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Name)
-	checkField(t, "Ross Grayson Bell", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.OriginalName)
-	checkField(t, float64(0.057), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Popularity)
-	checkField(t, "52fe4250c3a36847f8014a05", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.CreditID)
+	checkField(t, "Laray Mayfield", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Name)
+	checkField(t, "Laray Mayfield", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.OriginalName)
+	checkField(t, float64(2.8707), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Popularity)
+	checkField(t, "52fe4250c3a36847f8014a2f", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.CreditID)
 	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Department)
-	checkField(t, "Producer", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Job)
+	checkField(t, "Casting", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Job)
 	if credits, err := fightClub.Credits(); err != nil {
 		t.Fatalf("failed to get credits: %v", err)
 	} else if crew, err := credits.Crew(); err != nil || len(crew) != 188 {
 		t.Errorf("expected no error and 188 crew members, got %v and %d", err, len(crew))
 	}
+	if releaseDates, err := fightClub.ReleaseDates(); err != nil {
+		t.Fatalf("failed to get release dates: %v", err)
+	} else if results, err := releaseDates.Results(); err != nil || len(results) == 0 {
+		t.Errorf("expected no error and some release dates, got %v and %d", err, len(results))
+	} else if usReleases, err := findReleseDates(results, "US"); err != nil {
+		t.Error(err)
+	} else {
+		checkField(t, "US", usReleases, tmdb.CountryReleaseDates.ISO3166_1)
+		if date, err := findReleaseDate(usReleases, "1999-10-15T00:00:00.000Z"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, "R", date, tmdb.ReleaseDate.Certification)
+			checkField(t, "1999-10-15T00:00:00.000Z", date, tmdb.ReleaseDate.ReleaseDate)
+			checkField(t, int32(3), date, tmdb.ReleaseDate.Type)
+		}
+		if date, err := findReleaseDate(usReleases, "2000-04-25T00:00:00.000Z"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, "R", date, tmdb.ReleaseDate.Certification)
+			checkField(t, "2000-04-25T00:00:00.000Z", date, tmdb.ReleaseDate.ReleaseDate)
+			checkField(t, "VHS", date, tmdb.ReleaseDate.Note)
+			checkField(t, int32(5), date, tmdb.ReleaseDate.Type)
+		}
+	}
 	// TODO: write more tests for other fields.
+}
+
+func findReleseDates(in []tmdb.CountryReleaseDates, want string) (tmdb.CountryReleaseDates, error) {
+	for _, r := range in {
+		if iso, err := r.ISO3166_1(); err != nil {
+			return tmdb.CountryReleaseDates{}, fmt.Errorf("failed to get ISO3166_1: %w", err)
+		} else if iso == want {
+			return r, nil
+		}
+	}
+	return tmdb.CountryReleaseDates{}, fmt.Errorf("no release dates found for ISO 3166-1 code: %s", want)
+}
+
+func findReleaseDate(in tmdb.CountryReleaseDates, want string) (tmdb.ReleaseDate, error) {
+	rd, err := in.ReleaseDates()
+	if err != nil {
+		return tmdb.ReleaseDate{}, fmt.Errorf("failed to get release dates: %w", err)
+	}
+	for _, r := range rd {
+		if date, err := r.ReleaseDate(); err != nil {
+			return tmdb.ReleaseDate{}, fmt.Errorf("failed to get release date: %w", err)
+		} else if date == want {
+			return r, nil
+		}
+	}
+	return tmdb.ReleaseDate{}, fmt.Errorf("no release date found for date: %s", want)
 }

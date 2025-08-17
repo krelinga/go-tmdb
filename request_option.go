@@ -42,7 +42,11 @@ func WithAppendToResponse(appends ...string) RequestOption {
 			if *values == nil {
 				*values = url.Values{}
 			}
-			values.Add("append_to_response", url.QueryEscape(strings.Join(appends, ",")))
+			escapedAppends := make([]string, len(appends))
+			for i, append := range appends {
+				escapedAppends[i] = url.QueryEscape(append)
+			}
+			values.Set("append_to_response", strings.Join(escapedAppends, ","))
 		},
 	}
 }

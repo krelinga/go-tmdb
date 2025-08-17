@@ -19,7 +19,7 @@ func (r ReleaseDates) Results() ([]CountryReleaseDates, error) {
 
 type CountryReleaseDates Object
 
-func (c CountryReleaseDates) ISO31661() (string, error) {
+func (c CountryReleaseDates) ISO3166_1() (string, error) {
 	return jsonflex.GetField(c, "iso_3166_1", jsonflex.AsString())
 }
 

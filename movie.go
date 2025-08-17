@@ -122,3 +122,7 @@ func (m Movie) Credits() (Credits, error) {
 func (m Movie) Keywords() (Keywords, error) {
 	return jsonflex.GetField(m, "keywords", jsonflex.AsObject[Keywords]())
 }
+
+func (m Movie) ReleaseDates() (ReleaseDates, error) {
+	return jsonflex.GetField(m, "release_dates", jsonflex.AsObject[ReleaseDates]())
+}
