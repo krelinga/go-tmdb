@@ -1,0 +1,53 @@
+package tmdb
+
+import "github.com/krelinga/go-jsonflex"
+
+type Episode Object
+
+func (e Episode) ID() (int32, error) {
+	return jsonflex.GetField(e, "id", jsonflex.AsInt32())
+}
+
+func (e Episode) Name() (string, error) {
+	return jsonflex.GetField(e, "name", jsonflex.AsString())
+}
+
+func (e Episode) Overview() (string, error) {
+	return jsonflex.GetField(e, "overview", jsonflex.AsString())
+}
+
+func (e Episode) VoteAverage() (float64, error) {
+	return jsonflex.GetField(e, "vote_average", jsonflex.AsFloat64())
+}
+
+func (e Episode) VoteCount() (int32, error) {
+	return jsonflex.GetField(e, "vote_count", jsonflex.AsInt32())
+}
+
+func (e Episode) AirDate() (string, error) {
+	return jsonflex.GetField(e, "air_date", jsonflex.AsString())
+}
+
+func (e Episode) EpisodeNumber() (int32, error) {
+	return jsonflex.GetField(e, "episode_number", jsonflex.AsInt32())
+}
+
+func (e Episode) ProductionCode() (string, error) {
+	return jsonflex.GetField(e, "production_code", jsonflex.AsString())
+}
+
+func (e Episode) Runtime() (int32, error) {
+	return jsonflex.GetField(e, "runtime", jsonflex.AsInt32())
+}
+
+func (e Episode) SeasonNumber() (int32, error) {
+	return jsonflex.GetField(e, "season_number", jsonflex.AsInt32())
+}
+
+func (e Episode) ShowID() (int32, error) {
+	return jsonflex.GetField(e, "show_id", jsonflex.AsInt32())
+}
+
+func (e Episode) StillPath() (string, error) {
+	return jsonflex.GetField(e, "still_path", jsonflex.AsString())
+}
