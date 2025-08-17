@@ -1,6 +1,11 @@
 package tmdb
 
-import "github.com/krelinga/go-jsonflex"
+import (
+	"context"
+	"fmt"
+
+	"github.com/krelinga/go-jsonflex"
+)
 
 type ReleaseDates Object
 
@@ -53,4 +58,8 @@ const (
 
 func (c ReleaseDate) Type() (int32, error) {
 	return jsonflex.GetField(c, "type", jsonflex.AsInt32())
+}
+
+func GetReleaseDates(ctx context.Context, client Client, movieID int32, opts ...RequestOption) (ReleaseDates, error) {
+	return client.Get(ctx, fmt.Sprintf("/3/movie/%d/release_dates", movieID), opts...)
 }
