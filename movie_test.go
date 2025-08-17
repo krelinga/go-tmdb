@@ -58,7 +58,7 @@ func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, want V
 
 func TestGetMovie(t *testing.T) {
 	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
-	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates"))
+	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates", "external_ids"))
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
@@ -157,6 +157,9 @@ func TestGetMovie(t *testing.T) {
 			checkField(t, int32(5), date, tmdb.ReleaseDate.Type)
 		}
 	}
+	checkField(t, "tt0137523", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.IMDBID)
+	checkField(t, "Q190050", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.WikidataID)
+	checkField(t, "FightClub", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.FacebookID)
 	// TODO: write more tests for other fields.
 }
 
