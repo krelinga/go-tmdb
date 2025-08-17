@@ -21,10 +21,6 @@ func (s Show) CreatedBy() ([]Credit, error) {
 	return jsonflex.GetField(s, "created_by", jsonflex.AsArray(jsonflex.AsObject[Credit]()))
 }
 
-func (s Show) EpisodeRunTime() ([]int32, error) {
-	return jsonflex.GetField(s, "episode_run_time", jsonflex.AsArray(jsonflex.AsInt32()))
-}
-
 func (s Show) FirstAirDate() (string, error) {
 	return jsonflex.GetField(s, "first_air_date", jsonflex.AsString())
 }
