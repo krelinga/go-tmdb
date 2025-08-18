@@ -260,6 +260,16 @@ func TestGetShow(t *testing.T) {
 			checkField(t, int32(43), c, tmdb.Credit.TotalEpisodeCount)
 		}
 	}
+	if contentRatings, err := show.ContentRatings(); err != nil {
+		t.Errorf("failed to get content_ratings: %v", err)
+	} else if results, err := contentRatings.Results(); err != nil {
+		t.Errorf("failed to get content_ratings results: %v", err)
+	} else if usRating, err := findContentRating(results, "US"); err != nil {
+		t.Error(err)
+	} else {
+		checkField(t, "US", usRating, tmdb.ContentRating.ISO3166_1)
+		checkField(t, "TV-MA", usRating, tmdb.ContentRating.Rating)
+	}
 	// TODO: checks for other fields.
 }
 
@@ -327,4 +337,15 @@ func findLanguage(in []tmdb.Language, want string) (tmdb.Language, error) {
 		}
 	}
 	return tmdb.Language{}, fmt.Errorf("no language found with iso_639_1: %s", want)
+}
+
+func findContentRating(in []tmdb.ContentRating, want string) (tmdb.ContentRating, error) {
+	for _, cr := range in {
+		if iso_3166_1, err := cr.ISO3166_1(); err != nil {
+			return tmdb.ContentRating{}, fmt.Errorf("failed to get content rating: %w", err)
+		} else if iso_3166_1 == want {
+			return cr, nil
+		}
+	}
+	return tmdb.ContentRating{}, fmt.Errorf("no content rating found with iso_3166_1: %s", want)
 }

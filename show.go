@@ -137,6 +137,10 @@ func (s Show) AggregateCredits() (Credits, error) {
 	return jsonflex.GetField(s, "aggregate_credits", jsonflex.AsObject[Credits]())
 }
 
+func (s Show) ContentRatings() (ContentRatings, error) {
+	return jsonflex.GetField(s, "content_ratings", jsonflex.AsObject[ContentRatings]())
+}
+
 func GetShow(ctx context.Context, client Client, showId int32, opts ...RequestOption) (Show, error) {
 	return client.Get(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
 }
