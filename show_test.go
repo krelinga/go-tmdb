@@ -270,6 +270,46 @@ func TestGetShow(t *testing.T) {
 		checkField(t, "US", usRating, tmdb.ContentRating.ISO3166_1)
 		checkField(t, "TV-MA", usRating, tmdb.ContentRating.Rating)
 	}
+	if credits, err := show.Credits(); err != nil {
+		t.Errorf("failed to get credits: %v", err)
+	} else {
+		if cast, err := credits.Cast(); err != nil {
+			t.Errorf("failed to get credits cast: %v", err)
+		} else if len(cast) != 14 {
+			t.Errorf("expected 14 cast members, got %d", len(cast))
+		} else if c, err := findCredit(cast, "Peter Dinklage"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, false, c, tmdb.Credit.Adult)
+			checkField(t, int32(2), c, tmdb.Credit.Gender)
+			checkField(t, int32(22970), c, tmdb.Credit.ID)
+			checkField(t, "Acting", c, tmdb.Credit.KnownForDepartment)
+			checkField(t, 2.0333, c, tmdb.Credit.Popularity)
+			checkField(t, "/9CAd7wr8QZyIN0E7nm8v1B6WkGn.jpg", c, tmdb.Credit.ProfilePath)
+			checkField(t, "Tyrion 'The Halfman' Lannister", c, tmdb.Credit.Character)
+			checkField(t, "5256c8b219c2956ff6047cd8", c, tmdb.Credit.CreditID)
+			checkField(t, int32(0), c, tmdb.Credit.Order)
+		}
+		if crew, err := credits.Crew(); err != nil {
+			t.Errorf("failed to get credits crew: %v", err)
+		} else if len(crew) != 28 {
+			t.Errorf("expected 28 crew members, got %d", len(crew))
+		} else if c, err := findCredit(crew, "Martin Hill"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, false, c, tmdb.Credit.Adult)
+			checkField(t, int32(2), c, tmdb.Credit.Gender)
+			checkField(t, int32(1390362), c, tmdb.Credit.ID)
+			checkField(t, "Visual Effects", c, tmdb.Credit.KnownForDepartment)
+			checkField(t, "Martin Hill", c, tmdb.Credit.Name)
+			checkField(t, "Martin Hill", c, tmdb.Credit.OriginalName)
+			checkField(t, 0.25, c, tmdb.Credit.Popularity)
+			checkField(t, "/ngqjwVqZDghcjjsqDE34a4ZGHNH.jpg", c, tmdb.Credit.ProfilePath)
+			checkField(t, "677c99ff817d356a1a724d81", c, tmdb.Credit.CreditID)
+			checkField(t, "Visual Effects", c, tmdb.Credit.Department)
+			checkField(t, "Visual Effects Supervisor", c, tmdb.Credit.Job)
+		}
+	}
 	// TODO: checks for other fields.
 }
 
