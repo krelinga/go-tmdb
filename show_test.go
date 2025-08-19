@@ -310,6 +310,19 @@ func TestGetShow(t *testing.T) {
 			checkField(t, "Visual Effects Supervisor", c, tmdb.Credit.Job)
 		}
 	}
+	if externalIDs, err := show.ExternalIDs(); err != nil {
+		t.Errorf("failed to get external_ids: %v", err)
+	} else {
+		checkField(t, "tt0944947", externalIDs, tmdb.ExternalIDs.IMDBID)
+		checkField(t, "/m/0524b41", externalIDs, tmdb.ExternalIDs.FreebaseMID)
+		checkField(t, "/en/game_of_thrones", externalIDs, tmdb.ExternalIDs.FreebaseID)
+		checkField(t, int32(121361), externalIDs, tmdb.ExternalIDs.TVDBID)
+		checkField(t, int32(24493), externalIDs, tmdb.ExternalIDs.TVRageID)
+		checkField(t, "Q23572", externalIDs, tmdb.ExternalIDs.WikidataID)
+		checkField(t, "GameOfThrones", externalIDs, tmdb.ExternalIDs.FacebookID)
+		checkField(t, "gameofthrones", externalIDs, tmdb.ExternalIDs.InstagramID)
+		checkField(t, "GameOfThrones", externalIDs, tmdb.ExternalIDs.TwitterID)
+	}
 	// TODO: checks for other fields.
 }
 

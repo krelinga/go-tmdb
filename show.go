@@ -145,6 +145,10 @@ func (s Show) Credits() (Credits, error) {
 	return jsonflex.GetField(s, "credits", jsonflex.AsObject[Credits]())
 }
 
+func (s Show) ExternalIDs() (ExternalIDs, error) {
+	return jsonflex.GetField(s, "external_ids", jsonflex.AsObject[ExternalIDs]())
+}
+
 func GetShow(ctx context.Context, client Client, showId int32, opts ...RequestOption) (Show, error) {
 	return client.Get(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
 }
