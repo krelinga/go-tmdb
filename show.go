@@ -149,6 +149,10 @@ func (s Show) ExternalIDs() (ExternalIDs, error) {
 	return jsonflex.GetField(s, "external_ids", jsonflex.AsObject[ExternalIDs]())
 }
 
+func (s Show) Keywords() (Keywords, error) {
+	return jsonflex.GetField(s, "keywords", jsonflex.AsObject[Keywords]())
+}
+
 func GetShow(ctx context.Context, client Client, showId int32, opts ...RequestOption) (Show, error) {
 	return client.Get(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
 }

@@ -12,6 +12,10 @@ func (k Keywords) Keywords() ([]Keyword, error) {
 	return jsonflex.GetField(k, "keywords", jsonflex.AsArray(jsonflex.AsObject[Keyword]()))
 }
 
+func (k Keywords) Results() ([]Keyword, error) {
+	return jsonflex.GetField(k, "results", jsonflex.AsArray(jsonflex.AsObject[Keyword]()))
+}
+
 type Keyword Object
 
 func (k Keyword) ID() (int32, error) {

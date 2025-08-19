@@ -162,14 +162,16 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "FightClub", fightClub, tmdb.Movie.ExternalIDs, tmdb.ExternalIDs.FacebookID)
 	if keywords, err := fightClub.Keywords(); err != nil {
 		t.Fatalf("failed to get keywords: %v", err)
+	} else if keywordList, err := keywords.Keywords(); err != nil {
+		t.Fatalf("failed to get keywords: %v", err)
 	} else {
-		if kw, err := findKeyword(keywords, "insomnia"); err != nil {
+		if kw, err := findKeyword(keywordList, "insomnia"); err != nil {
 			t.Error(err)
 		} else {
 			checkField(t, int32(4142), kw, tmdb.Keyword.ID)
 			checkField(t, "insomnia", kw, tmdb.Keyword.Name)
 		}
-		if kw, err := findKeyword(keywords, "support group"); err != nil {
+		if kw, err := findKeyword(keywordList, "support group"); err != nil {
 			t.Error(err)
 		} else {
 			checkField(t, int32(825), kw, tmdb.Keyword.ID)
@@ -205,12 +207,8 @@ func findReleaseDate(in tmdb.CountryReleaseDates, want string) (tmdb.ReleaseDate
 	return tmdb.ReleaseDate{}, fmt.Errorf("no release date found for date: %s", want)
 }
 
-func findKeyword(in tmdb.Keywords, want string) (tmdb.Keyword, error) {
-	kw, err := in.Keywords()
-	if err != nil {
-		return tmdb.Keyword{}, fmt.Errorf("failed to get keywords: %w", err)
-	}
-	for _, k := range kw {
+func findKeyword(in []tmdb.Keyword, want string) (tmdb.Keyword, error) {
+	for _, k := range in {
 		if name, err := k.Name(); err != nil {
 			return tmdb.Keyword{}, fmt.Errorf("failed to get keyword name: %w", err)
 		} else if name == want {

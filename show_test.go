@@ -323,7 +323,26 @@ func TestGetShow(t *testing.T) {
 		checkField(t, "gameofthrones", externalIDs, tmdb.ExternalIDs.InstagramID)
 		checkField(t, "GameOfThrones", externalIDs, tmdb.ExternalIDs.TwitterID)
 	}
-	// TODO: checks for other fields.
+	if keywords, err := show.Keywords(); err != nil {
+		t.Errorf("failed to get keywords: %v", err)
+	} else if keywordList, err := keywords.Results(); err != nil {
+		t.Errorf("failed to get keyword list: %v", err)
+	} else if len(keywordList) != 6 {
+		t.Errorf("expected 6 keywords, got %d", len(keywordList))
+	} else {
+		if k, err := findKeyword(keywordList, "based on novel or book"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, int32(818), k, tmdb.Keyword.ID)
+			checkField(t, "based on novel or book", k, tmdb.Keyword.Name)
+		}
+		if k, err := findKeyword(keywordList, "kingdom"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, int32(4152), k, tmdb.Keyword.ID)
+			checkField(t, "kingdom", k, tmdb.Keyword.Name)
+		}
+	}
 }
 
 func findCredit(in []tmdb.Credit, want string) (tmdb.Credit, error) {
