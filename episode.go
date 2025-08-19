@@ -1,6 +1,11 @@
 package tmdb
 
-import "github.com/krelinga/go-jsonflex"
+import (
+	"context"
+	"fmt"
+
+	"github.com/krelinga/go-jsonflex"
+)
 
 type Episode Object
 
@@ -54,4 +59,8 @@ func (e Episode) ShowID() (int32, error) {
 
 func (e Episode) StillPath() (string, error) {
 	return jsonflex.GetField(e, "still_path", jsonflex.AsString())
+}
+
+func GetEpisode(ctx context.Context, client Client, showID int32, seasonNumber int32, episodeNumber int32, opts ...RequestOption) (Episode, error) {
+	return client.Get(ctx, fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", showID, seasonNumber, episodeNumber), opts...)
 }
