@@ -124,4 +124,10 @@ func TestGetEpisode(t *testing.T) {
 			checkField(t, "/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg", hodor, tmdb.Credit.ProfilePath)
 		}
 	}
+	checkField(t, "tt1480055", episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.IMDBID)
+	checkField(t, "/m/0gmc6ph", episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.FreebaseMID)
+	checkField(t, "/en/winter_is_coming", episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.FreebaseID)
+	checkField(t, int32(3254641), episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.TVDBID)
+	checkField(t, int32(1065008299), episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.TVRageID)
+	checkField(t, "Q2614622", episode, tmdb.Episode.ExternalIDs, tmdb.ExternalIDs.WikidataID)
 }
