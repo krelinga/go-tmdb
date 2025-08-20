@@ -69,6 +69,10 @@ func (e Episode) GuestStars() ([]Credit, error) {
 	return jsonflex.GetField(e, "guest_stars", jsonflex.AsArray(jsonflex.AsObject[Credit]()))
 }
 
+func (e Episode) Credits() (Credits, error) {
+	return jsonflex.GetField(e, "credits", jsonflex.AsObject[Credits]())
+}
+
 func GetEpisode(ctx context.Context, client Client, showID int32, seasonNumber int32, episodeNumber int32, opts ...RequestOption) (Episode, error) {
 	return client.Get(ctx, fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", showID, seasonNumber, episodeNumber), opts...)
 }

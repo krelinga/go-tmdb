@@ -62,4 +62,66 @@ func TestGetEpisode(t *testing.T) {
 	checkField(t, "/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg", episode, tmdb.Episode.StillPath)
 	checkField(t, 8.097, episode, tmdb.Episode.VoteAverage)
 	checkField(t, int32(385), episode, tmdb.Episode.VoteCount)
+	if credits, err := episode.Credits(); err != nil {
+		t.Fatalf("failed to get credits: %v", err)
+	} else {
+		if cast, err := credits.Cast(); err != nil {
+			t.Fatalf("failed to get cast from credits: %v", err)
+		} else if len(cast) == 0 {
+			t.Fatal("expected cast, got none")
+		} else if actor, err := findCredit(cast, "Peter Dinklage"); err != nil {
+			t.Fatalf("failed to find actor: %v", err)
+		} else {
+			checkField(t, false, actor, tmdb.Credit.Adult)
+			checkField(t, int32(2), actor, tmdb.Credit.Gender)
+			checkField(t, int32(22970), actor, tmdb.Credit.ID)
+			checkField(t, "Acting", actor, tmdb.Credit.KnownForDepartment)
+			checkField(t, "Peter Dinklage", actor, tmdb.Credit.Name)
+			checkField(t, "Peter Dinklage", actor, tmdb.Credit.OriginalName)
+			checkField(t, 1.9543, actor, tmdb.Credit.Popularity)
+			checkField(t, "/9CAd7wr8QZyIN0E7nm8v1B6WkGn.jpg", actor, tmdb.Credit.ProfilePath)
+			checkField(t, "Tyrion 'The Halfman' Lannister", actor, tmdb.Credit.Character)
+			checkField(t, "5256c8b219c2956ff6047cd8", actor, tmdb.Credit.CreditID)
+			checkField(t, int32(0), actor, tmdb.Credit.Order)
+
+		}
+		if crew, err := credits.Crew(); err != nil {
+			t.Fatalf("failed to get crew from credits: %v", err)
+		} else if len(crew) == 0 {
+			t.Fatal("expected crew, got none")
+		} else if director, err := findCredit(crew, "Tim Van Patten"); err != nil {
+			t.Fatalf("failed to find director: %v", err)
+		} else {
+			checkField(t, "Directing", director, tmdb.Credit.Department)
+			checkField(t, "Director", director, tmdb.Credit.Job)
+			checkField(t, "5256c8a219c2956ff6046e77", director, tmdb.Credit.CreditID)
+			checkField(t, false, director, tmdb.Credit.Adult)
+			checkField(t, int32(2), director, tmdb.Credit.Gender)
+			checkField(t, int32(44797), director, tmdb.Credit.ID)
+			checkField(t, "Directing", director, tmdb.Credit.KnownForDepartment)
+			checkField(t, "Tim Van Patten", director, tmdb.Credit.Name)
+			checkField(t, "Tim Van Patten", director, tmdb.Credit.OriginalName)
+			checkField(t, 0.7112, director, tmdb.Credit.Popularity)
+			checkField(t, "/vwcARZBg4PEzOwnPsXdjRWeUVrZ.jpg", director, tmdb.Credit.ProfilePath)
+		}
+		if guestStars, err := credits.GuestStars(); err != nil {
+			t.Fatalf("failed to get guest stars from credits: %v", err)
+		} else if len(guestStars) == 0 {
+			t.Fatal("expected guest stars, got none")
+		} else if hodor, err := findCredit(guestStars, "Kristian Nairn"); err != nil {
+			t.Fatalf("failed to find guest star: %v", err)
+		} else {
+			checkField(t, "Hodor", hodor, tmdb.Credit.Character)
+			checkField(t, "5256c8be19c2956ff6048446", hodor, tmdb.Credit.CreditID)
+			checkField(t, int32(81), hodor, tmdb.Credit.Order)
+			checkField(t, false, hodor, tmdb.Credit.Adult)
+			checkField(t, int32(2), hodor, tmdb.Credit.Gender)
+			checkField(t, int32(1223792), hodor, tmdb.Credit.ID)
+			checkField(t, "Acting", hodor, tmdb.Credit.KnownForDepartment)
+			checkField(t, "Kristian Nairn", hodor, tmdb.Credit.Name)
+			checkField(t, "Kristian Nairn", hodor, tmdb.Credit.OriginalName)
+			checkField(t, 0.4995, hodor, tmdb.Credit.Popularity)
+			checkField(t, "/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg", hodor, tmdb.Credit.ProfilePath)
+		}
+	}
 }

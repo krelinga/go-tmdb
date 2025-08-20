@@ -85,3 +85,7 @@ func (c Credits) Cast() ([]Credit, error) {
 func (c Credits) Crew() ([]Credit, error) {
 	return jsonflex.GetField(c, "crew", jsonflex.AsArray(jsonflex.AsObject[Credit]()))
 }
+
+func (c Credits) GuestStars() ([]Credit, error) {
+	return jsonflex.GetField(c, "guest_stars", jsonflex.AsArray(jsonflex.AsObject[Credit]()))
+}
