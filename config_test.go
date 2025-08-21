@@ -2,6 +2,7 @@ package tmdb_test
 
 import (
 	"context"
+	"slices"
 	"testing"
 
 	"github.com/krelinga/go-tmdb"
@@ -23,10 +24,8 @@ func checkChangeKey(t *testing.T, config tmdb.ConfigDetails, key string) {
 	if err != nil {
 		t.Fatalf("failed to get change keys: %v", err)
 	}
-	for _, k := range changeKeys {
-		if k == key {
-			return
-		}
+	if slices.Contains(changeKeys, key) {
+		return
 	}
 	t.Errorf("expected change key %q not found in %v", key, changeKeys)
 }
