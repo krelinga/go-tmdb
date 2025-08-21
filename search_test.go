@@ -62,3 +62,58 @@ func findMovie(movies []tmdb.Movie, title string) (tmdb.Movie, error) {
 	}
 	return nil, fmt.Errorf("movie not found: %s", title)
 }
+
+func TestSeachTv(t *testing.T) {
+	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
+	results, err := tmdb.SearchTv(context.Background(), client, "Breaking Bad")
+	if err != nil {
+		t.Fatalf("Failed to search TV show: %v", err)
+	}
+	checkField(t, int32(1), results, tmdb.SearchResults[tmdb.Show].Page)
+	checkField(t, int32(1), results, tmdb.SearchResults[tmdb.Show].TotalPages)
+	checkField(t, int32(3), results, tmdb.SearchResults[tmdb.Show].TotalResults)
+	if results, err := results.Results(); err != nil {
+		t.Fatalf("Failed to get TV show results: %v", err)
+	} else if bb, err := findShow(results, "Breaking Bad"); err != nil {
+		t.Fatalf("Failed to find TV show: %v", err)
+	} else {
+		checkField(t, false, bb, tmdb.Show.Adult)
+		checkField(t, "/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg", bb, tmdb.Show.BackdropPath)
+		if genreIds, err := bb.GenreIDs(); err != nil {
+			t.Fatalf("Failed to get genre IDs: %v", err)
+		} else {
+			if !slices.Contains(genreIds, int32(80)) {
+				t.Errorf("Expected genre ID 80 not found")
+			}
+			if !slices.Contains(genreIds, int32(18)) {
+				t.Errorf("Expected genre ID 18 not found")
+			}
+		}
+		checkField(t, int32(1396), bb, tmdb.Show.ID)
+		if originCountry, err := bb.OriginCountry(); err != nil {
+			t.Fatalf("Failed to get origin country: %v", err)
+		} else if !slices.Contains(originCountry, "US") {
+			t.Errorf("Expected origin country 'US' not found")
+		}
+		checkField(t, "en", bb, tmdb.Show.OriginalLanguage)
+		checkField(t, "Breaking Bad", bb, tmdb.Show.OriginalName)
+		checkField(t, "Walter White, a New Mexico chemistry teacher, is diagnosed with Stage III cancer and given a prognosis of only two years left to live. He becomes filled with a sense of fearlessness and an unrelenting desire to secure his family's financial future at any cost as he enters the dangerous world of drugs and crime.", bb, tmdb.Show.Overview)
+		checkField(t, 110.6989, bb, tmdb.Show.Popularity)
+		checkField(t, "/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg", bb, tmdb.Show.PosterPath)
+		checkField(t, "2008-01-20", bb, tmdb.Show.FirstAirDate)
+		checkField(t, "Breaking Bad", bb, tmdb.Show.Name)
+		checkField(t, 8.92, bb, tmdb.Show.VoteAverage)
+		checkField(t, int32(15966), bb, tmdb.Show.VoteCount)
+	}
+}
+
+func findShow(shows []tmdb.Show, name string) (tmdb.Show, error) {
+	for _, show := range shows {
+		if n, err := show.Name(); err != nil {
+			return nil, fmt.Errorf("failed to get show name: %w", err)
+		} else if n == name {
+			return show, nil
+		}
+	}
+	return nil, fmt.Errorf("show not found: %s", name)
+}

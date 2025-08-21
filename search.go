@@ -28,3 +28,8 @@ func SearchMovie(ctx context.Context, client Client, query string, opts ...Reque
 	opts = append([]RequestOption{WithQueryParam("query", query)}, opts...)
 	return client.GetObject(ctx, "/3/search/movie", opts...)
 }
+
+func SearchTv(ctx context.Context, client Client, query string, opts ...RequestOption) (SearchResults[Show], error) {
+	opts = append([]RequestOption{WithQueryParam("query", query)}, opts...)
+	return client.GetObject(ctx, "/3/search/tv", opts...)
+}

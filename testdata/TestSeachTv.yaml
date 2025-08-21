@@ -1,0 +1,64 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: ""
+        proto_major: 0
+        proto_minor: 0
+        content_length: 0
+        host: ""
+        form:
+            query:
+                - Breaking+Bad
+        headers:
+            Authorization:
+                - Bearer fake-api-read-access-token
+        url: https://api.themoviedb.org/3/search/tv?query=Breaking%2BBad
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"page":1,"results":[{"adult":false,"backdrop_path":"/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg","genre_ids":[18,80],"id":1396,"origin_country":["US"],"original_language":"en","original_name":"Breaking Bad","overview":"Walter White, a New Mexico chemistry teacher, is diagnosed with Stage III cancer and given a prognosis of only two years left to live. He becomes filled with a sense of fearlessness and an unrelenting desire to secure his family''s financial future at any cost as he enters the dangerous world of drugs and crime.","popularity":110.6989,"poster_path":"/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg","first_air_date":"2008-01-20","name":"Breaking Bad","vote_average":8.92,"vote_count":15966},{"adult":false,"backdrop_path":null,"genre_ids":[18,9648],"id":232533,"origin_country":["CN"],"original_language":"zh","original_name":"绝命卦师","overview":"During the Ming Dynasty, the emperor sets out for Xinjiang to advocate peace. Shortly after his absence, mysterious occurrences plague the palace and Daoist Tian Mu Tong is called to cast out demons. Together with eunuch Xiao Mo Gu and Jin Yi Wei leader Yun Xiang Rong, Mu Tong uncovers deep dark secrets and conspiracies hidden within conspiracies.","popularity":0.6393,"poster_path":"/n8dKkbPkdEPFCFmjNvrUl1gUAYr.jpg","first_air_date":"2016-04-11","name":"Breaking Bad Fortune Teller","vote_average":7.5,"vote_count":1},{"adult":false,"backdrop_path":null,"genre_ids":[35,80,18],"id":297997,"origin_country":["US"],"original_language":"en","original_name":"Breaking Bad: Original Minisodes","overview":"Breaking Bad: Original Minisodes is a web series based on the television series Breaking Bad. A total of 17 \"minisodes\", which are more comedy-oriented than most full episodes, were released over the course of three years.","popularity":0.6117,"poster_path":"/fFNbRUleJQ9GkCfJunU4yXuNbma.jpg","first_air_date":"2009-02-17","name":"Breaking Bad: Original Minisodes","vote_average":0.0,"vote_count":0}],"total_pages":1,"total_results":3}'
+        headers:
+            Alt-Svc:
+                - h3=":443"; ma=86400
+            Cache-Control:
+                - public, max-age=21373
+            Content-Type:
+                - application/json;charset=utf-8
+            Date:
+                - Thu, 21 Aug 2025 23:24:29 GMT
+            Etag:
+                - W/"868f1ae1cb06681d3bf9b176a44ec8f6"
+            Server:
+                - openresty
+            Vary:
+                - accept-encoding
+                - Origin
+            Via:
+                - 1.1 70524e73797c8207f99cc1f287d08416.cloudfront.net (CloudFront)
+            X-Amz-Cf-Id:
+                - JLTm-2N7wdth5xzStvMckArYevCtJWFJoRLEt_PwBZ3AJtejwZWlmw==
+            X-Amz-Cf-Pop:
+                - ORD56-P12
+            X-Az:
+                - us-east-1b
+            X-Cache:
+                - Miss from cloudfront
+            X-Memc:
+                - HIT
+            X-Memc-Age:
+                - "4382"
+            X-Memc-Expires:
+                - "21373"
+            X-Memc-Key:
+                - bdf640800a0d15fa86d7975fe436a1efa0c44a497599e130fc674792e9fa0be3
+            X-Task-Id:
+                - e28ce5ffe8e74e5e879234f4e6c698bb
+        status: 200 OK
+        code: 200
+        duration: 153.798713ms

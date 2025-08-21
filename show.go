@@ -29,6 +29,10 @@ func (s Show) Genres() ([]Genre, error) {
 	return jsonflex.GetField(s, "genres", jsonflex.AsArray(jsonflex.AsObject[Genre]()))
 }
 
+func (s Show) GenreIDs() ([]int32, error) {
+	return jsonflex.GetField(s, "genre_ids", jsonflex.AsArray(jsonflex.AsInt32()))
+}
+
 func (s Show) Homepage() (string, error) {
 	return jsonflex.GetField(s, "homepage", jsonflex.AsString())
 }
