@@ -9,8 +9,16 @@ import (
 
 type Season Object
 
+func (s Season) UnderbarID() (string, error) {
+	return jsonflex.GetField(s, "_id", jsonflex.AsString())
+}
+
 func (s Season) AirDate() (string, error) {
 	return jsonflex.GetField(s, "air_date", jsonflex.AsString())
+}
+
+func (s Season) Episodes() ([]Episode, error) {
+	return jsonflex.GetField(s, "episodes", jsonflex.AsArray(jsonflex.AsObject[Episode]()))
 }
 
 func (s Season) EpisodeCount() (int32, error) {
@@ -39,6 +47,10 @@ func (s Season) SeasonNumber() (int32, error) {
 
 func (s Season) VoteAverage() (float64, error) {
 	return jsonflex.GetField(s, "vote_average", jsonflex.AsFloat64())
+}
+
+func (s Season) ShowID() (int32, error) {
+	return jsonflex.GetField(s, "show_id", jsonflex.AsInt32())
 }
 
 func GetSeason(ctx context.Context, client Client, showID, seasonNumber int32, opts ...RequestOption) (Season, error) {
