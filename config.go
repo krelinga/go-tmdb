@@ -75,3 +75,11 @@ func GetConfigJobs(ctx context.Context, client Client, opts ...RequestOption) ([
 		return jsonflex.FromArray(jobs, jsonflex.AsObject[ConfigJobs]())
 	}
 }
+
+func GetConfigLanguages(ctx context.Context, client Client, opts ...RequestOption) ([]Language, error) {
+	if languages, err := client.GetArray(ctx, "/3/configuration/languages", opts...); err != nil {
+		return nil, err
+	} else {
+		return jsonflex.FromArray(languages, jsonflex.AsObject[Language]())
+	}
+}

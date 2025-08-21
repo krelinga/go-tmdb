@@ -97,3 +97,20 @@ func checkConfigJob(t *testing.T, jobs []tmdb.ConfigJobs, department, job string
 	}
 	t.Errorf("expected job %q in department %q not found", job, department)
 }
+
+func TestGetConfigLanguages(t *testing.T) {
+	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
+	languages, err := tmdb.GetConfigLanguages(context.Background(), client)
+	if err != nil {
+		t.Fatalf("failed to get config languages: %v", err)
+	}
+	if len(languages) == 0 {
+		t.Fatal("expected languages, got none")
+	} else if english, err := findLanguage(languages, "en"); err != nil {
+		t.Fatal(err)
+	} else {
+		checkField(t, "en", english, tmdb.Language.ISO639_1)
+		checkField(t, "English", english, tmdb.Language.EnglishName)
+		checkField(t, "English", english, tmdb.Language.Name)
+	}
+}
