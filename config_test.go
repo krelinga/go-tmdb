@@ -66,3 +66,34 @@ func TestGetConfigCountries(t *testing.T) {
 		checkField(t, "United States", usa, tmdb.Country.NativeName)
 	}
 }
+
+func TestGetConfigJobs(t *testing.T) {
+	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
+	jobs, err := tmdb.GetConfigJobs(context.Background(), client)
+	if err != nil {
+		t.Fatalf("failed to get config jobs: %v", err)
+	}
+	if len(jobs) == 0 {
+		t.Fatal("expected jobs, got none")
+	}
+	checkConfigJob(t, jobs, "Actors", "Actor")
+	checkConfigJob(t, jobs, "Actors", "Stunt Double")
+	checkConfigJob(t, jobs, "Actors", "Voice")
+	checkConfigJob(t, jobs, "Writing", "Writer")
+}
+
+func checkConfigJob(t *testing.T, jobs []tmdb.ConfigJobs, department, job string) {
+	t.Helper()
+	for _, j := range jobs {
+		if dep, err := j.Department(); err != nil {
+			t.Fatalf("failed to get department: %v", err)
+		} else if dep == department {
+			if jobs, err := j.Jobs(); err != nil {
+				t.Fatalf("failed to get jobs: %v", err)
+			} else if slices.Contains(jobs, job) {
+				return
+			}
+		}
+	}
+	t.Errorf("expected job %q in department %q not found", job, department)
+}

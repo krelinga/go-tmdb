@@ -57,3 +57,21 @@ func GetConfigCountries(ctx context.Context, client Client, opts ...RequestOptio
 		return jsonflex.FromArray(countries, jsonflex.AsObject[Country]())
 	}
 }
+
+type ConfigJobs Object
+
+func (c ConfigJobs) Department() (string, error) {
+	return jsonflex.GetField(c, "department", jsonflex.AsString())
+}
+
+func (c ConfigJobs) Jobs() ([]string, error) {
+	return jsonflex.GetField(c, "jobs", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func GetConfigJobs(ctx context.Context, client Client, opts ...RequestOption) ([]ConfigJobs, error) {
+	if jobs, err := client.GetArray(ctx, "/3/configuration/jobs", opts...); err != nil {
+		return nil, err
+	} else {
+		return jsonflex.FromArray(jobs, jsonflex.AsObject[ConfigJobs]())
+	}
+}
