@@ -1,6 +1,11 @@
 package tmdb
 
-import "github.com/krelinga/go-jsonflex"
+import (
+	"context"
+	"fmt"
+
+	"github.com/krelinga/go-jsonflex"
+)
 
 type Season Object
 
@@ -34,4 +39,8 @@ func (s Season) SeasonNumber() (int32, error) {
 
 func (s Season) VoteAverage() (float64, error) {
 	return jsonflex.GetField(s, "vote_average", jsonflex.AsFloat64())
+}
+
+func GetSeason(ctx context.Context, client Client, showID, seasonNumber int32, opts ...RequestOption) (Season, error) {
+	return client.Get(ctx, fmt.Sprintf("/3/tv/%d/season/%d", showID, seasonNumber), opts...)
 }
