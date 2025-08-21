@@ -2,17 +2,84 @@ package tmdb
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/krelinga/go-tmdb/tmdbconfig"
+	"github.com/krelinga/go-jsonflex"
 )
 
-type GetConfigDetailsOptions = tmdbconfig.GetDetailsOptions
-type GetConfigDetailsReply = tmdbconfig.GetDetailsReply
+type ConfigDetails Object
 
-func GetConfigDetails(ctx context.Context, options GetConfigDetailsOptions) (*http.Response, error) {
-	return tmdbconfig.GetDetails(ctx, options)
+func (c ConfigDetails) Images() (ConfigImages, error) {
+	return jsonflex.GetField(c, "images", jsonflex.AsObject[ConfigImages]())
 }
-func ParseGetConfigDetailsReply(httpReply *http.Response) (*GetConfigDetailsReply, error) {
-	return tmdbconfig.ParseGetDetailsReply(httpReply)
+
+func (c ConfigDetails) ChangeKeys() ([]string, error) {
+	return jsonflex.GetField(c, "change_keys", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+type ConfigImages Object
+
+func (c ConfigImages) BaseURL() (string, error) {
+	return jsonflex.GetField(c, "base_url", jsonflex.AsString())
+}
+
+func (c ConfigImages) SecureBaseURL() (string, error) {
+	return jsonflex.GetField(c, "secure_base_url", jsonflex.AsString())
+}
+
+func (c ConfigImages) BackdropSizes() ([]string, error) {
+	return jsonflex.GetField(c, "backdrop_sizes", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func (c ConfigImages) LogoSizes() ([]string, error) {
+	return jsonflex.GetField(c, "logo_sizes", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func (c ConfigImages) PosterSizes() ([]string, error) {
+	return jsonflex.GetField(c, "poster_sizes", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func (c ConfigImages) ProfileSizes() ([]string, error) {
+	return jsonflex.GetField(c, "profile_sizes", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func (c ConfigImages) StillSizes() ([]string, error) {
+	return jsonflex.GetField(c, "still_sizes", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func GetConfigDetails(ctx context.Context, client Client, opts ...RequestOption) (ConfigDetails, error) {
+	return client.GetObject(ctx, "/3/configuration", opts...)
+}
+
+func GetConfigCountries(ctx context.Context, client Client, opts ...RequestOption) ([]Country, error) {
+	if countries, err := client.GetArray(ctx, "/3/configuration/countries", opts...); err != nil {
+		return nil, err
+	} else {
+		return jsonflex.FromArray(countries, jsonflex.AsObject[Country]())
+	}
+}
+
+type ConfigJobs Object
+
+func (c ConfigJobs) Department() (string, error) {
+	return jsonflex.GetField(c, "department", jsonflex.AsString())
+}
+
+func (c ConfigJobs) Jobs() ([]string, error) {
+	return jsonflex.GetField(c, "jobs", jsonflex.AsArray(jsonflex.AsString()))
+}
+
+func GetConfigJobs(ctx context.Context, client Client, opts ...RequestOption) ([]ConfigJobs, error) {
+	if jobs, err := client.GetArray(ctx, "/3/configuration/jobs", opts...); err != nil {
+		return nil, err
+	} else {
+		return jsonflex.FromArray(jobs, jsonflex.AsObject[ConfigJobs]())
+	}
+}
+
+func GetConfigLanguages(ctx context.Context, client Client, opts ...RequestOption) ([]Language, error) {
+	if languages, err := client.GetArray(ctx, "/3/configuration/languages", opts...); err != nil {
+		return nil, err
+	} else {
+		return jsonflex.FromArray(languages, jsonflex.AsObject[Language]())
+	}
 }
