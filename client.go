@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 )
 
 type Client interface {
 	Get(ctx context.Context, path string, options ...RequestOption) (Object, error)
+	GetArray(ctx context.Context, path string, options ...RequestOption) (Array, error)
 }
 
 type ClientOptions struct {
@@ -31,7 +33,7 @@ type clientImpl struct {
 	options ClientOptions
 }
 
-func (c *clientImpl) Get(ctx context.Context, path string, options ...RequestOption) (Object, error) {
+func (c *clientImpl) getRaw(ctx context.Context, path string, options ...RequestOption) (io.ReadCloser, error) {
 	if c.options.APIKey != "" {
 		options = append(options, WithQueryParam("api_key", c.options.APIKey))
 	}
@@ -78,16 +80,37 @@ func (c *clientImpl) Get(ctx context.Context, path string, options ...RequestOpt
 			opt.ChangeResponse(response)
 		}
 	}
-	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
 	}
 	if response.Header.Get("Content-Type") != "application/json;charset=utf-8" {
 		return nil, fmt.Errorf("unexpected content type: %s", response.Header.Get("Content-Type"))
 	}
+	return response.Body, nil
+}
+
+func (c *clientImpl) Get(ctx context.Context, path string, options ...RequestOption) (Object, error) {
+	body, err := c.getRaw(ctx, path, options...)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
 	o := Object{}
-	if err := json.NewDecoder(response.Body).Decode(&o); err != nil {
+	if err := json.NewDecoder(body).Decode(&o); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 	return o, nil
+}
+
+func (c *clientImpl) GetArray(ctx context.Context, path string, options ...RequestOption) (Array, error) {
+	body, err := c.getRaw(ctx, path, options...)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+	var arr Array
+	if err := json.NewDecoder(body).Decode(&arr); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+	return arr, nil
 }

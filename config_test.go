@@ -49,3 +49,20 @@ func checkImageSize(t *testing.T, config tmdb.ConfigDetails, sizeType func(tmdb.
 		t.Errorf("expected size %q not found in %v", wantSize, sizes)
 	}
 }
+
+func TestGetConfigCountries(t *testing.T) {
+	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
+	countries, err := tmdb.GetConfigCountries(context.Background(), client)
+	if err != nil {
+		t.Fatalf("failed to get config countries: %v", err)
+	}
+	if len(countries) == 0 {
+		t.Fatal("expected countries, got none")
+	} else if usa, err := findCountry(countries, "US"); err != nil {
+		t.Fatal(err)
+	} else {
+		checkField(t, "US", usa, tmdb.Country.ISO3166_1)
+		checkField(t, "United States of America", usa, tmdb.Country.EnglishName)
+		checkField(t, "United States", usa, tmdb.Country.NativeName)
+	}
+}
