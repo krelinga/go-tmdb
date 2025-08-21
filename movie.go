@@ -31,6 +31,10 @@ func (m Movie) Genres() ([]Genre, error) {
 	return jsonflex.GetField(m, "genres", jsonflex.AsArray(jsonflex.AsObject[Genre]()))
 }
 
+func (m Movie) GenreIDs() ([]int32, error) {
+	return jsonflex.GetField(m, "genre_ids", jsonflex.AsArray(jsonflex.AsInt32()))
+}
+
 func (m Movie) Homepage() (string, error) {
 	return jsonflex.GetField(m, "homepage", jsonflex.AsString())
 }
