@@ -154,5 +154,5 @@ func (s Show) Keywords() (Keywords, error) {
 }
 
 func GetShow(ctx context.Context, client Client, showId int32, opts ...RequestOption) (Show, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/tv/%d", showId), opts...)
 }

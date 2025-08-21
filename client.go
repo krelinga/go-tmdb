@@ -10,7 +10,7 @@ import (
 )
 
 type Client interface {
-	Get(ctx context.Context, path string, options ...RequestOption) (Object, error)
+	GetObject(ctx context.Context, path string, options ...RequestOption) (Object, error)
 	GetArray(ctx context.Context, path string, options ...RequestOption) (Array, error)
 }
 
@@ -89,7 +89,7 @@ func (c *clientImpl) getRaw(ctx context.Context, path string, options ...Request
 	return response.Body, nil
 }
 
-func (c *clientImpl) Get(ctx context.Context, path string, options ...RequestOption) (Object, error) {
+func (c *clientImpl) GetObject(ctx context.Context, path string, options ...RequestOption) (Object, error) {
 	body, err := c.getRaw(ctx, path, options...)
 	if err != nil {
 		return nil, err

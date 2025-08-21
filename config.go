@@ -47,7 +47,7 @@ func (c ConfigImages) StillSizes() ([]string, error) {
 }
 
 func GetConfigDetails(ctx context.Context, client Client, opts ...RequestOption) (ConfigDetails, error) {
-	return client.Get(ctx, "/3/configuration", opts...)
+	return client.GetObject(ctx, "/3/configuration", opts...)
 }
 
 func GetConfigCountries(ctx context.Context, client Client, opts ...RequestOption) ([]Country, error) {

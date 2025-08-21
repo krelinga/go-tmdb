@@ -54,5 +54,5 @@ func (s Season) ShowID() (int32, error) {
 }
 
 func GetSeason(ctx context.Context, client Client, showID, seasonNumber int32, opts ...RequestOption) (Season, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/tv/%d/season/%d", showID, seasonNumber), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/tv/%d/season/%d", showID, seasonNumber), opts...)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func GetMovie(ctx context.Context, client Client, movieID int32, opts ...RequestOption) (Movie, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/movie/%d", movieID), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/movie/%d", movieID), opts...)
 }
 
 type Movie Object

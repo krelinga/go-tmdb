@@ -50,5 +50,5 @@ func (e ExternalIDs) WikidataID() (string, error) {
 }
 
 func GetMovieExternalIDs(ctx context.Context, client Client, movieID int32, opts ...RequestOption) (ExternalIDs, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/movie/%d/external_ids", movieID), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/movie/%d/external_ids", movieID), opts...)
 }

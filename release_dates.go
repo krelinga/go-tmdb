@@ -61,5 +61,5 @@ func (c ReleaseDate) Type() (int32, error) {
 }
 
 func GetReleaseDates(ctx context.Context, client Client, movieID int32, opts ...RequestOption) (ReleaseDates, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/movie/%d/release_dates", movieID), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/movie/%d/release_dates", movieID), opts...)
 }

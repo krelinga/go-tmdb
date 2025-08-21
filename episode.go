@@ -78,5 +78,5 @@ func (e Episode) ExternalIDs() (ExternalIDs, error) {
 }
 
 func GetEpisode(ctx context.Context, client Client, showID int32, seasonNumber int32, episodeNumber int32, opts ...RequestOption) (Episode, error) {
-	return client.Get(ctx, fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", showID, seasonNumber, episodeNumber), opts...)
+	return client.GetObject(ctx, fmt.Sprintf("/3/tv/%d/season/%d/episode/%d", showID, seasonNumber, episodeNumber), opts...)
 }
