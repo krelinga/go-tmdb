@@ -3,7 +3,7 @@ module github.com/krelinga/go-tmdb
 go 1.24.3
 
 require (
-	github.com/krelinga/go-jsonflex v0.1.1
+	github.com/krelinga/go-jsonflex v0.2.0
 	gopkg.in/dnaeon/go-vcr.v4 v4.0.4
 )
 
