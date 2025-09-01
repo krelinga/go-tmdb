@@ -22,3 +22,17 @@ func configDetails(client tmdb.Client, args []string) error {
 
 	return nil
 }
+
+func configCountries(client tmdb.Client, args []string) error {
+	if len(args) != 0 {
+		return errors.New("no arguments expected")
+	}
+
+	out, err := tmdb.GetConfigCountries(context.Background(), client)
+	if err != nil {
+		return err
+	}
+	fmt.Println(jsonflex.String(out))
+
+	return nil
+}

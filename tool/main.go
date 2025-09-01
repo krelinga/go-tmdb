@@ -10,7 +10,8 @@ import (
 type command func(tmdb.Client, []string) error
 
 var commands = map[string]command{
-	"configdetails": configDetails,
+	"configdetails":   configDetails,
+	"configcountries": configCountries,
 }
 
 func main() {
