@@ -12,6 +12,7 @@ type command func(tmdb.Client, []string) error
 var commands = map[string]command{
 	"configdetails":   configDetails,
 	"configcountries": configCountries,
+	"configjobs":      configJobs,
 }
 
 func main() {
