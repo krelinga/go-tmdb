@@ -11,7 +11,7 @@ import (
 
 func configDetails(client tmdb.Client, args []string) error {
 	if len(args) != 0 {
-		return errors.New("No arguments expected")
+		return errors.New("no arguments expected")
 	}
 
 	out, err := tmdb.GetConfigDetails(context.Background(), client)
