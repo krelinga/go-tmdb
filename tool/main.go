@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/krelinga/go-tmdb"
 )
@@ -14,6 +15,15 @@ var commands = map[string]command{
 	"configcountries": configCountries,
 	"configjobs":      configJobs,
 	"configlanguages": configLanguages,
+	"movie":           movie,
+}
+
+func toInt32(in string) (int32, error) {
+	val, err := strconv.ParseInt(in, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return int32(val), nil
 }
 
 func main() {
