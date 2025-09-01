@@ -50,3 +50,17 @@ func configJobs(client tmdb.Client, args []string) error {
 
 	return nil
 }
+
+func configLanguages(client tmdb.Client, args []string) error {
+	if len(args) != 0 {
+		return errors.New("no arguments expected")
+	}
+
+	out, err := tmdb.GetConfigLanguages(context.Background(), client)
+	if err != nil {
+		return err
+	}
+	fmt.Println(jsonflex.String(out))
+
+	return nil
+}

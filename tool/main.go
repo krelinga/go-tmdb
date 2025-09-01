@@ -13,6 +13,7 @@ var commands = map[string]command{
 	"configdetails":   configDetails,
 	"configcountries": configCountries,
 	"configjobs":      configJobs,
+	"configlanguages": configLanguages,
 }
 
 func main() {
