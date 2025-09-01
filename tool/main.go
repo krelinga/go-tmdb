@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -11,12 +10,7 @@ import (
 type command func(tmdb.Client, []string) error
 
 var commands = map[string]command{
-	"hello": hello,
-}
-
-func hello(_ tmdb.Client, args []string) error {
-	fmt.Println("Hello, World!")
-	return nil
+	"configdetails": configDetails,
 }
 
 func main() {
@@ -32,7 +26,7 @@ func main() {
 		return
 	}
 	client := tmdb.ClientOptions{
-		APIKey:          api_key,
+		APIKey:             api_key,
 		APIReadAccessToken: read_access_token,
 	}.NewClient()
 
