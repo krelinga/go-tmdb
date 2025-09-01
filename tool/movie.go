@@ -10,7 +10,7 @@ import (
 )
 
 func movie(client tmdb.Client, args []string) error {
-	if len(args) != 1 {
+	if len(args) == 0 {
 		return errors.New("expected movie ID as argument")
 	}
 
@@ -18,7 +18,11 @@ func movie(client tmdb.Client, args []string) error {
 	if err != nil {
 		return fmt.Errorf("invalid movie ID: %w", err)
 	}
-	out, err := tmdb.GetMovie(context.Background(), client, movieID)
+	options, err := toRequestOptions(args[1:])
+	if err != nil {
+		return err
+	}
+	out, err := tmdb.GetMovie(context.Background(), client, movieID, options...)
 	if err != nil {
 		return err
 	}

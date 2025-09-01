@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/krelinga/go-tmdb"
 )
@@ -24,6 +26,33 @@ func toInt32(in string) (int32, error) {
 		return 0, err
 	}
 	return int32(val), nil
+}
+
+func toRequestOptions(args []string) ([]tmdb.RequestOption, error) {
+	var options []tmdb.RequestOption
+	appends := []string{}
+	for _, arg := range args {
+		parts := strings.SplitN(arg, "=", 2)
+		if len(parts) != 2 {
+			return nil, fmt.Errorf("invalid argument format: %q", arg)
+		}
+		key := parts[0]
+		value := parts[1]
+		switch key {
+		case "--append":
+			appends = append(appends, value)
+		case "--param":
+			paramParts := strings.SplitN(value, "=", 2)
+			if len(paramParts) != 2 {
+				return nil, fmt.Errorf("invalid query param format: %q", value)
+			}
+			options = append(options, tmdb.WithQueryParam(paramParts[0], paramParts[1]))
+		}
+	}
+	if len(appends) > 0 {
+		options = append(options, tmdb.WithAppendToResponse(appends...))
+	}
+	return options, nil
 }
 
 func main() {
