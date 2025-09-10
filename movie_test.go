@@ -178,7 +178,52 @@ func TestGetMovie(t *testing.T) {
 			checkField(t, "support group", kw, tmdb.Keyword.Name)
 		}
 	}
-	// TODO: write more tests for other fields.
+	// Images appended to response.
+	if images, err := fightClub.Images(); err != nil {
+		t.Fatalf("failed to get images: %v", err)
+	} else {
+		if backdrops, err := images.Backdrops(); err != nil || len(backdrops) == 0 {
+			t.Errorf("expected no error and some backdrops, got %v and %d", err, len(backdrops))
+		} else if backdrop, err := findImage(backdrops, "/b9HyPoxwxjxkWEUL5ErZdhApQe2.jpg"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, float64(1.778), backdrop, tmdb.Image.AspectRatio)
+			checkField(t, int32(1080), backdrop, tmdb.Image.Height)
+			checkField(t, "en", backdrop, tmdb.Image.ISO639_1)
+			checkField(t, "/b9HyPoxwxjxkWEUL5ErZdhApQe2.jpg", backdrop, tmdb.Image.FilePath)
+			checkField(t, float64(3.334), backdrop, tmdb.Image.VoteAverage)
+			checkField(t, int32(1), backdrop, tmdb.Image.VoteCount)
+			checkField(t, int32(1920), backdrop, tmdb.Image.Width)
+		}
+
+		if logos, err := images.Logos(); err != nil || len(logos) == 0 {
+			t.Errorf("expected no error and some logos, got %v and %d", err, len(logos))
+		} else if logo, err := findImage(logos, "/7Uqhv24pGJs4Ns31NoOPWFJGWNG.png"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, float64(4.638), logo, tmdb.Image.AspectRatio)
+			checkField(t, int32(389), logo, tmdb.Image.Height)
+			checkField(t, "en", logo, tmdb.Image.ISO639_1)
+			checkField(t, "/7Uqhv24pGJs4Ns31NoOPWFJGWNG.png", logo, tmdb.Image.FilePath)
+			checkField(t, float64(8.034), logo, tmdb.Image.VoteAverage)
+			checkField(t, int32(5), logo, tmdb.Image.VoteCount)
+			checkField(t, int32(1804), logo, tmdb.Image.Width)
+		}
+
+		if posters, err := images.Posters(); err != nil || len(posters) == 0 {
+			t.Errorf("expected no error and some posters, got %v and %d", err, len(posters))
+		} else if poster, err := findImage(posters, "/r3pPehX4ik8NLYPpbDRAh0YRtMb.jpg"); err != nil {
+			t.Error(err)
+		} else {
+			checkField(t, float64(0.667), poster, tmdb.Image.AspectRatio)
+			checkField(t, int32(900), poster, tmdb.Image.Height)
+			checkField(t, "pt", poster, tmdb.Image.ISO639_1)
+			checkField(t, "/r3pPehX4ik8NLYPpbDRAh0YRtMb.jpg", poster, tmdb.Image.FilePath)
+			checkField(t, float64(3.984), poster, tmdb.Image.VoteAverage)
+			checkField(t, int32(30), poster, tmdb.Image.VoteCount)
+			checkField(t, int32(600), poster, tmdb.Image.Width)
+		}
+	}
 }
 
 func findReleseDates(in []tmdb.CountryReleaseDates, want string) (tmdb.CountryReleaseDates, error) {
@@ -216,4 +261,15 @@ func findKeyword(in []tmdb.Keyword, want string) (tmdb.Keyword, error) {
 		}
 	}
 	return tmdb.Keyword{}, fmt.Errorf("no keyword found with name: %s", want)
+}
+
+func findImage(in []tmdb.Image, want string) (tmdb.Image, error) {
+	for _, img := range in {
+		if path, err := img.FilePath(); err != nil {
+			return tmdb.Image{}, fmt.Errorf("failed to get image file path: %w", err)
+		} else if path == want {
+			return img, nil
+		}
+	}
+	return tmdb.Image{}, fmt.Errorf("no image found with file path: %s", want)
 }

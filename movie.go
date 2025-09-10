@@ -134,3 +134,7 @@ func (m Movie) ReleaseDates() (ReleaseDates, error) {
 func (m Movie) ExternalIDs() (ExternalIDs, error) {
 	return jsonflex.GetField(m, "external_ids", jsonflex.AsObject[ExternalIDs]())
 }
+
+func (m Movie) Images() (Images, error) {
+	return jsonflex.GetField(m, "images", jsonflex.AsObject[Images]())
+}
