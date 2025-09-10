@@ -58,7 +58,7 @@ func checkField[ObjType ~tmdb.Object, ValueType comparable](t *testing.T, want V
 
 func TestGetMovie(t *testing.T) {
 	client := testClientOptions{useApiReadAccessToken: true}.newClient(t)
-	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates", "external_ids", "keywords"))
+	fightClub, err := tmdb.GetMovie(context.Background(), client, 550, tmdb.WithAppendToResponse("credits", "release_dates", "external_ids", "keywords", "images"))
 	if err != nil {
 		t.Fatalf("failed to get movie: %v", err)
 	}
@@ -72,7 +72,7 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "en", fightClub, tmdb.Movie.OriginalLanguage)
 	checkField(t, "Fight Club", fightClub, tmdb.Movie.OriginalTitle)
 	checkField(t, "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.", fightClub, tmdb.Movie.Overview)
-	checkField(t, float64(19.2158), fightClub, tmdb.Movie.Popularity)
+	checkField(t, float64(24.1745), fightClub, tmdb.Movie.Popularity)
 	checkField(t, "/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", fightClub, tmdb.Movie.PosterPath)
 	checkField(t, int32(711), fightClub, tmdb.Movie.ProductionCompanies, index(0), tmdb.Company.ID)
 	checkField(t, int32(18), fightClub, tmdb.Movie.Genres, index(0), tmdb.Genre.ID)
@@ -97,8 +97,8 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "Mischief. Mayhem. Soap.", fightClub, tmdb.Movie.Tagline)
 	checkField(t, "Fight Club", fightClub, tmdb.Movie.Title)
 	checkField(t, false, fightClub, tmdb.Movie.Video)
-	checkField(t, float64(8.437), fightClub, tmdb.Movie.VoteAverage)
-	checkField(t, int32(30601), fightClub, tmdb.Movie.VoteCount)
+	checkField(t, float64(8.438), fightClub, tmdb.Movie.VoteAverage)
+	checkField(t, int32(30717), fightClub, tmdb.Movie.VoteCount)
 
 	// Credits appended to response.
 	checkField(t, false, fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Adult)
@@ -107,7 +107,7 @@ func TestGetMovie(t *testing.T) {
 	checkField(t, "Acting", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.KnownForDepartment)
 	checkField(t, "Edward Norton", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Name)
 	checkField(t, "Edward Norton", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.OriginalName)
-	checkField(t, float64(3.9497), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Popularity)
+	checkField(t, float64(3.9679), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Popularity)
 	checkField(t, "/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.ProfilePath)
 	checkField(t, int32(4), fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.CastID)
 	checkField(t, "Narrator", fightClub, tmdb.Movie.Credits, tmdb.Credits.Cast, index(0), tmdb.Credit.Character)
@@ -119,15 +119,15 @@ func TestGetMovie(t *testing.T) {
 		t.Errorf("expected no error and 75 cast members, got %v and %d", err, len(cast))
 	}
 	checkField(t, false, fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Adult)
-	checkField(t, int32(1), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Gender)
-	checkField(t, int32(7481), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.ID)
-	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.KnownForDepartment)
-	checkField(t, "Laray Mayfield", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Name)
-	checkField(t, "Laray Mayfield", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.OriginalName)
-	checkField(t, float64(2.8707), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Popularity)
-	checkField(t, "52fe4250c3a36847f8014a2f", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.CreditID)
-	checkField(t, "Production", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Department)
-	checkField(t, "Casting", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Job)
+	checkField(t, int32(2), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Gender)
+	checkField(t, int32(7764), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.ID)
+	checkField(t, "Sound", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.KnownForDepartment)
+	checkField(t, "Richard Hymns", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Name)
+	checkField(t, "Richard Hymns", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.OriginalName)
+	checkField(t, float64(0.3053), fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Popularity)
+	checkField(t, "52fe4250c3a36847f8014a41", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.CreditID)
+	checkField(t, "Sound", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Department)
+	checkField(t, "Sound Editor", fightClub, tmdb.Movie.Credits, tmdb.Credits.Crew, index(0), tmdb.Credit.Job)
 	if credits, err := fightClub.Credits(); err != nil {
 		t.Fatalf("failed to get credits: %v", err)
 	} else if crew, err := credits.Crew(); err != nil || len(crew) != 188 {
