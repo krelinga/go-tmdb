@@ -21,7 +21,9 @@ func (m Movie) BackdropPath() (string, error) {
 	return jsonflex.GetField(m, "backdrop_path", jsonflex.AsString())
 }
 
-// TODO: BelongsToCollection()
+func (m Movie) BelongsToCollection() (Collection, error) {
+	return jsonflex.GetField(m, "belongs_to_collection", jsonflex.AsObject[Collection]())
+}
 
 func (m Movie) Budget() (int32, error) {
 	return jsonflex.GetField(m, "budget", jsonflex.AsInt32())

@@ -224,6 +224,16 @@ func TestGetMovie(t *testing.T) {
 			checkField(t, int32(600), poster, tmdb.Image.Width)
 		}
 	}
+
+	// We need a movie that belongs to a collection.
+	alien, err := tmdb.GetMovie(context.Background(), client, 348)
+	if err != nil {
+		t.Fatalf("failed to get movie: %v", err)
+	}
+	checkField(t, int32(8091), alien, tmdb.Movie.BelongsToCollection, tmdb.Collection.ID)
+	checkField(t, "Alien Collection", alien, tmdb.Movie.BelongsToCollection, tmdb.Collection.Name)
+	checkField(t, "/gWFHIY77cRVoBRGERwMHqpD27gc.jpg", alien, tmdb.Movie.BelongsToCollection, tmdb.Collection.PosterPath)
+	checkField(t, "/6X42JnSMdo3dPAswOHUuvebdTq7.jpg", alien, tmdb.Movie.BelongsToCollection, tmdb.Collection.BackdropPath)
 }
 
 func findReleseDates(in []tmdb.CountryReleaseDates, want string) (tmdb.CountryReleaseDates, error) {

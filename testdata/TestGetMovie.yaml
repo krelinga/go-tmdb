@@ -54,3 +54,63 @@ interactions:
         status: 200 OK
         code: 200
         duration: 87.310701ms
+    - id: 1
+      request:
+        proto: ""
+        proto_major: 0
+        proto_minor: 0
+        content_length: 0
+        host: ""
+        headers:
+            Authorization:
+                - Bearer fake-api-read-access-token
+        url: https://api.themoviedb.org/3/movie/348
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"adult":false,"backdrop_path":"/AmR3JG1VQVxU8TfAvljUhfSFUOx.jpg","belongs_to_collection":{"id":8091,"name":"Alien Collection","poster_path":"/gWFHIY77cRVoBRGERwMHqpD27gc.jpg","backdrop_path":"/6X42JnSMdo3dPAswOHUuvebdTq7.jpg"},"budget":11000000,"genres":[{"id":27,"name":"Horror"},{"id":878,"name":"Science Fiction"}],"homepage":"https://www.20thcenturystudios.com/movies/alien","id":348,"imdb_id":"tt0078748","origin_country":["US"],"original_language":"en","original_title":"Alien","overview":"During its return to the earth, commercial spaceship Nostromo intercepts a distress signal from a distant planet. When a three-member team of the crew discovers a chamber containing thousands of eggs on the planet, a creature inside one of the eggs attacks an explorer. The entire crew is unaware of the impending nightmare set to descend upon them when the alien parasite planted inside its unfortunate host is birthed.","popularity":16.0707,"poster_path":"/vfrQk5IPloGg1v9Rzbh2Eg3VGyM.jpg","production_companies":[{"id":25,"logo_path":"/qZCc1lty5FzX30aOCVRBLzaVmcp.png","name":"20th Century Fox","origin_country":"US"},{"id":401,"logo_path":"/t7mM3DvQ9MwDT3YzMCBrkWpWiiz.png","name":"Brandywine Productions","origin_country":"US"}],"production_countries":[{"iso_3166_1":"US","name":"United States of America"}],"release_date":"1979-05-25","revenue":104931801,"runtime":117,"spoken_languages":[{"english_name":"English","iso_639_1":"en","name":"English"},{"english_name":"Spanish","iso_639_1":"es","name":"Español"}],"status":"Released","tagline":"In space no one can hear you scream.","title":"Alien","video":false,"vote_average":8.164,"vote_count":15577}'
+        headers:
+            Age:
+                - "1126"
+            Alt-Svc:
+                - h3=":443"; ma=86400
+            Cache-Control:
+                - public, max-age=2622
+            Content-Type:
+                - application/json;charset=utf-8
+            Date:
+                - Fri, 12 Sep 2025 04:22:18 GMT
+            Etag:
+                - W/"185e41c637cf0194e4cbf9cf08900410"
+            Server:
+                - openresty
+            Vary:
+                - accept-encoding
+                - Origin
+            Via:
+                - 1.1 f3aa752ecd9b08d624e22fa6bb90d52e.cloudfront.net (CloudFront)
+            X-Amz-Cf-Id:
+                - yB8tZENgfGdnk0Y6FpDaJdfvYsz7XMizZbds5TK1lCbReGxI5g7Cew==
+            X-Amz-Cf-Pop:
+                - ORD56-P12
+            X-Az:
+                - us-east-1c
+            X-Cache:
+                - Hit from cloudfront
+            X-Memc:
+                - HIT
+            X-Memc-Age:
+                - "21236"
+            X-Memc-Expires:
+                - "2622"
+            X-Memc-Key:
+                - fb19b4b51412ccae3b0b108a23aa65ca5edc91948bb72fd22a4cb266e492a352
+            X-Task-Id:
+                - 815fe1a8794a4755b2693393adfecc00
+        status: 200 OK
+        code: 200
+        duration: 40.34493ms
