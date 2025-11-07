@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type Client interface {
@@ -83,8 +84,9 @@ func (c *clientImpl) getRaw(ctx context.Context, path string, options ...Request
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
 	}
-	if response.Header.Get("Content-Type") != "application/json;charset=utf-8" {
-		return nil, fmt.Errorf("unexpected content type: %s", response.Header.Get("Content-Type"))
+	contentType := response.Header.Get("Content-Type")
+	if !strings.Contains(contentType, "application/json") {
+		return nil, fmt.Errorf("unexpected content type: %s", contentType)
 	}
 	return response.Body, nil
 }
